@@ -5,15 +5,18 @@ import org.jsoup.nodes.Document;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import sunday.app.bairead.DataBase.SearchBook;
 
 /**
  * Created by sunday on 2016/9/13.
  */
 
 
-public abstract class JsoupParse {
+public  class JsoupParse {
     public static final String TAG = "snuday";
     public static final String UTF8 = "UTF-8";
     public static final String GB2312 = "gb2312";
@@ -22,7 +25,7 @@ public abstract class JsoupParse {
 
     protected Document mDocument;
 
-    protected Document loadCurrentHtml(String filename) {
+    public  Document loadCurrentHtml(String filename) {
         try {
             File input = new File(filename);
             mDocument = Jsoup.parse(input, GB2312);
@@ -32,6 +35,12 @@ public abstract class JsoupParse {
             return null;
         }
     }
+
+    public ArrayList<String> loadSearchHtml(String fileName){
+        return new ArrayList<>();
+    }
+
+
 
 //    public Document loadCurrentHtml(String web,String format) {
 //        try {

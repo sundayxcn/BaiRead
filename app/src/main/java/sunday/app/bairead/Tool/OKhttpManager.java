@@ -9,7 +9,9 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import sunday.app.bairead.DataBase.SearchBook;
 import sunday.app.bairead.DownLoadManager;
+import sunday.app.bairead.SearchManager;
 
 /**
  * 下载html到本地
@@ -36,10 +38,9 @@ public class OKhttpManager {
     }
 
 
-    public void connectHtml(String web, final DownLoadManager.DownLoadSearchListener searchStatus) {
-        searchStatus.start(web);
-        final Request request = new Request.Builder().url("https://www.baidu.com/s?wd=%E6%9C%AB%E6%97%A5%E5%88%81%E6%B0%91")
-                .build();
+    public void connectHtml(final String bookName, final DownLoadManager.DownLoadSearchListener searchStatus) {
+        searchStatus.start(bookName);
+        final Request request = new Request.Builder().url(SearchManager.BAIDU+bookName).build();
         Call call = OKhttpManager.getInstance().getOkHttpClient().newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -51,12 +52,10 @@ public class OKhttpManager {
             public void onResponse(Call call, Response response) throws IOException {
                 //if(response.h)
                 String fileName = null;
-                FileManager.getInstance().writeByte("123.txt", response.body().bytes());
+                FileManager.getInstance().writeBookSearch(bookName, response.body().bytes());
                 if (searchStatus != null) {
                     searchStatus.end(fileName);
                 }
-                //LogManager.d(response.body().string());
-                //initData();
             }
         });
     }

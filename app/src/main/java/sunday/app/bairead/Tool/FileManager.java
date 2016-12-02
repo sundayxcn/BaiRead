@@ -10,13 +10,14 @@ import java.io.FileOutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import sunday.app.bairead.SearchManager;
+
 /**
  * eidt Created by sunday on 2016/6/27.
  */
 public class FileManager {
     public static final String PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static final String DIR = "BaiRead";
-    //public static final String FileName= PATH+"/"+DIR + "/"+"mainWeb.html";
     public static final String TAG = "snuday";
     public static final String UTF8 = "UTF-8";
     public static final String GB2312 = "gb2312";
@@ -46,21 +47,24 @@ public class FileManager {
         return file.exists();
     }
 
-//    public  void writeByte(byte[] bytes){
-//            try {
-//                FileOutputStream fileOutputStream = new FileOutputStream(FileName,false);
-//                fileOutputStream.write(bytes);
-//                fileOutputStream.close();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }finally{
-//
-//            }
-//    }
+
+    public void writeBookSearch(String fileName, byte[] bytes){
+        String fileDirPath = PATH + "/" + DIR + "/" + fileName;
+        File fileDir = new File(fileDirPath);
+        if(!fileDir.exists()){
+            fileDir.mkdir();
+        }
+
+
+        writeByte(fileDirPath+"/"+SearchManager.SEARCH_TXT,bytes);
+    }
+
+
 
     public void writeByte(String fileName, byte[] bytes) {
+
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(PATH + "/" + DIR + "/" + fileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(fileName);
             fileOutputStream.write(bytes);
             fileOutputStream.close();
         } catch (Exception e) {
