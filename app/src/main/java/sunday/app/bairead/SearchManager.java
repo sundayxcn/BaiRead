@@ -1,6 +1,6 @@
 package sunday.app.bairead;
 
-import sunday.app.bairead.DataBase.SearchLink;
+import sunday.app.bairead.DataBase.SearchBook;
 import sunday.app.bairead.Tool.OKhttpManager;
 
 /**
@@ -13,12 +13,12 @@ public class SearchManager implements DownLoadManager.DownLoadSearchListener {
     public static final String BAIDU = "https://www.baidu.com/s?tn=99853826_hao_pg&rn=50&wd=";
 
 
-    private SearchLink searchBook;
+    private SearchBook searchBook;
 
 
     @Override
     public void start(String bookName) {
-        searchBook = new SearchLink();
+        searchBook = new SearchBook();
     }
 
     @Override

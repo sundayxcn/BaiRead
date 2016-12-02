@@ -7,8 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by sunday on 2016/12/1.
  */
-public class SearchLink {
-    //ArrayList<String> webLinkList = new ArrayList<>();
+public class SearchBook {
     String chapterLink;
     String coverImageLink;
     String bookName;
