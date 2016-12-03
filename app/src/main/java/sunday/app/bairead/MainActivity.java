@@ -51,11 +51,19 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
+            android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right);
+            fragmentTransaction.remove(searchFragment);
+            fragmentTransaction.commit();
+            getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
     }
 
+    FragmentManager fragmentManager;
+    SearchFragment searchFragment;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -75,10 +83,11 @@ public class MainActivity extends AppCompatActivity
             return true;
         }else if(id == R.id.action_search){
             //转到搜索界面fragment
-            SearchFragment searchFragment = new SearchFragment();
-            FragmentManager fragmentManager = getFragmentManager();
+            searchFragment = new SearchFragment();
+            fragmentManager = getFragmentManager();
             android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right);
+            fragmentTransaction.addToBackStack("search");
             fragmentTransaction.add(R.id.drawer_layout,searchFragment).show(searchFragment).commit();
             return true;
         }

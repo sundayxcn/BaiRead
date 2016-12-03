@@ -14,7 +14,7 @@ import sunday.app.bairead.Tool.OKhttpManager;
 public class SearchManager implements DownLoadManager.DownLoadSearchListener {
 
     public static final String SEARCH_TXT = "search.txt";
-    public static final String BAIDU = "http://www.baidu.com/s?tn=99853826_hao_pg&rn=50&wd=";
+    public static final String BAIDU = "http://www.baidu.com/s?tn=baiduhome_pg&rn=50&wd=";
 
 
     private SearchBook searchBook;
