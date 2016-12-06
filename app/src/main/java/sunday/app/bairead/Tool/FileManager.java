@@ -10,8 +10,6 @@ import java.io.FileOutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import sunday.app.bairead.SearchManager;
-
 /**
  * eidt Created by sunday on 2016/6/27.
  */

@@ -1,25 +1,20 @@
-package sunday.app.bairead;
+package sunday.app.bairead.Tool;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
-import sunday.app.bairead.DataBase.SearchBook;
-import sunday.app.bairead.Tool.JsoupParse;
-import sunday.app.bairead.Tool.OKhttpManager;
 
 /**
  * 访问百度搜索书籍
  * Created by sunday on 2016/12/1.
  */
-public class SearchManager implements DownLoadManager.DownLoadSearchListener {
+public class SearchManager extends OKhttpManager{
 
     public static final String SEARCH_TXT = "search.txt";
     public static final String BAIDU = "http://www.baidu.com/s?tn=baiduhome_pg&rn=50&wd=";
 
 
-    private SearchBook searchBook;
+    //private B searchBook;
 
-    private ArrayList<String> searchLinkList;
+    private ArrayList<SearchLink> searchLinkList;
 
 
     class SearchLink{
@@ -28,16 +23,15 @@ public class SearchManager implements DownLoadManager.DownLoadSearchListener {
          * */
         String webLink;
 
-
+        /**
+         * 站点名称
+         * */
+        String webName;
     }
 
-    @Override
-    public void start(String bookName) {
-
-    }
 
     @Override
-    public void end(String fileName) {
+    public void downloadEnd(String fileName) {
         if (fileName != null) {
             JsoupParse jsoupParse = new JsoupParse();
             searchLinkList = jsoupParse.loadSearchHtml(fileName);
@@ -46,7 +40,7 @@ public class SearchManager implements DownLoadManager.DownLoadSearchListener {
 
 
     public void search(String bookName) {
-        OKhttpManager.getInstance().connectHtml(bookName, this);
+        OKhttpManager.getInstance().connectHtml(bookName);
     }
 
 }

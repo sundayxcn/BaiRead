@@ -36,7 +36,7 @@ public  class JsoupParse {
         }
     }
 
-    public ArrayList<String> loadSearchHtml(String fileName){
+    public ArrayList<SearchManager.SearchLink> loadSearchHtml(String fileName){
         return new ArrayList<>();
     }
 
