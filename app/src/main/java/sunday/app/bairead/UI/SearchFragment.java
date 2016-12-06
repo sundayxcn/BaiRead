@@ -17,9 +17,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jsoup.Connection;
+
 import java.util.ArrayList;
 
 import sunday.app.bairead.R;
+import sunday.app.bairead.Tool.SearchLink;
 import sunday.app.bairead.Tool.SearchManager;
 
 /**
@@ -29,10 +32,11 @@ public class SearchFragment extends Fragment {
 
     private ImageButton mButtonBack;
     private Button mButtonSearch;
-    private EditText mEdittext;
+    private EditText mEditText;
     private ListView mListView;
 
     private SearchHistory searchHistory = new SearchHistory();
+    private SearchLinkAdapter mSearchLinkAdapter = new SearchLinkAdapter();
 
     @Nullable
     @Override
@@ -57,17 +61,61 @@ public class SearchFragment extends Fragment {
         mButtonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SearchManager().search(mEdittext.getText().toString());
-                Toast.makeText(getContext(),"search",Toast.LENGTH_SHORT).show();
+                new SearchManager(SearchFragment.this).search(mEditText.getText().toString());
+                //Toast.makeText(getContext(),"search",Toast.LENGTH_SHORT).show();
             }
         });
 
-        mEdittext = (EditText) view.findViewById(R.id.search_fragment_edit_text);
+        mEditText = (EditText) view.findViewById(R.id.search_fragment_edit_text);
 
 
         mListView = (ListView) view.findViewById(R.id.search_fragment_list_view);
         mListView.setAdapter(new SearchHistoryAdapter());
         return view;
+    }
+
+    public void refreshSearchResult(ArrayList<SearchLink> list){
+        if(list == null){
+
+        }else {
+            if (mListView.getAdapter() instanceof SearchHistoryAdapter) {
+                mListView.setAdapter(mSearchLinkAdapter);
+            } else {
+                mSearchLinkAdapter.setData(list);
+            }
+        }
+    }
+
+
+    class SearchLinkAdapter extends BaseAdapter{
+
+        ArrayList<SearchLink> searchLinkArrayList = new ArrayList<>();
+
+        public void setData(ArrayList<SearchLink> list){
+            searchLinkArrayList.clear();
+            searchLinkArrayList.addAll(list);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount() {
+            return searchLinkArrayList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return searchLinkArrayList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return null;
+        }
     }
 
     class SearchHistoryAdapter extends BaseAdapter{

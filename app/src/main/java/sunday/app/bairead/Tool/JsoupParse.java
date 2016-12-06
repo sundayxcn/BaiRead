@@ -9,14 +9,12 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import sunday.app.bairead.DataBase.SearchBook;
-
 /**
  * Created by sunday on 2016/9/13.
  */
 
 
-public  class JsoupParse {
+public  class JsoupParse{
     public static final String TAG = "snuday";
     public static final String UTF8 = "UTF-8";
     public static final String GB2312 = "gb2312";
@@ -25,19 +23,39 @@ public  class JsoupParse {
 
     protected Document mDocument;
 
-    public  Document loadCurrentHtml(String filename) {
-        try {
-            File input = new File(filename);
-            mDocument = Jsoup.parse(input, GB2312);
-            return mDocument;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+
+//    public  Document loadCurrentHtml(String filename) {
+//        try {
+//            File input = new File(filename);
+//            mDocument = Jsoup.parse(input, GB2312);
+//            return mDocument;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+
+    public ArrayList<SearchLink> loadSearchHtml(String fileName){
+        return new ArrayList<>();
     }
 
-    public ArrayList<SearchManager.SearchLink> loadSearchHtml(String fileName){
-        return new ArrayList<>();
+    public static void from(String fileName,DocumentParse documentParse) {
+        try {
+            File input = new File(fileName);
+            Document mDocument = Jsoup.parse(input, GB2312);
+            documentParse.parse(mDocument);
+            //return mDocument;
+        } catch (IOException e) {
+            e.printStackTrace();
+            //return null;
+        }
+        //parse.parse();
+        //return parse;
+    }
+
+
+    public void parseEnd(){
+
     }
 
 
