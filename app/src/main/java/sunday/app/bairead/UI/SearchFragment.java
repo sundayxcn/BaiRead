@@ -110,11 +110,12 @@ public class SearchFragment extends Fragment {
         if(list == null){
 
         }else {
-            if (mListView.getAdapter() instanceof SearchHistoryAdapter) {
+            if (mListView.getAdapter() == searchHistory.getAdapter()) {
                 mListView.setAdapter(mSearchLinkAdapter);
-            } else {
-                mSearchLinkAdapter.setData(list);
             }
+
+            mSearchLinkAdapter.setData(list);
+
         }
     }
 
@@ -146,7 +147,12 @@ public class SearchFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
+            if(convertView == null){
+                TextView textView = new TextView(getContext());
+                textView.setText(searchLinkArrayList.get(position).getLink());
+                convertView = textView;
+            }
+            return convertView;
         }
     }
 

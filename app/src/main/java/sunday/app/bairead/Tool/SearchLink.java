@@ -14,4 +14,13 @@ public class SearchLink{
      * 站点名称
      * */
     String webName;
+
+    SearchLink(String link){
+        webLink = link;
+    }
+
+    public String getLink(){
+        return webLink;
+    }
+
 }

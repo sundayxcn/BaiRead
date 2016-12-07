@@ -42,7 +42,7 @@ public  class JsoupParse{
     public static void from(String fileName,DocumentParse documentParse) {
         try {
             File input = new File(fileName);
-            Document mDocument = Jsoup.parse(input, GB2312);
+            Document mDocument = Jsoup.parse(input, UTF8);
             documentParse.parse(mDocument);
             //return mDocument;
         } catch (IOException e) {

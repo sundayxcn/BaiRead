@@ -33,7 +33,16 @@ public class SearchManager extends OKhttpManager {
 
 
     public void search(String bookName) {
-        OKhttpManager.getInstance().connectHtml(bookName);
+        //OKhttpManager.getInstance().connectHtml(bookName);
+        String fileName = FileManager.PATH + "/" + FileManager.DIR + "/" + bookName+"/"+"search.txt";
+        if (fileName != null) {
+            SearchHtmlParse searchHtmlParse = new SearchHtmlParse();
+            JsoupParse.from(fileName, searchHtmlParse);
+            ArrayList<SearchLink> searchLinkList = searchHtmlParse.result();
+            searchFragment.refreshSearchResult(searchLinkList);
+        }else{
+            searchFragment.refreshSearchResult(null);
+        }
     }
 
 }
