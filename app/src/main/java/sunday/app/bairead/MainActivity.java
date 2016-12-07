@@ -1,11 +1,9 @@
 package sunday.app.bairead;
 
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,8 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-import sunday.app.bairead.Tool.SearchManager;
+import sunday.app.bairead.Tool.NetworkTool;
 import sunday.app.bairead.UI.SearchFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -43,6 +42,10 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        registerReceiver();
+
     }
 
     @Override
@@ -51,17 +54,12 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (getFragmentManager().getBackStackEntryCount() > 0) {
-            android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right);
-            fragmentTransaction.remove(searchFragment);
-            fragmentTransaction.commit();
-            getFragmentManager().popBackStack();
+            searchFragment.hide();
         } else {
             super.onBackPressed();
         }
     }
 
-    FragmentManager fragmentManager;
     SearchFragment searchFragment;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -83,11 +81,7 @@ public class MainActivity extends AppCompatActivity
         }else if(id == R.id.action_search){
             //转到搜索界面fragment
             searchFragment = new SearchFragment();
-            fragmentManager = getFragmentManager();
-            android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right);
-            fragmentTransaction.addToBackStack("search");
-            fragmentTransaction.add(R.id.drawer_layout,searchFragment).show(searchFragment).commit();
+            searchFragment.show(this);
             return true;
         }
 
@@ -118,4 +112,21 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unRegisterReceiver();
+    }
+
+    private NetworkTool networkTool = new NetworkTool(this);
+    public void registerReceiver(){
+        networkTool.addReceiver();
+    }
+
+    public void unRegisterReceiver(){
+        networkTool.removeReceiver();
+    }
+
 }

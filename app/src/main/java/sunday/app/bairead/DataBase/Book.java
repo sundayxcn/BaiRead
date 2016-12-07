@@ -34,10 +34,6 @@ public class Book{
      * 作者
      * */
     String author;
-    /**
-     * 最新章节序号
-     * */
-    int chapterIndex;
 
     /**
      * 最新章节名

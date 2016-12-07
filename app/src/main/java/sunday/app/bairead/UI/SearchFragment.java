@@ -1,6 +1,8 @@
 package sunday.app.bairead.UI;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,7 +23,9 @@ import org.jsoup.Connection;
 
 import java.util.ArrayList;
 
+import sunday.app.bairead.MainActivity;
 import sunday.app.bairead.R;
+import sunday.app.bairead.Tool.NetworkTool;
 import sunday.app.bairead.Tool.SearchLink;
 import sunday.app.bairead.Tool.SearchManager;
 
@@ -48,11 +52,7 @@ public class SearchFragment extends Fragment {
         mButtonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                android.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right);
-                fragmentTransaction.remove(SearchFragment.this);
-                fragmentTransaction.commit();
-                getFragmentManager().popBackStack();
+                hide();
             }
         });
 
@@ -61,8 +61,13 @@ public class SearchFragment extends Fragment {
         mButtonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SearchManager(SearchFragment.this).search(mEditText.getText().toString());
-                //Toast.makeText(getContext(),"search",Toast.LENGTH_SHORT).show();
+                if(NetworkTool.isNetworkConnect(getContext())){
+                    new SearchManager(SearchFragment.this).search(mEditText.getText().toString());
+                }else{
+                    Toast.makeText(getContext(),"open the network",Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         });
 
@@ -72,6 +77,24 @@ public class SearchFragment extends Fragment {
         mListView = (ListView) view.findViewById(R.id.search_fragment_list_view);
         mListView.setAdapter(new SearchHistoryAdapter());
         return view;
+    }
+
+
+    public void show(Activity activity){
+        FragmentManager fragmentManager = activity.getFragmentManager();
+        android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right);
+        fragmentTransaction.addToBackStack("search");
+        fragmentTransaction.add(R.id.drawer_layout,this).show(this).commit();
+    }
+
+    public void hide(){
+        FragmentManager fragmentManager = getFragmentManager();
+        android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right);
+        fragmentTransaction.remove(SearchFragment.this);
+        fragmentTransaction.commit();
+        fragmentManager.popBackStack();
     }
 
     public void refreshSearchResult(ArrayList<SearchLink> list){
