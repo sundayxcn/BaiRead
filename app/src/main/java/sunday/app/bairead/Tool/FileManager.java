@@ -4,9 +4,15 @@ import android.os.Environment;
 
 import org.apache.http.util.EncodingUtils;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,13 +56,46 @@ public class FileManager {
         String fileDirPath = PATH + "/" + DIR + "/" + fileName;
         File fileDir = new File(fileDirPath);
         if(!fileDir.exists()){
-            fileDir.mkdir();
+            fileDir.mkdirs();
         }
 
 
         writeByte(fileDirPath+"/"+SearchManager.SEARCH_TXT,bytes);
     }
 
+
+    public ArrayList<String> readFileByLine(String fileName){
+        ArrayList<String> list = new ArrayList<>();
+        String fileDirPath = PATH + "/" + DIR + "/" + fileName;
+        try{
+            File file = new File(fileDirPath);
+            InputStream inputStream = new FileInputStream(file);
+            InputStreamReader reader = new InputStreamReader(inputStream);
+            BufferedReader buffReader= new BufferedReader(reader);
+            String  str;
+            while ((str = buffReader .readLine()) != null) {
+                list.add(str);
+            }
+            inputStream.close();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void writeFileByLine(String fileName,String name) throws IOException {
+        String fileDirPath = PATH + "/" + DIR + "/" + fileName;
+        File file = new File(fileDirPath);
+
+        if(!file.exists()){
+            file.createNewFile();
+        }
+
+        FileWriter fileWriter = new FileWriter(fileDirPath, true);
+        fileWriter.write(name);
+        fileWriter.write("\r\n");
+        fileWriter.close();
+    }
 
 
     public void writeByte(String fileName, byte[] bytes) {

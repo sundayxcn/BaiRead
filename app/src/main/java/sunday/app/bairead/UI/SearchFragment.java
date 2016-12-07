@@ -21,10 +21,13 @@ import android.widget.Toast;
 
 import org.jsoup.Connection;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import sunday.app.bairead.MainActivity;
 import sunday.app.bairead.R;
+import sunday.app.bairead.Tool.FileManager;
 import sunday.app.bairead.Tool.NetworkTool;
 import sunday.app.bairead.Tool.SearchLink;
 import sunday.app.bairead.Tool.SearchManager;
@@ -62,7 +65,9 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(NetworkTool.isNetworkConnect(getContext())){
-                    new SearchManager(SearchFragment.this).search(mEditText.getText().toString());
+                    String bookName = mEditText.getText().toString();
+                    searchHistory.addHistory(bookName);
+                    new SearchManager(SearchFragment.this).search(bookName);
                 }else{
                     Toast.makeText(getContext(),"open the network",Toast.LENGTH_SHORT).show();
                 }
@@ -75,7 +80,7 @@ public class SearchFragment extends Fragment {
 
 
         mListView = (ListView) view.findViewById(R.id.search_fragment_list_view);
-        mListView.setAdapter(new SearchHistoryAdapter());
+        mListView.setAdapter(searchHistory.getAdapter());
         return view;
     }
 
@@ -97,6 +102,10 @@ public class SearchFragment extends Fragment {
         fragmentManager.popBackStack();
     }
 
+    /**
+     * 点击搜索按钮后显示搜索结果
+     * 点击按钮->OKHttp异步下载搜索结果->调用此方法
+     * **/
     public void refreshSearchResult(ArrayList<SearchLink> list){
         if(list == null){
 
@@ -172,15 +181,23 @@ public class SearchFragment extends Fragment {
 
     /**
      * Created by sunday on 2016/12/6.
+     * 用于对搜索历史的管理，每次进入读写根目录的searchHistory文件
      */
-
       class SearchHistory {
         public static final String FILE_NAME = "searchHistory.txt";
         private ArrayList<String> mHistoryList = new ArrayList<>();
 
+        private SearchHistoryAdapter searchHistoryAdapter = new SearchHistoryAdapter();
+
+        public SearchHistoryAdapter getAdapter(){
+            return searchHistoryAdapter;
+        }
+
         SearchHistory(){
-            //test
-            mHistoryList.add("末日刁民");
+            ArrayList<String> list = FileManager.getInstance().readFileByLine(FILE_NAME);
+            for(String name :list){
+                mHistoryList.add(0,name);
+            }
         }
 
         public ArrayList<String> getHistory(){
@@ -188,7 +205,14 @@ public class SearchFragment extends Fragment {
         }
 
         public void addHistory(String bookName){
-
+            try {
+                FileManager.getInstance().writeFileByLine(FILE_NAME, bookName);
+                mHistoryList.add(0,bookName);
+            }catch (IOException e){
+                e.printStackTrace();
+            }finally {
+                searchHistoryAdapter.notifyDataSetChanged();
+            }
         }
 
 

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 /**
  * Created by sunday on 2016/12/7.
+ * 监听网络状态变化，提供状态改变接口
  */
 
 public class NetworkTool {
