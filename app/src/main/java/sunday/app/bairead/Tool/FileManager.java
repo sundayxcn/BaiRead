@@ -1,6 +1,7 @@
 package sunday.app.bairead.Tool;
 
 import android.os.Environment;
+import android.util.Log;
 
 import org.apache.http.util.EncodingUtils;
 
@@ -45,23 +46,33 @@ public class FileManager {
 
         File file = new File(PATH + "/" + DIR);
         if (!file.exists()) {
-            file.mkdir();
+            file.mkdirs();
+        }
+
+        return file.exists();
+    }
+
+    public boolean createDir(String dirPath) {
+
+        File file = new File(PATH + "/" + DIR +"/"+ dirPath);
+        if (!file.exists()) {
+            file.mkdirs();
         }
 
         return file.exists();
     }
 
 
-    public void writeBookSearch(String fileName, byte[] bytes){
-        String fileDirPath = PATH + "/" + DIR + "/" + fileName;
-        File fileDir = new File(fileDirPath);
-        if(!fileDir.exists()){
-            fileDir.mkdirs();
-        }
-
-
-        writeByte(fileDirPath+"/"+SearchManager.SEARCH_TXT,bytes);
-    }
+//    public void writeBookSearch(String fileName, byte[] bytes){
+//        String fileDirPath = PATH + "/" + DIR + "/" + fileName;
+//        File fileDir = new File(fileDirPath);
+//        if(!fileDir.exists()){
+//            fileDir.mkdirs();
+//        }
+//
+//
+//        writeByte(fileDirPath+"/"+SearchManager.SEARCH_TXT,bytes);
+//    }
 
 
     public ArrayList<String> readFileByLine(String fileName){
@@ -104,6 +115,9 @@ public class FileManager {
             FileOutputStream fileOutputStream = new FileOutputStream(fileName);
             fileOutputStream.write(bytes);
             fileOutputStream.close();
+            Log.e(TAG,"writeByte"+fileName+"  bytes.length=="+bytes.length);
+        } catch(IOException e){
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

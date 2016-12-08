@@ -35,9 +35,29 @@ public class OKhttpManager{
     }
 
 
-    public void connectHtml(final String bookName) {
-        downloadStart(bookName);
-        final Request request = new Request.Builder().url(SearchManager.BAIDU+bookName).build();
+//    public void connectHtml(final String bookName) {
+//        downloadStart(bookName);
+//        final Request request = new Request.Builder().url(SearchManager.BAIDU+bookName).build();
+//        Call call = OKhttpManager.getInstance().getOkHttpClient().newCall(request);
+//        call.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                Log.d("sunday", "OKHttp onFailure");
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                //if(response.h)
+//                String fileName = null;
+//                FileManager.getInstance().writeBookSearch(bookName, response.body().bytes());
+//                downloadEnd(fileName);
+//            }
+//        });
+//    }
+
+    public void connectUrl(final String url) {
+        connectStart(url);
+        final Request request = new Request.Builder().url(url).build();
         Call call = OKhttpManager.getInstance().getOkHttpClient().newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -48,19 +68,19 @@ public class OKhttpManager{
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 //if(response.h)
-                String fileName = null;
-                FileManager.getInstance().writeBookSearch(bookName, response.body().bytes());
-                downloadEnd(fileName);
+                //String fileName = null;
+                //FileManager.getInstance().writeBookSearch(response.body().bytes());
+                connectEnd(url,response.body().bytes());
             }
         });
     }
 
 
-    public void downloadStart(String bookName) {
+    public void connectStart(String url) {
         //弹出loading等待框
     }
 
-    public void downloadEnd(String fileName) {
+    public void connectEnd(String url,byte[] responseBody) {
 
     }
 }

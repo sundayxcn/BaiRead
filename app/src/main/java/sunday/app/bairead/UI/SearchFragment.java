@@ -3,10 +3,7 @@ package sunday.app.bairead.UI;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,20 +14,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.jsoup.Connection;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import sunday.app.bairead.MainActivity;
+import sunday.app.bairead.DataBase.BookDetail;
 import sunday.app.bairead.R;
 import sunday.app.bairead.Tool.FileManager;
-import sunday.app.bairead.Tool.NetworkTool;
-import sunday.app.bairead.Tool.SearchLink;
 import sunday.app.bairead.Tool.SearchManager;
+import sunday.app.bairead.View.SearchLinkItemView;
 
 /**
  * Created by sunday on 2016/12/2.
@@ -64,13 +56,18 @@ public class SearchFragment extends Fragment {
         mButtonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(NetworkTool.isNetworkConnect(getContext())){
-                    String bookName = mEditText.getText().toString();
-                    searchHistory.addHistory(bookName);
-                    new SearchManager(SearchFragment.this).search(bookName);
-                }else{
-                    Toast.makeText(getContext(),"open the network",Toast.LENGTH_SHORT).show();
-                }
+
+                new SearchManager(SearchFragment.this).downloadEnd();
+
+//                if(NetworkTool.isNetworkConnect(getContext())){
+//                    String bookName = mEditText.getText().toString().trim();
+//                    if(bookName.length() > 0) {
+//                        searchHistory.addHistory(bookName);
+//                        new SearchManager(SearchFragment.this).search(bookName);
+//                    }
+//                }else{
+//                    Toast.makeText(getContext(),"open the network",Toast.LENGTH_SHORT).show();
+//                }
 
 
             }
@@ -106,38 +103,44 @@ public class SearchFragment extends Fragment {
      * 点击搜索按钮后显示搜索结果
      * 点击按钮->OKHttp异步下载搜索结果->调用此方法
      * **/
-    public void refreshSearchResult(ArrayList<SearchLink> list){
-        if(list == null){
+    public void refreshSearchResult(final BookDetail bookDetail){
 
-        }else {
-            if (mListView.getAdapter() == searchHistory.getAdapter()) {
-                mListView.setAdapter(mSearchLinkAdapter);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mListView.getAdapter() == searchHistory.getAdapter()) {
+                    mListView.setAdapter(mSearchLinkAdapter);
+                }
+                mSearchLinkAdapter.addData(bookDetail);
             }
-
-            mSearchLinkAdapter.setData(list);
-
-        }
+        });
     }
+
 
 
     class SearchLinkAdapter extends BaseAdapter{
 
-        ArrayList<SearchLink> searchLinkArrayList = new ArrayList<>();
+        ArrayList<BookDetail> bookDetailList = new ArrayList<>();
 
-        public void setData(ArrayList<SearchLink> list){
-            searchLinkArrayList.clear();
-            searchLinkArrayList.addAll(list);
+        public void addData(BookDetail bookDetail){
+            bookDetailList.add(bookDetail);
+            notifyDataSetChanged();
+        }
+
+        public void setData(ArrayList<BookDetail> list){
+            bookDetailList.clear();
+            bookDetailList.addAll(list);
             notifyDataSetChanged();
         }
 
         @Override
         public int getCount() {
-            return searchLinkArrayList.size();
+            return bookDetailList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return searchLinkArrayList.get(position);
+            return bookDetailList.get(position);
         }
 
         @Override
@@ -148,9 +151,10 @@ public class SearchFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if(convertView == null){
-                TextView textView = new TextView(getContext());
-                textView.setText(searchLinkArrayList.get(position).getLink());
-                convertView = textView;
+                LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+                SearchLinkItemView searchLinkItemView = (SearchLinkItemView) layoutInflater.inflate(R.layout.search_fragment_list_item,null);
+                searchLinkItemView.setInfo(bookDetailList.get(position));
+                convertView = searchLinkItemView;
             }
             return convertView;
         }
