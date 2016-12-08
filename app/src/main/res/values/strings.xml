@@ -9,4 +9,7 @@
     <string name="search_text">搜索</string>
     <string name="search_edit_text_hint">请输入书名</string>
     <string name="search_text_history">历史搜索</string>
+    <string name="search_item_author_text">作者:</string>
+    <string name="search_item_author_chapterLatest">最新:</string>
+    <string name="search_item_author_source">来源:</string>
 </resources>

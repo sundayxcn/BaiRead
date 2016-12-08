@@ -4,29 +4,57 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/search_fragment_list_item_name"
+    <ImageView
+        android:id="@+id/search_fragment_list_item_image"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher" />
 
-    <TextView
-        android:id="@+id/search_fragment_list_item_author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/search_fragment_list_item_chapter_latest"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/search_fragment_list_item_chapter_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/search_fragment_list_item_source"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/search_fragment_list_item_chapter_latest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_item_author_chapterLatest"
+            android:textColor="@color/colorDark"
+            android:textSize="@dimen/search_fragment_list_item_chapter_text_size" />
+
+        <TextView
+            android:id="@+id/search_fragment_list_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGray" />
+
+        <TextView
+            android:id="@+id/search_fragment_list_item_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/search_item_author_text"
+            android:textColor="@color/colorGray" />
+
+
+        <TextView
+            android:id="@+id/search_fragment_list_item_chapter_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGray"
+            android:visibility="gone" />
+
+
+        <TextView
+            android:id="@+id/search_fragment_list_item_source"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_item_author_source"
+            android:textColor="@color/colorGray" />
+    </LinearLayout>
+
 
 </sunday.app.bairead.View.SearchLinkItemView>
