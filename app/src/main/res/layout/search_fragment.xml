@@ -38,13 +38,27 @@
             android:text="@string/search_text" />
     </LinearLayout>
 
-    <TextView
-        android:gravity="center_vertical"
-        android:layout_marginLeft="@dimen/default_padding_left"
-        android:text="@string/search_text_history"
-        android:id="@+id/search_fragment_text_history"
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_image_button_height" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/default_padding_left"
+            android:text="@string/search_text_history"
+            android:id="@+id/search_fragment_text_history"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_image_button_height" />
+
+        <include layout="@layout/search_book_detail"
+            android:id="@+id/search_fragment_top_book_detail"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"/>
+
+    </FrameLayout>
+
     <ListView
         android:layout_marginLeft="@dimen/default_padding_left"
         android:id="@+id/search_fragment_list_view"

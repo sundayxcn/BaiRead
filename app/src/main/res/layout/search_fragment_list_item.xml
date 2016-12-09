@@ -21,7 +21,7 @@
             android:id="@+id/search_fragment_list_item_chapter_latest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/search_item_author_chapterLatest"
+            android:text="@string/search_item_author_chapter_latest"
             android:textColor="@color/colorDark"
             android:textSize="@dimen/search_fragment_list_item_chapter_text_size" />
 

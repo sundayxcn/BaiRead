@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import sunday.app.bairead.DataBase.BookDetail;
 import sunday.app.bairead.R;
 import sunday.app.bairead.Tool.FileManager;
 import sunday.app.bairead.Tool.SearchManager;
+import sunday.app.bairead.View.BookDetailView;
 import sunday.app.bairead.View.SearchLinkItemView;
 
 /**
@@ -33,9 +35,12 @@ public class SearchFragment extends Fragment {
     private Button mButtonSearch;
     private EditText mEditText;
     private ListView mListView;
+    private BookDetailView bookDetailView;
 
     private SearchHistory searchHistory = new SearchHistory();
     private SearchLinkAdapter mSearchLinkAdapter = new SearchLinkAdapter();
+
+
 
     @Nullable
     @Override
@@ -78,6 +83,23 @@ public class SearchFragment extends Fragment {
 
         mListView = (ListView) view.findViewById(R.id.search_fragment_list_view);
         mListView.setAdapter(searchHistory.getAdapter());
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(view instanceof SearchLinkItemView){
+                    SearchLinkItemView searchLinkItemView = (SearchLinkItemView) view;
+                    bookDetailView.setDetail((BookDetail) searchLinkItemView.getTag());
+                    bookDetailView.animatorShow(false);
+                }else{
+
+                }
+            }
+        });
+
+
+        bookDetailView = (BookDetailView) view.findViewById(R.id.search_fragment_top_book_detail);
+
+
         return view;
     }
 
@@ -127,11 +149,11 @@ public class SearchFragment extends Fragment {
             notifyDataSetChanged();
         }
 
-        public void setData(ArrayList<BookDetail> list){
-            bookDetailList.clear();
-            bookDetailList.addAll(list);
-            notifyDataSetChanged();
-        }
+//        public void setData(ArrayList<BookDetail> list){
+//            bookDetailList.clear();
+//            bookDetailList.addAll(list);
+//            notifyDataSetChanged();
+//        }
 
         @Override
         public int getCount() {

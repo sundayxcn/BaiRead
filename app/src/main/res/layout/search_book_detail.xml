@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sunday.app.bairead.View.BookDetailView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/search_book_detail_description"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/search_fragment_list_item_chapter_text_size"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/search_fragment_book_detail_description_height"/>
+
+    <TextView
+        android:id="@+id/search_book_detail_chapter_latest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/search_book_detail_chapter_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_alignParentLeft="true"
+            android:text="@string/search_book_detail_button_read_text"
+            android:id="@+id/search_book_detail_button_read"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_centerInParent="true"
+            android:text="@string/search_book_detail_button_bookcase_text"
+            android:id="@+id/search_book_detail_button_bookcase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_alignParentRight="true"
+            android:text="@string/search_book_detail_button_cache_text"
+            android:id="@+id/search_book_detail_button_cache"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2dp" />
+
+    </sunday.app.bairead.View.BookDetailView>

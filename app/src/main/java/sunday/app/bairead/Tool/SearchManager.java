@@ -87,7 +87,7 @@ public class SearchManager extends OKhttpManager {
                 }
             }
         }).start();
-        
+
     }
 
 }

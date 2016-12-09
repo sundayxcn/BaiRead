@@ -15,7 +15,7 @@ public class BookDetail {
         final static public String AUTHOR = "og:novel:author";
         final static public String DESCRIPTION = "og:description";
         final static public String IMAGE = "og:image";
-        final static public String URL = "og:url";
+        final static public String URL = "og:novel:read_url";
         final static public String TIME = "og:novel:update_time";
         final static public String CHAPTERlATEST = "og:novel:latest_chapter_name";
 
