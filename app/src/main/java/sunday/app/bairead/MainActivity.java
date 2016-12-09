@@ -1,6 +1,7 @@
 package sunday.app.bairead;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -12,12 +13,25 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+
+import java.util.ArrayList;
 
 import sunday.app.bairead.Tool.NetworkTool;
 import sunday.app.bairead.UI.SearchFragment;
+import sunday.app.bairead.View.XListView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener ,XListView.IXListViewListener {
+
+
+
+    private XListView mListView;
+    private ArrayAdapter<String> mAdapter;
+    private ArrayList<String> items = new ArrayList<String>();
+    private Handler mHandler;
+    private int start = 0;
+    private static int refreshCnt = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +56,16 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
+        geneItems();
+        mListView = (XListView) findViewById(R.id.xlist_view);
+        mListView.setPullLoadEnable(false);
+        mAdapter = new ArrayAdapter<String>(this, R.layout.xlist_item, items);
+        mListView.setAdapter(mAdapter);
+        mListView.setXListViewListener(this);
+        mHandler = new Handler();
 
 
         registerReceiver();
@@ -129,4 +153,43 @@ public class MainActivity extends AppCompatActivity
         networkTool.removeReceiver();
     }
 
+    private void geneItems() {
+        for (int i = 0; i != 20; ++i) {
+            items.add("refresh cnt " + (++start));
+        }
+    }
+
+    private void onLoad() {
+        mListView.stopRefresh();
+        mListView.stopLoadMore();
+        mListView.setRefreshTime("刚刚");
+    }
+
+    @Override
+    public void onRefresh() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                start = ++refreshCnt;
+                items.clear();
+                geneItems();
+                // mAdapter.notifyDataSetChanged();
+                mAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.xlist_item, items);
+                mListView.setAdapter(mAdapter);
+                onLoad();
+            }
+        }, 2000);
+    }
+
+    @Override
+    public void onLoadMore() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                geneItems();
+                mAdapter.notifyDataSetChanged();
+                onLoad();
+            }
+        }, 2000);
+    }
 }

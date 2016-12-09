@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">白读</string>
+    <string name="app_name">百读</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -10,6 +10,16 @@
     <string name="search_edit_text_hint">请输入书名</string>
     <string name="search_text_history">历史搜索</string>
     <string name="search_item_author_text">作者:</string>
-    <string name="search_item_author_chapterLatest">最新:</string>
+    <string name="search_item_author_chapter_latest">最新:</string>
     <string name="search_item_author_source">来源:</string>
+    <string name="search_book_detail_button_read_text">立即阅读</string>
+    <string name="search_book_detail_button_bookcase_text">加入书架</string>
+    <string name="search_book_detail_button_cache_text">全本缓存</string>
+	
+	<string name="xlistview_header_hint_normal">下拉刷新</string>
+    <string name="xlistview_header_hint_ready">松开刷新数据</string>
+    <string name="xlistview_header_hint_loading">正在加载...</string>
+    <string name="xlistview_header_last_time">上次更新时间：</string>
+    <string name="xlistview_footer_hint_normal">查看更多</string>
+    <string name="xlistview_footer_hint_ready">松开载入更多</string>
 </resources>
