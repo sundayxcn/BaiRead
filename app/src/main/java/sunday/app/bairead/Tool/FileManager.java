@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -93,6 +94,35 @@ public class FileManager {
         }
         return list;
     }
+
+    public String readFile(String fileName){
+        String fileDirPath = PATH + "/" + DIR + "/" + fileName;
+        String string = null;
+
+        try{
+            File file = new File(fileDirPath);
+            InputStream inputStream = new FileInputStream(file);
+            InputStreamReader reader = new InputStreamReader(inputStream,"GBK");
+            BufferedReader buffReader= new BufferedReader(reader);
+            String  str = null;
+            while ((str = buffReader .readLine()) != null) {
+                string = string + str;
+            }
+            inputStream.close();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        try {
+//            String ss = new String(string.getBytes(),"UTF-8");
+//            string = ss;
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+
+        return string;
+    }
+
 
     public void writeFileByLine(String fileName,String name) throws IOException {
         String fileDirPath = PATH + "/" + DIR + "/" + fileName;

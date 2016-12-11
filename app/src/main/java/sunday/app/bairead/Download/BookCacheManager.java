@@ -1,4 +1,6 @@
-package sunday.app.bairead.Tool;
+package sunday.app.bairead.Download;
+
+import sunday.app.bairead.Download.OKhttpManager;
 
 /**
  * Created by sunday on 2016/12/8.

@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +24,6 @@ import java.util.ArrayList;
 import sunday.app.bairead.DataBase.BookDetail;
 import sunday.app.bairead.R;
 import sunday.app.bairead.Tool.FileManager;
-import sunday.app.bairead.Tool.SearchManager;
 import sunday.app.bairead.View.BookDetailView;
 import sunday.app.bairead.View.SearchLinkItemView;
 
@@ -62,8 +63,11 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                new SearchManager(SearchFragment.this).downloadEnd();
-
+//                new SearchManager(SearchFragment.this).downloadEnd();
+                    String s = FileManager.getInstance().readFile("11.html");
+                Spanned spanned = Html.fromHtml(s);
+                TextView textView = new TextView(getActivity());
+                textView.setText(spanned);
 //                if(NetworkTool.isNetworkConnect(getContext())){
 //                    String bookName = mEditText.getText().toString().trim();
 //                    if(bookName.length() > 0) {

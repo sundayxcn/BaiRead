@@ -1,4 +1,4 @@
-package sunday.app.bairead.Tool;
+package sunday.app.bairead.Download;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -8,6 +8,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import sunday.app.bairead.DataBase.BookDetail;
+import sunday.app.bairead.Parse.JsoupParse;
+import sunday.app.bairead.Tool.FileManager;
+import sunday.app.bairead.Tool.SearchHtmlParse;
+import sunday.app.bairead.Tool.SearchInfoParse;
 import sunday.app.bairead.UI.SearchFragment;
 
 /**
@@ -43,6 +47,11 @@ public class SearchManager extends OKhttpManager {
         String cUrl = url.substring(URL_CUT.length()) +".txt";
         String fileName = FileManager.PATH + "/" + FileManager.DIR + "/" + bookName+"/"+SEARCH_DIR + "/"+cUrl;
         FileManager.getInstance().writeByte(fileName,body);
+        //String text = new String(body);
+        //Spanned spanned = Html.fromHtml(text);
+        //TextView textView = new TextView(searchFragment.getActivity());
+        //textView.setText(spanned);
+
     }
 
     public void downloadEnd(){
@@ -68,6 +77,29 @@ public class SearchManager extends OKhttpManager {
 
 
     public void search(final String name) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                bookName = name;
+                try {
+                    bookName = name;
+                    Document document = Jsoup.connect(BAIDU + bookName).get();
+                    SearchHtmlParse searchHtmlParse = new SearchHtmlParse();
+                    ArrayList<String> searchLinkList = searchHtmlParse.parse(document);
+                    for(String link:searchLinkList){
+                        connectUrl(link);
+                    }
+                }catch (IOException e){
+                    e.printStackTrace();
+                }finally {
+                    downloadEnd();
+                }
+            }
+        }).start();
+
+    }
+
+    public void searchTopWeb(final String name) {
         new Thread(new Runnable() {
             @Override
             public void run() {

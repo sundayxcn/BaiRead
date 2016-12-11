@@ -1,4 +1,4 @@
-package sunday.app.bairead;
+package sunday.app.bairead.UI;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,16 +10,24 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import org.jsoup.examples.HtmlToPlainText;
 
 import java.util.ArrayList;
 
+import sunday.app.bairead.R;
 import sunday.app.bairead.Tool.NetworkTool;
 import sunday.app.bairead.UI.SearchFragment;
+import sunday.app.bairead.View.BookcaseView;
 import sunday.app.bairead.View.XListView;
 
 public class MainActivity extends AppCompatActivity
@@ -28,8 +36,8 @@ public class MainActivity extends AppCompatActivity
 
 
     private XListView mListView;
-    private ArrayAdapter<String> mAdapter;
-    private ArrayList<String> items = new ArrayList<String>();
+    private XlistAdapter mAdapter;
+    private ArrayList<BookcaseView> items = new ArrayList<>();
     private Handler mHandler;
     private int start = 0;
     private static int refreshCnt = 0;
@@ -65,9 +73,15 @@ public class MainActivity extends AppCompatActivity
         geneItems();
         mListView = (XListView) findViewById(R.id.xlist_view);
         mListView.setPullLoadEnable(false);
-        mAdapter = new ArrayAdapter<String>(this, R.layout.xlist_item, items);
+        mAdapter = new XlistAdapter();
         mListView.setAdapter(mAdapter);
         mListView.setXListViewListener(this);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Html.fromHtml()
+            }
+        });
         mHandler = new Handler();
 
 
@@ -158,7 +172,7 @@ public class MainActivity extends AppCompatActivity
 
     private void geneItems() {
         for (int i = 0; i != 20; ++i) {
-            items.add("refresh cnt " + (++start));
+            items.add(new BookcaseView(this));
         }
     }
 
@@ -177,7 +191,7 @@ public class MainActivity extends AppCompatActivity
                 items.clear();
                 geneItems();
                 // mAdapter.notifyDataSetChanged();
-                mAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.xlist_item, items);
+                mAdapter = new XlistAdapter();
                 mListView.setAdapter(mAdapter);
                 onLoad();
             }
@@ -195,4 +209,32 @@ public class MainActivity extends AppCompatActivity
             }
         }, 2000);
     }
+
+    public class XlistAdapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return items.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if(convertView == null){
+                BookcaseView bookcaseView = (BookcaseView) getLayoutInflater().inflate(R.layout.xlist_item,null);
+                convertView = bookcaseView;
+            }
+            return convertView;
+        }
+    }
+
 }

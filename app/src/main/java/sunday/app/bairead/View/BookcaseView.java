@@ -12,4 +12,8 @@ public class BookcaseView extends RelativeLayout {
     public BookcaseView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
+
+    public BookcaseView(Context context) {
+        super(context, null);
+    }
 }
