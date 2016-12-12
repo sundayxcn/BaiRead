@@ -9,6 +9,7 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import sunday.app.bairead.Tool.FileManager;
 
 /**
  * 下载html到本地
@@ -20,6 +21,12 @@ public class OKhttpManager{
 
     private void OKhttpManager() {
 
+    }
+
+
+    public interface ConnectListener{
+        void start(String url);
+        void end(String fileName);
     }
 
     public static OKhttpManager getInstance() {
@@ -34,29 +41,16 @@ public class OKhttpManager{
         return okHttpClient;
     }
 
-
-//    public void connectHtml(final String bookName) {
-//        downloadStart(bookName);
-//        final Request request = new Request.Builder().url(SearchManager.BAIDU+bookName).build();
-//        Call call = OKhttpManager.getInstance().getOkHttpClient().newCall(request);
-//        call.enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                Log.d("sunday", "OKHttp onFailure");
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                //if(response.h)
-//                String fileName = null;
-//                FileManager.getInstance().writeBookSearch(bookName, response.body().bytes());
-//                downloadEnd(fileName);
-//            }
-//        });
-//    }
-
-    public void connectUrl(final String url) {
-        connectStart(url);
+    /**
+     * 下载网址源码
+     * @param url 网站地址
+     * @param fileName 保存的文件地址
+     * @param connectListener 下载过程的回调
+     * */
+    public void connectUrl(final String url,final String fileName,final ConnectListener connectListener) {
+        if(connectListener != null){
+            connectListener.start(url);
+        }
         final Request request = new Request.Builder().url(url).build();
         Call call = OKhttpManager.getInstance().getOkHttpClient().newCall(request);
         call.enqueue(new Callback() {
@@ -67,20 +61,11 @@ public class OKhttpManager{
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                //if(response.h)
-                //String fileName = null;
-                //FileManager.getInstance().writeBookSearch(response.body().bytes());
-                connectEnd(url,response.body().bytes());
+                if(connectListener != null){
+                    FileManager.getInstance().writeByte(fileName,response.body().bytes());
+                    connectListener.end(fileName);
+                }
             }
         });
-    }
-
-
-    public void connectStart(String url) {
-        //弹出loading等待框
-    }
-
-    public void connectEnd(String url,byte[] responseBody) {
-
     }
 }

@@ -28,7 +28,7 @@ public class BookReadFragment extends Fragment {
     }
 
     public void setBookDetail(BookDetail bookDetail){
-        String chapterUrl = bookDetail.chapterUrl;
+        //String chapterUrl = bookDetail.chapterUrl;
     }
 
     public void read(){

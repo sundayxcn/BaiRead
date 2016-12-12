@@ -1,17 +1,14 @@
 package sunday.app.bairead.Download;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import sunday.app.bairead.DataBase.BookDetail;
+import sunday.app.bairead.DataBase.BookSource;
+import sunday.app.bairead.DataBase.WebInfo;
+import sunday.app.bairead.Parse.BaiduSearchParse;
+import sunday.app.bairead.Parse.BookSourceParse;
 import sunday.app.bairead.Parse.JsoupParse;
 import sunday.app.bairead.Tool.FileManager;
-import sunday.app.bairead.Tool.SearchHtmlParse;
-import sunday.app.bairead.Tool.SearchInfoParse;
 import sunday.app.bairead.UI.SearchFragment;
 
 /**
@@ -21,105 +18,56 @@ import sunday.app.bairead.UI.SearchFragment;
 public class SearchManager extends OKhttpManager {
 
     public static final String SEARCH_DIR = "search";
-    public static final String BAIDU = "http://www.baidu.com/s?tn=baiduhome_pg&rn=50&wd=";
-    public static final String URL_CUT = "http://www.baidu.com/link?url=";
+
     private SearchFragment searchFragment;
+    private String bookName;
+    private BookDetail bookDetail;
+    private BookSource bookSource;
 
     public SearchManager(SearchFragment fragment){
         searchFragment = fragment;
     }
 
-
-
-    private String bookName = "重生完美时代";
-
-    private String url;
-
-    @Override
-    public void connectStart(String url) {
-        FileManager.getInstance().createDir(bookName+"/"+SEARCH_DIR);
-    }
-
-    //private int index = 100;
-
-    @Override
-    public void connectEnd(String url,byte[] body) {
-        String cUrl = url.substring(URL_CUT.length()) +".txt";
-        String fileName = FileManager.PATH + "/" + FileManager.DIR + "/" + bookName+"/"+SEARCH_DIR + "/"+cUrl;
-        FileManager.getInstance().writeByte(fileName,body);
-        //String text = new String(body);
-        //Spanned spanned = Html.fromHtml(text);
-        //TextView textView = new TextView(searchFragment.getActivity());
-        //textView.setText(spanned);
-
-    }
-
-    public void downloadEnd(){
-        String dirName = FileManager.PATH + "/" + FileManager.DIR + "/" + bookName+"/"+SEARCH_DIR;
-        File dir = new File(dirName);
-        File[] files = dir.listFiles();
-        final SearchInfoParse searchInfoParse = new SearchInfoParse();
-        for(final File file : files){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    BookDetail bookDetail = JsoupParse.from(file,searchInfoParse);
-                    if(bookDetail.isValid()) {
-
-                        searchFragment.refreshSearchResult(bookDetail);
-                    }
-                }
-            }).start();
-
-        }
-
-    }
-
-
-    public void search(final String name) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                bookName = name;
-                try {
-                    bookName = name;
-                    Document document = Jsoup.connect(BAIDU + bookName).get();
-                    SearchHtmlParse searchHtmlParse = new SearchHtmlParse();
-                    ArrayList<String> searchLinkList = searchHtmlParse.parse(document);
-                    for(String link:searchLinkList){
-                        connectUrl(link);
-                    }
-                }catch (IOException e){
-                    e.printStackTrace();
-                }finally {
-                    downloadEnd();
-                }
-            }
-        }).start();
-
-    }
-
     public void searchTopWeb(final String name) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                bookName = name;
-                try {
-                    bookName = name;
-                    Document document = Jsoup.connect(BAIDU + bookName).get();
-                    SearchHtmlParse searchHtmlParse = new SearchHtmlParse();
-                    ArrayList<String> searchLinkList = searchHtmlParse.parse(document);
-                    for(String link:searchLinkList){
-                        connectUrl(link);
-                    }
-                }catch (IOException e){
-                    e.printStackTrace();
-                }finally {
-                    downloadEnd();
-                }
-            }
-        }).start();
+        bookName = name;
+        String webName = WebInfo.TOP_WEB[0][0];
+        String webLink = WebInfo.TOP_WEB[0][1];
+        String webSearchLink = WebInfo.TOP_WEB[0][2];
+        WebInfo webInfo = new WebInfo(webName,webLink,webSearchLink);
 
+        String fileDir = FileManager.PATH +"/"+bookName+"/"+SEARCH_DIR;
+        FileManager.getInstance().createDir(fileDir);
+        String fileName = fileDir + "/"+"search.txt";
+
+        connectUrl(webInfo.getLink() + bookName, fileName,new ConnectListener() {
+            @Override
+            public void start(String url) {
+
+            }
+
+            @Override
+            public void end(String fileName) {
+                HashMap<String,String> hashMap =  JsoupParse.from(fileName,new BaiduSearchParse());
+                String chapterLink = hashMap.get(bookName);
+                downloadChapterLink(chapterLink);
+            }
+        });
     }
 
+    private void downloadChapterLink(String link){
+        if(link != null){
+            final String chapterFile = FileManager.PATH +"/"+bookName+"/" + "chapter.txt";
+            connectUrl(link, chapterFile, new ConnectListener() {
+                @Override
+                public void start(String url) {
+
+                }
+
+                @Override
+                public void end(String fileName) {
+                    JsoupParse.from(chapterFile,new BookSourceParse());
+                }
+            });
+        }
+    }
 }

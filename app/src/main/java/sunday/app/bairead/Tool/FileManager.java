@@ -22,8 +22,8 @@ import java.util.regex.Pattern;
  * eidt Created by sunday on 2016/6/27.
  */
 public class FileManager {
-    public static final String PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static final String DIR = "BaiRead";
+    public static final String PATH = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+DIR;
     public static final String TAG = "snuday";
     public static final String UTF8 = "UTF-8";
     public static final String GB2312 = "gb2312";
@@ -45,7 +45,7 @@ public class FileManager {
 
     public boolean createDir() {
 
-        File file = new File(PATH + "/" + DIR);
+        File file = new File(PATH);
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -55,7 +55,7 @@ public class FileManager {
 
     public boolean createDir(String dirPath) {
 
-        File file = new File(PATH + "/" + DIR +"/"+ dirPath);
+        File file = new File(PATH +"/"+ dirPath);
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -78,7 +78,7 @@ public class FileManager {
 
     public ArrayList<String> readFileByLine(String fileName){
         ArrayList<String> list = new ArrayList<>();
-        String fileDirPath = PATH + "/" + DIR + "/" + fileName;
+        String fileDirPath = PATH + "/" + fileName;
         try{
             File file = new File(fileDirPath);
             InputStream inputStream = new FileInputStream(file);
@@ -96,7 +96,7 @@ public class FileManager {
     }
 
     public String readFile(String fileName){
-        String fileDirPath = PATH + "/" + DIR + "/" + fileName;
+        String fileDirPath = PATH + "/" + fileName;
         String string = null;
 
         try{
@@ -125,7 +125,7 @@ public class FileManager {
 
 
     public void writeFileByLine(String fileName,String name) throws IOException {
-        String fileDirPath = PATH + "/" + DIR + "/" + fileName;
+        String fileDirPath = PATH + "/" + fileName;
         File file = new File(fileDirPath);
 
         if(!file.exists()){

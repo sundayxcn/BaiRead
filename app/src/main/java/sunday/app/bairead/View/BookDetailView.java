@@ -53,7 +53,7 @@ public class BookDetailView extends LinearLayout {
 
     public void setDetail(BookDetail bookDetail){
         mDescriptionTView.setText(bookDetail.description);
-        mTimeTView.setText(bookDetail.chapterTime);
+        //mTimeTView.setText(bookDetail.chapterTime);
     }
 
     public void animatorShow(boolean animator){

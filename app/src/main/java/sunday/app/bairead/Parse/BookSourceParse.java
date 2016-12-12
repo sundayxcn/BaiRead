@@ -1,4 +1,4 @@
-package sunday.app.bairead.Tool;
+package sunday.app.bairead.Parse;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -7,11 +7,15 @@ import org.jsoup.select.Elements;
 import java.util.HashMap;
 
 import sunday.app.bairead.DataBase.BookDetail;
+import sunday.app.bairead.DataBase.BookSource;
 
-public class SearchInfoParse extends DocumentParse {
-    //private ArrayList<SearchLinkInfo> list = new ArrayList<>();
+public class BookSourceParse extends HtmlParse{
+
     @Override
-    public BookDetail parse(Document document) {
+    public BookSource parse(Document document) {
+
+        BookSource bookSource = new BookSource();
+
         //获取meta标签属性-start
         HashMap<String ,String> metaMap = new HashMap<>();
         Elements elements =  document.select("meta");
@@ -35,11 +39,13 @@ public class SearchInfoParse extends DocumentParse {
         String title = ar[ar.length - 1];
         //获取网站名称-end
 
-        BookDetail.Builder builder = new BookDetail.Builder(metaMap)
-                .setSourceName(title);
+        BookDetail.Builder builder = new BookDetail.Builder(metaMap);
         //builder.setSourceName();
 
-        return builder.build();
+        return bookSource;
     }
 
+//    private void downloadChapter(){
+//
+//    }
 }

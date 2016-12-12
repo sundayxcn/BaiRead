@@ -18,7 +18,7 @@ public  class WebInfo{
     public static final int CUS_ID = 2;
 
     public static final String[][] TOP_WEB= {
-            {"笔趣阁","http://www.biquge.com/","287293036948159515"},
+            {"笔趣阁","http://www.biquge.com/","http://zhannei.baidu.com/cse/search?s=287293036948159515&q="},
             {"新笔趣阁","http://www.xxbiquge.com/","8823758711381329060"},
             {"顶点小说","http://www.23wx.com/","15772447660171623812"},
             {"假顶点小说","http://www.23us.so/","17233375349940438896"},
@@ -28,13 +28,13 @@ public  class WebInfo{
 
     private String name;
     private String link;
-    private String cusId;
+    private String searchLink;
+    private HtmlParse htmlParse;
 
-
-    public WebInfo(String name,String link,String cusId){
+    public WebInfo(String name,String link,String searchLink){
         this.name = name;
         this.link = link;
-        this.cusId = cusId;
+        this.searchLink = searchLink;
     }
 
 
@@ -43,14 +43,10 @@ public  class WebInfo{
     }
 
     public String getLink(){
-        return link;
+        return searchLink;
     }
 
-    public String getCusId(){
-        return cusId;
-    }
 
-    private HtmlParse htmlParse;
 
     public void setParse(HtmlParse htmlParse){
         this.htmlParse = htmlParse;

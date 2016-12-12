@@ -17,13 +17,16 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import sunday.app.bairead.DataBase.BookDetail;
+import sunday.app.bairead.Download.SearchManager;
 import sunday.app.bairead.R;
 import sunday.app.bairead.Tool.FileManager;
+import sunday.app.bairead.Tool.NetworkTool;
 import sunday.app.bairead.View.BookDetailView;
 import sunday.app.bairead.View.SearchLinkItemView;
 
@@ -64,19 +67,19 @@ public class SearchFragment extends Fragment {
             public void onClick(View v) {
 
 //                new SearchManager(SearchFragment.this).downloadEnd();
-                    String s = FileManager.getInstance().readFile("11.html");
-                Spanned spanned = Html.fromHtml(s);
-                TextView textView = new TextView(getActivity());
-                textView.setText(spanned);
-//                if(NetworkTool.isNetworkConnect(getContext())){
-//                    String bookName = mEditText.getText().toString().trim();
-//                    if(bookName.length() > 0) {
-//                        searchHistory.addHistory(bookName);
-//                        new SearchManager(SearchFragment.this).search(bookName);
-//                    }
-//                }else{
-//                    Toast.makeText(getContext(),"open the network",Toast.LENGTH_SHORT).show();
-//                }
+//                    String s = FileManager.getInstance().readFile("11.html");
+//                Spanned spanned = Html.fromHtml(s);
+//                TextView textView = new TextView(getActivity());
+//                textView.setText(spanned);
+                if(NetworkTool.isNetworkConnect(getContext())){
+                    String bookName = mEditText.getText().toString().trim();
+                    if(bookName.length() > 0) {
+                        searchHistory.addHistory(bookName);
+                        new SearchManager(SearchFragment.this).searchTopWeb(bookName);
+                    }
+                }else{
+                    Toast.makeText(getContext(),"open the network",Toast.LENGTH_SHORT).show();
+                }
 
 
             }
@@ -242,8 +245,13 @@ public class SearchFragment extends Fragment {
 
         public void addHistory(String bookName){
             try {
-                FileManager.getInstance().writeFileByLine(FILE_NAME, bookName);
-                mHistoryList.add(0,bookName);
+                if(mHistoryList.contains(bookName)){
+                    mHistoryList.remove(bookName);
+                    mHistoryList.add(0, bookName);
+                }else {
+                    FileManager.getInstance().writeFileByLine(FILE_NAME, bookName);
+                    mHistoryList.add(0, bookName);
+                }
             }catch (IOException e){
                 e.printStackTrace();
             }finally {
