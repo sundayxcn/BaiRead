@@ -19,10 +19,10 @@ public  class WebInfo{
 
     public static final String[][] TOP_WEB= {
             {"笔趣阁","http://www.biquge.com/","http://zhannei.baidu.com/cse/search?s=287293036948159515&q="},
-            {"新笔趣阁","http://www.xxbiquge.com/","8823758711381329060"},
-            {"顶点小说","http://www.23wx.com/","15772447660171623812"},
-            {"假顶点小说","http://www.23us.so/","17233375349940438896"},
-            {"无错小说","http://www.quledu.com/","14724046118796340648"},
+            {"新笔趣阁","http://www.xxbiquge.com/","http://zhannei.baidu.com/cse/search?s=8823758711381329060&q="},
+            {"顶点小说","http://www.23wx.com/","http://zhannei.baidu.com/cse/search?s=15772447660171623812&q="},
+            {"假顶点小说","http://www.23us.so/","http://zhannei.baidu.com/cse/search?s=17233375349940438896&q="},
+            {"无错小说","http://www.quledu.com/","http://zhannei.baidu.com/cse/search?s=14724046118796340648&q="},
             };
 
 

@@ -6,6 +6,7 @@ import sunday.app.bairead.DataBase.BookDetail;
 import sunday.app.bairead.DataBase.BookSource;
 import sunday.app.bairead.DataBase.WebInfo;
 import sunday.app.bairead.Parse.BaiduSearchParse;
+import sunday.app.bairead.Parse.BookDetailParse;
 import sunday.app.bairead.Parse.BookSourceParse;
 import sunday.app.bairead.Parse.JsoupParse;
 import sunday.app.bairead.Tool.FileManager;
@@ -37,7 +38,7 @@ public class SearchManager extends OKhttpManager {
 
         String fileDir = FileManager.PATH +"/"+bookName+"/"+SEARCH_DIR;
         FileManager.getInstance().createDir(fileDir);
-        String fileName = fileDir + "/"+"search.txt";
+        String fileName = fileDir + "/"+"search.html";
 
         connectUrl(webInfo.getLink() + bookName, fileName,new ConnectListener() {
             @Override
@@ -56,7 +57,7 @@ public class SearchManager extends OKhttpManager {
 
     private void downloadChapterLink(String link){
         if(link != null){
-            final String chapterFile = FileManager.PATH +"/"+bookName+"/" + "chapter.txt";
+            final String chapterFile = FileManager.PATH +"/"+bookName+"/" + "chapter.html";
             connectUrl(link, chapterFile, new ConnectListener() {
                 @Override
                 public void start(String url) {
@@ -65,7 +66,8 @@ public class SearchManager extends OKhttpManager {
 
                 @Override
                 public void end(String fileName) {
-                    JsoupParse.from(chapterFile,new BookSourceParse());
+                    bookDetail = JsoupParse.from(chapterFile,new BookDetailParse());
+                    bookSource  = JsoupParse.from(chapterFile,new BookSourceParse());
                 }
             });
         }

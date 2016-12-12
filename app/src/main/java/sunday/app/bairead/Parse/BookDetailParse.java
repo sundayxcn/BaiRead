@@ -35,7 +35,6 @@ public class BookDetailParse extends HtmlParse {
         //获取网站名称-end
 
         BookDetail.Builder builder = new BookDetail.Builder(metaMap);
-        //builder.setSourceName();
 
         return builder.build();
     }
