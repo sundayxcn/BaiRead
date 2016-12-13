@@ -8,35 +8,84 @@ package sunday.app.bairead.DataBase;
  * 按行读取，第一行为第一章
  */
 
-public class BookSource {
+public class BookSource extends BookInfo{
 
     /**
      * 章节目录页
      */
-    public String chapterLink;
-
-    /**
-     * 最后更新时间
-     */
-    public String chapterTime;
-
-    /**
-     * 书签
-     * */
-    public int bookMark;
+    private String chapterLink;
 
     /**
      * 章节总数
      * */
-    public int chapterCount;
+    private int chapterCount;
 
     /**
      * 阅读章节
      * */
-    public int chapterIndex;
+    private int chapterIndex;
 
     /**
      * 当前阅读源
      * */
-    public boolean current;
+    private boolean current;
+
+
+    public static class Builder{
+        private String chapterLink;
+        private int chapterCount;
+        private int chapterIndex;
+        private boolean current;
+        public Builder(){
+
+        }
+
+        public Builder setChapterLink(String chapterLink) {
+            this.chapterLink = chapterLink;
+            return this;
+        }
+
+        public Builder setChapterCount(int chapterCount) {
+            this.chapterCount = chapterCount;
+            return this;
+        }
+
+        public Builder setChapterIndex(int chapterIndex) {
+            this.chapterIndex = chapterIndex;
+            return this;
+        }
+
+        public Builder setCurrent(boolean current) {
+            this.current = current;
+            return this;
+        }
+
+        public BookSource build(){
+            return new BookSource(this);
+        }
+
+    }
+
+    private BookSource(Builder builder){
+        this.chapterLink = builder.chapterLink;
+        this.chapterCount = builder.chapterCount;
+        this.chapterIndex = builder.chapterIndex;
+        this.current = builder.current;
+    }
+
+    public int getChapterIndex() {
+        return chapterIndex;
+    }
+
+    public int getChapterCount() {
+        return chapterCount;
+    }
+
+    public String getChapterLink() {
+        return chapterLink;
+    }
+
+    public boolean isCurrent() {
+        return current;
+    }
 }

@@ -33,7 +33,7 @@ import sunday.app.bairead.View.SearchLinkItemView;
 /**
  * Created by sunday on 2016/12/2.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements View.OnClickListener {
 
     private ImageButton mButtonBack;
     private Button mButtonSearch;
@@ -62,28 +62,7 @@ public class SearchFragment extends Fragment {
 
 
         mButtonSearch = (Button) view.findViewById(R.id.search_fragment_button_search);
-        mButtonSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-//                new SearchManager(SearchFragment.this).downloadEnd();
-//                    String s = FileManager.getInstance().readFile("11.html");
-//                Spanned spanned = Html.fromHtml(s);
-//                TextView textView = new TextView(getActivity());
-//                textView.setText(spanned);
-                if(NetworkTool.isNetworkConnect(getContext())){
-                    String bookName = mEditText.getText().toString().trim();
-                    if(bookName.length() > 0) {
-                        searchHistory.addHistory(bookName);
-                        new SearchManager(SearchFragment.this).searchTopWeb(bookName);
-                    }
-                }else{
-                    Toast.makeText(getContext(),"open the network",Toast.LENGTH_SHORT).show();
-                }
-
-
-            }
-        });
+        mButtonSearch.setOnClickListener(this);
 
         mEditText = (EditText) view.findViewById(R.id.search_fragment_edit_text);
 
@@ -98,7 +77,10 @@ public class SearchFragment extends Fragment {
                     bookDetailView.setDetail((BookDetail) searchLinkItemView.getTag());
                     bookDetailView.animatorShow(false);
                 }else{
-
+                    TextView textView = (TextView) view;
+                    CharSequence text = textView.getText();
+                    mEditText.setText(text);
+                    onClick(null);
                 }
             }
         });
@@ -145,6 +127,18 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onClick(View v) {
+        if(NetworkTool.isNetworkConnect(getContext())){
+            String bookName = mEditText.getText().toString().trim();
+            if(bookName.length() > 0) {
+                searchHistory.addHistory(bookName);
+                new SearchManager(SearchFragment.this).searchTopWeb(bookName);
+            }
+        }else{
+            Toast.makeText(getContext(),"open the network",Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     class SearchLinkAdapter extends BaseAdapter{

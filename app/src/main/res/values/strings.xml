@@ -10,7 +10,8 @@
     <string name="search_edit_text_hint">请输入书名</string>
     <string name="search_text_history">历史搜索</string>
     <string name="search_item_author_text">作者:</string>
-    <string name="search_item_author_chapter_latest">最新:</string>
+    <string name="search_item_author_chapter_latest">最新章节:</string>
+    <string name="search_item_author_update_time">最后更新:</string>
     <string name="search_item_author_source">来源:</string>
     <string name="search_book_detail_button_read_text">立即阅读</string>
     <string name="search_book_detail_button_bookcase_text">加入书架</string>

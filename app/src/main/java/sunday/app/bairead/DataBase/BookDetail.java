@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class BookDetail {
+public class BookDetail extends BookInfo{
 
     /**
      * Html meta标签对应的我们有用的属性
@@ -44,10 +44,7 @@ public class BookDetail {
 
     }
 
-    /**
-     * 数据库对应每本书一个唯一id
-     * */
-    long id;
+
     /**
      * 书名
      */
@@ -108,10 +105,6 @@ public class BookDetail {
 
     public String getUpdate_time() {
         return update_time;
-    }
-
-    public long getId() {
-        return id;
     }
 
 }

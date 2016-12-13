@@ -42,10 +42,10 @@ public class SearchLinkItemView extends LinearLayout{
 
     public void setInfo(BookDetail info){
         nameTView.setText(nameTView.getText()+info.getName()+" | "+authorTView.getText()+info.getAuthor());
-        //authorTView.setText(authorTView.getText()+info.author);
-//        sourceTView.setText(sourceTView.getText()+info.sourceName);
-//        chapterLatestTView.setText(chapterLatestTView.getText()+info.chapterLatest);
-//        chapterTimeTView.setText(chapterTimeTView.getText()+info.chapterTime);
+        //authorTView.setText(authorTView.getText());
+        //sourceTView.setText(sourceTView.getText()+info.get);
+        chapterLatestTView.setText(chapterLatestTView.getText()+info.getChapter_latest());
+        chapterTimeTView.setText(chapterTimeTView.getText()+info.getUpdate_time());
 
         setTag(info);
     }

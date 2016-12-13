@@ -6,7 +6,6 @@ import org.jsoup.select.Elements;
 
 import java.util.HashMap;
 
-import sunday.app.bairead.DataBase.BookDetail;
 import sunday.app.bairead.DataBase.BookSource;
 
 public class BookSourceParse extends HtmlParse{
@@ -14,7 +13,7 @@ public class BookSourceParse extends HtmlParse{
     @Override
     public BookSource parse(Document document) {
 
-        BookSource bookSource = new BookSource();
+        BookSource.Builder builder = new BookSource.Builder();
 
         //获取meta标签属性-start
         HashMap<String ,String> metaMap = new HashMap<>();
@@ -39,10 +38,10 @@ public class BookSourceParse extends HtmlParse{
         String title = ar[ar.length - 1];
         //获取网站名称-end
 
-        BookDetail.Builder builder = new BookDetail.Builder(metaMap);
+        //BookDetail.Builder builder = new BookDetail.Builder(metaMap);
         //builder.setSourceName();
 
-        return bookSource;
+        return builder.build();
     }
 
 //    private void downloadChapter(){

@@ -67,9 +67,11 @@ public class SearchManager extends OKhttpManager {
                 @Override
                 public void end(String fileName) {
                     bookDetail = JsoupParse.from(chapterFile,new BookDetailParse());
+                    searchFragment.refreshSearchResult(bookDetail);
                     bookSource  = JsoupParse.from(chapterFile,new BookSourceParse());
                 }
             });
         }
     }
+
 }
