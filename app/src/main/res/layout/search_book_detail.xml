@@ -11,15 +11,17 @@
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/search_fragment_list_item_chapter_text_size"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/search_fragment_book_detail_description_height"/>
+        android:layout_height="wrap_content"/>
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/search_book_detail_chapter_latest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/search_book_detail_chapter_time"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

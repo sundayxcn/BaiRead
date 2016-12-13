@@ -44,8 +44,8 @@ public class SearchLinkItemView extends LinearLayout{
         nameTView.setText(nameTView.getText()+info.getName()+" | "+authorTView.getText()+info.getAuthor());
         //authorTView.setText(authorTView.getText());
         //sourceTView.setText(sourceTView.getText()+info.get);
-        chapterLatestTView.setText(chapterLatestTView.getText()+info.getChapter_latest());
-        chapterTimeTView.setText(chapterTimeTView.getText()+info.getUpdate_time());
+        chapterLatestTView.setText(chapterLatestTView.getText()+info.getChapterLatest());
+        chapterTimeTView.setText(chapterTimeTView.getText()+info.getUpdateTime());
 
         setTag(info);
     }

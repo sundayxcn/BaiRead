@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (getFragmentManager().getBackStackEntryCount() > 0) {
-            searchFragment.hide();
+            searchFragment.back();
         } else {
             super.onBackPressed();
         }

@@ -74,4 +74,13 @@ public class SearchManager extends OKhttpManager {
         }
     }
 
+
+    public void debugDetail(String name){
+        final String chapterFile = FileManager.PATH +"/"+name+"/" + "chapter.html";
+        bookDetail = JsoupParse.from(chapterFile,new BookDetailParse());
+        searchFragment.refreshSearchResult(bookDetail);
+        bookChapter  = JsoupParse.from(chapterFile,new BookChapterParse());
+    }
+
+
 }

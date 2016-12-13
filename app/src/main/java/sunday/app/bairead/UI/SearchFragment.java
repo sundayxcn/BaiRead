@@ -110,6 +110,15 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         fragmentManager.popBackStack();
     }
 
+    public void back(){
+        if(bookDetailView.getVisibility() == View.VISIBLE){
+            bookDetailView.animatorHide(false);
+        }else{
+            hide();
+        }
+    }
+
+
     /**
      * 点击搜索按钮后显示搜索结果
      * 点击按钮->OKHttp异步下载搜索结果->调用此方法
@@ -133,7 +142,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             String bookName = mEditText.getText().toString().trim();
             if(bookName.length() > 0) {
                 searchHistory.addHistory(bookName);
-                new SearchManager(SearchFragment.this).searchTopWeb(bookName);
+
+                new SearchManager(SearchFragment.this).debugDetail(bookName);
+                ///new SearchManager(SearchFragment.this).searchTopWeb(bookName);
             }
         }else{
             Toast.makeText(getContext(),"open the network",Toast.LENGTH_SHORT).show();
