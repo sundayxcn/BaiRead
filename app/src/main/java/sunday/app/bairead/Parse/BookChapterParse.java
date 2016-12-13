@@ -6,14 +6,15 @@ import org.jsoup.select.Elements;
 
 import java.util.HashMap;
 
-import sunday.app.bairead.DataBase.BookSource;
+import sunday.app.bairead.DataBase.BookChapter;
 
-public class BookSourceParse extends HtmlParse{
+
+public class BookChapterParse extends HtmlParse{
 
     @Override
-    public BookSource parse(Document document) {
+    public BookChapter parse(Document document) {
 
-        BookSource.Builder builder = new BookSource.Builder();
+        BookChapter.Builder builder = new BookChapter.Builder();
 
         //获取meta标签属性-start
         HashMap<String ,String> metaMap = new HashMap<>();

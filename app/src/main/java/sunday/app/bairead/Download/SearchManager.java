@@ -2,12 +2,12 @@ package sunday.app.bairead.Download;
 
 import java.util.HashMap;
 
+import sunday.app.bairead.DataBase.BookChapter;
 import sunday.app.bairead.DataBase.BookDetail;
-import sunday.app.bairead.DataBase.BookSource;
 import sunday.app.bairead.DataBase.WebInfo;
 import sunday.app.bairead.Parse.BaiduSearchParse;
+import sunday.app.bairead.Parse.BookChapterParse;
 import sunday.app.bairead.Parse.BookDetailParse;
-import sunday.app.bairead.Parse.BookSourceParse;
 import sunday.app.bairead.Parse.JsoupParse;
 import sunday.app.bairead.Tool.FileManager;
 import sunday.app.bairead.UI.SearchFragment;
@@ -23,7 +23,7 @@ public class SearchManager extends OKhttpManager {
     private SearchFragment searchFragment;
     private String bookName;
     private BookDetail bookDetail;
-    private BookSource bookSource;
+    private BookChapter bookChapter;
 
     public SearchManager(SearchFragment fragment){
         searchFragment = fragment;
@@ -68,7 +68,7 @@ public class SearchManager extends OKhttpManager {
                 public void end(String fileName) {
                     bookDetail = JsoupParse.from(chapterFile,new BookDetailParse());
                     searchFragment.refreshSearchResult(bookDetail);
-                    bookSource  = JsoupParse.from(chapterFile,new BookSourceParse());
+                    bookChapter  = JsoupParse.from(chapterFile,new BookChapterParse());
                 }
             });
         }

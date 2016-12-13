@@ -18,9 +18,9 @@ public class BookDetailView extends LinearLayout {
 
     private TextView mDescriptionTView;
     private TextView mTimeTView;
-//    private Button mReadBView;
-//    private Button mBookcaseBView;
-//    private Button mCacheBView;
+    private Button mReadBView;
+    private Button mBookcaseBView;
+    private Button mCacheBView;
 
     public BookDetailView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -37,9 +37,9 @@ public class BookDetailView extends LinearLayout {
     public void setupView(){
         mDescriptionTView  = (TextView) findViewById(R.id.search_book_detail_description);
         mTimeTView = (TextView) findViewById(R.id.search_book_detail_chapter_time);
-//        mReadBView = (Button) findViewById(R.id.search_book_detail_button_read);
-//        mBookcaseBView = (Button) findViewById(R.id.search_book_detail_button_bookcase);
-//        mCacheBView = (Button) findViewById(R.id.search_book_detail_button_cache);
+        mReadBView = (Button) findViewById(R.id.search_book_detail_button_read);
+        mBookcaseBView = (Button) findViewById(R.id.search_book_detail_button_bookcase);
+        mCacheBView = (Button) findViewById(R.id.search_book_detail_button_cache);
         int count = getChildCount();
         for(int i = 0 ; i< count;i++){
             View view = getChildAt(i);
@@ -53,7 +53,7 @@ public class BookDetailView extends LinearLayout {
 
     public void setDetail(BookDetail bookDetail){
         mDescriptionTView.setText(bookDetail.getDescription());
-        //mTimeTView.setText(bookDetail.chapterTime);
+        mTimeTView.setText(bookDetail.getUpdateTime());
     }
 
     public void animatorShow(boolean animator){

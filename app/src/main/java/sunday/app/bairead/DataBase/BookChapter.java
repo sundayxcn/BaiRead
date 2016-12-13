@@ -8,7 +8,7 @@ package sunday.app.bairead.DataBase;
  * 按行读取，第一行为第一章
  */
 
-public class BookSource extends BookInfo{
+public class BookChapter extends BookInfo{
 
     /**
      * 章节目录页
@@ -60,13 +60,13 @@ public class BookSource extends BookInfo{
             return this;
         }
 
-        public BookSource build(){
-            return new BookSource(this);
+        public BookChapter build(){
+            return new BookChapter(this);
         }
 
     }
 
-    private BookSource(Builder builder){
+    private BookChapter(Builder builder){
         this.chapterLink = builder.chapterLink;
         this.chapterCount = builder.chapterCount;
         this.chapterIndex = builder.chapterIndex;

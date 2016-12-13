@@ -25,8 +25,8 @@ public class BookDetail extends BookInfo{
         private String author;
         private String coverImageLink;
         private String description;
-        private String chapter_latest;
-        private String update_time;
+        private String chapterLatest;
+        private String updateTime;
 
 
         public Builder(HashMap metaMap) {
@@ -34,8 +34,8 @@ public class BookDetail extends BookInfo{
             author = (String) metaMap.get(Meta.AUTHOR);
             description = (String) metaMap.get(Meta.DESCRIPTION);
             coverImageLink = (String) metaMap.get(Meta.IMAGE);
-            chapter_latest = (String) metaMap.get(Meta.CHAPTER_LATEST);
-            update_time = (String) metaMap.get(Meta.UPDATE_TIME);
+            chapterLatest = (String) metaMap.get(Meta.CHAPTER_LATEST);
+            updateTime = (String) metaMap.get(Meta.UPDATE_TIME);
         }
 
         public BookDetail build() {
@@ -67,20 +67,20 @@ public class BookDetail extends BookInfo{
     /**
      * 最新章节
      * */
-    private String chapter_latest;
+    private String chapterLatest;
 
     /**
      * 最后更新时间
      * */
-    private String update_time;
+    private String updateTime;
 
     private BookDetail(Builder builder) {
         this.name = builder.name;
         this.author = builder.author;
         this.coverImageLink = builder.coverImageLink;
         this.description = builder.description;
-        this.chapter_latest = builder.chapter_latest;
-        this.update_time = builder.update_time;
+        this.chapterLatest = builder.chapterLatest;
+        this.updateTime = builder.updateTime;
     }
 
     public String getName(){
@@ -91,8 +91,8 @@ public class BookDetail extends BookInfo{
         return author;
     }
 
-    public String getChapter_latest() {
-        return chapter_latest;
+    public String getChapterLatest() {
+        return chapterLatest;
     }
 
     public String getCoverImageLink() {
@@ -103,8 +103,8 @@ public class BookDetail extends BookInfo{
         return description;
     }
 
-    public String getUpdate_time() {
-        return update_time;
+    public String getUpdateTime() {
+        return updateTime;
     }
 
 }
