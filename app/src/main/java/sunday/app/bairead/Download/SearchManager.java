@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import sunday.app.bairead.DataBase.BookChapter;
 import sunday.app.bairead.DataBase.BookDetail;
+import sunday.app.bairead.DataBase.BookInfo;
 import sunday.app.bairead.DataBase.WebInfo;
 import sunday.app.bairead.Parse.BaiduSearchParse;
 import sunday.app.bairead.Parse.BookChapterParse;
@@ -66,9 +67,10 @@ public class SearchManager extends OKhttpManager {
 
                 @Override
                 public void end(String fileName) {
-                    bookDetail = JsoupParse.from(chapterFile,new BookDetailParse());
-                    searchFragment.refreshSearchResult(bookDetail);
-                    bookChapter  = JsoupParse.from(chapterFile,new BookChapterParse());
+                    BookInfo bookInfo = new BookInfo();
+                    bookInfo.bookDetail = JsoupParse.from(chapterFile,new BookDetailParse());
+                    bookInfo.bookChapter  = JsoupParse.from(chapterFile,new BookChapterParse());
+                    searchFragment.refreshSearchResult(bookInfo);
                 }
             });
         }
@@ -77,8 +79,9 @@ public class SearchManager extends OKhttpManager {
 
     public void debugDetail(String name){
         final String chapterFile = FileManager.PATH +"/"+name+"/" + "chapter.html";
-        bookDetail = JsoupParse.from(chapterFile,new BookDetailParse());
-        searchFragment.refreshSearchResult(bookDetail);
+        BookInfo bookInfo = new BookInfo();
+        bookInfo.bookDetail = JsoupParse.from(chapterFile,new BookDetailParse());
+        searchFragment.refreshSearchResult(bookInfo);
         bookChapter  = JsoupParse.from(chapterFile,new BookChapterParse());
     }
 

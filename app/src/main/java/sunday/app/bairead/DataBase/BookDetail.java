@@ -1,11 +1,13 @@
 package sunday.app.bairead.DataBase;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class BookDetail extends BookInfo{
+public class BookDetail{
 
     /**
      * Html meta标签对应的我们有用的属性
@@ -44,6 +46,10 @@ public class BookDetail extends BookInfo{
 
     }
 
+    /**
+     * 书籍唯一ID
+     * */
+    private long id;
 
     /**
      * 书名
@@ -105,6 +111,23 @@ public class BookDetail extends BookInfo{
 
     public String getUpdateTime() {
         return updateTime;
+    }
+
+    public void setId(long nameId) {
+       id = nameId;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void onAddToDatabase(ContentValues values){
+        values.put(BookSetting.Detail.NAME,name);
+        values.put(BookSetting.Detail.AUTHOR,author);
+        values.put(BookSetting.Detail.COVER_IMAGE_LINK,coverImageLink);
+        values.put(BookSetting.Detail.DESCRIPTION,description);
+        values.put(BookSetting.Detail.CHAPTER_LATEST,chapterLatest);
+        values.put(BookSetting.Detail.UPDATE_TIME,updateTime);
     }
 
 }

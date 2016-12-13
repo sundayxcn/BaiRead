@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import sunday.app.bairead.DataBase.BookDetail;
+import sunday.app.bairead.DataBase.BookInfo;
 import sunday.app.bairead.R;
 
 /**
@@ -40,12 +41,12 @@ public class SearchLinkItemView extends LinearLayout{
 
     }
 
-    public void setInfo(BookDetail info){
-        nameTView.setText(nameTView.getText()+info.getName()+" | "+authorTView.getText()+info.getAuthor());
+    public void setInfo(BookInfo info){
+        nameTView.setText(nameTView.getText()+info.bookDetail.getName()+" | "+authorTView.getText()+info.bookDetail.getAuthor());
         //authorTView.setText(authorTView.getText());
         //sourceTView.setText(sourceTView.getText()+info.get);
-        chapterLatestTView.setText(chapterLatestTView.getText()+info.getChapterLatest());
-        chapterTimeTView.setText(chapterTimeTView.getText()+info.getUpdateTime());
+        chapterLatestTView.setText(chapterLatestTView.getText()+info.bookDetail.getChapterLatest());
+        chapterTimeTView.setText(chapterTimeTView.getText()+info.bookDetail.getUpdateTime());
 
         setTag(info);
     }

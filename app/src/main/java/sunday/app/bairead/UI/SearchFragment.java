@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import sunday.app.bairead.DataBase.BookDetail;
+import sunday.app.bairead.DataBase.BookInfo;
 import sunday.app.bairead.Download.SearchManager;
 import sunday.app.bairead.R;
 import sunday.app.bairead.Tool.FileManager;
@@ -74,7 +75,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(view instanceof SearchLinkItemView){
                     SearchLinkItemView searchLinkItemView = (SearchLinkItemView) view;
-                    bookDetailView.setDetail((BookDetail) searchLinkItemView.getTag());
+                    bookDetailView.setInfo((BookInfo) searchLinkItemView.getTag());
                     bookDetailView.animatorShow(false);
                 }else{
                     TextView textView = (TextView) view;
@@ -123,7 +124,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
      * 点击搜索按钮后显示搜索结果
      * 点击按钮->OKHttp异步下载搜索结果->调用此方法
      * **/
-    public void refreshSearchResult(final BookDetail bookDetail){
+    public void refreshSearchResult(final BookInfo bookInfo){
 
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -131,7 +132,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 if (mListView.getAdapter() == searchHistory.getAdapter()) {
                     mListView.setAdapter(mSearchLinkAdapter);
                 }
-                mSearchLinkAdapter.addData(bookDetail);
+                mSearchLinkAdapter.addData(bookInfo);
             }
         });
     }
@@ -154,10 +155,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
     class SearchLinkAdapter extends BaseAdapter{
 
-        ArrayList<BookDetail> bookDetailList = new ArrayList<>();
+        ArrayList<BookInfo> bookInfoList = new ArrayList<>();
 
-        public void addData(BookDetail bookDetail){
-            bookDetailList.add(bookDetail);
+        public void addData(BookInfo bookInfo){
+            bookInfoList.add(bookInfo);
             notifyDataSetChanged();
         }
 
@@ -169,12 +170,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
         @Override
         public int getCount() {
-            return bookDetailList.size();
+            return bookInfoList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return bookDetailList.get(position);
+            return bookInfoList.get(position);
         }
 
         @Override
@@ -187,7 +188,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             if(convertView == null){
                 LayoutInflater layoutInflater = getActivity().getLayoutInflater();
                 SearchLinkItemView searchLinkItemView = (SearchLinkItemView) layoutInflater.inflate(R.layout.search_fragment_list_item,null);
-                searchLinkItemView.setInfo(bookDetailList.get(position));
+                searchLinkItemView.setInfo(bookInfoList.get(position));
                 convertView = searchLinkItemView;
             }
             return convertView;

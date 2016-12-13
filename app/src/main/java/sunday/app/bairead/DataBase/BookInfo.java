@@ -5,17 +5,7 @@ package sunday.app.bairead.DataBase;
  */
 
 public class BookInfo {
-
-    /**
-     * 数据库对应每本书一个唯一id
-     * */
-    private long id;
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getId() {
-        return id;
-    }
+    public BookDetail bookDetail;
+    public BookChapter bookChapter;
+    public BookMark bookMark;
 }

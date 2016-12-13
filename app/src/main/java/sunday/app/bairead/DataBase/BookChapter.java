@@ -1,5 +1,7 @@
 package sunday.app.bairead.DataBase;
 
+import android.content.ContentValues;
+
 /**
  * Created by sunday on 2016/12/12.
  * 监听正版网站更新，
@@ -8,7 +10,7 @@ package sunday.app.bairead.DataBase;
  * 按行读取，第一行为第一章
  */
 
-public class BookChapter extends BookInfo{
+public class BookChapter{
 
     /**
      * 章节目录页
@@ -87,5 +89,18 @@ public class BookChapter extends BookInfo{
 
     public boolean isCurrent() {
         return current;
+    }
+
+
+    public void onAddToDatabase(ContentValues values){
+        values.put(BookSetting.Chapter.Link,chapterLink);
+        values.put(BookSetting.Chapter.INDEX,chapterIndex);
+        values.put(BookSetting.Chapter.COUNT,chapterCount);
+
+        /*
+         *current 为真表示使用的是当前来源
+         */
+        int source = current ? 1 : 0;
+        values.put(BookSetting.Chapter.CURRENT,source);
     }
 }

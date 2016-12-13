@@ -10,37 +10,36 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
-
-import org.jsoup.examples.HtmlToPlainText;
 
 import java.util.ArrayList;
 
+import sunday.app.bairead.DataBase.BaiReadApplication;
+import sunday.app.bairead.DataBase.BookInfo;
+import sunday.app.bairead.DataBase.BookModel;
 import sunday.app.bairead.R;
+import sunday.app.bairead.Tool.FileManager;
 import sunday.app.bairead.Tool.NetworkTool;
-import sunday.app.bairead.UI.SearchFragment;
 import sunday.app.bairead.View.BookcaseView;
 import sunday.app.bairead.View.XListView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener ,XListView.IXListViewListener {
+        implements NavigationView.OnNavigationItemSelectedListener, BookModel.CallBack, XListView.IXListViewListener {
 
 
-
+    private static int refreshCnt = 0;
+    SearchFragment searchFragment;
     private XListView mListView;
-    private XlistAdapter mAdapter;
-    private ArrayList<BookcaseView> items = new ArrayList<>();
+    private XListAdapter mAdapter;
+    private ArrayList<BookInfo> items = new ArrayList<>();
     private Handler mHandler;
     private int start = 0;
-    private static int refreshCnt = 0;
+    private NetworkTool networkTool = new NetworkTool(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +68,13 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        BaiReadApplication application = (BaiReadApplication) getApplication();
+        application.getBookModel().setCallBack(this);
 
         geneItems();
         mListView = (XListView) findViewById(R.id.xlist_view);
         mListView.setPullLoadEnable(false);
-        mAdapter = new XlistAdapter();
+        mAdapter = new XListAdapter();
         mListView.setAdapter(mAdapter);
         mListView.setXListViewListener(this);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -101,7 +102,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    SearchFragment searchFragment;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }else if(id == R.id.action_search){
+        } else if (id == R.id.action_search) {
             //转到搜索界面fragment
             searchFragment = new SearchFragment();
             searchFragment.show(this);
@@ -154,25 +154,23 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unRegisterReceiver();
     }
 
-    private NetworkTool networkTool = new NetworkTool(this);
-    public void registerReceiver(){
+    public void registerReceiver() {
         networkTool.addReceiver();
     }
 
-    public void unRegisterReceiver(){
+    public void unRegisterReceiver() {
         networkTool.removeReceiver();
     }
 
     private void geneItems() {
         for (int i = 0; i != 20; ++i) {
-            items.add(new BookcaseView(this));
+            items.add(new BookInfo());
         }
     }
 
@@ -191,7 +189,7 @@ public class MainActivity extends AppCompatActivity
                 items.clear();
                 geneItems();
                 // mAdapter.notifyDataSetChanged();
-                mAdapter = new XlistAdapter();
+                mAdapter = new XListAdapter();
                 mListView.setAdapter(mAdapter);
                 onLoad();
             }
@@ -210,7 +208,26 @@ public class MainActivity extends AppCompatActivity
         }, 2000);
     }
 
-    public class XlistAdapter extends BaseAdapter{
+    @Override
+    public void addBookDataFinish(BookInfo bookInfo, boolean success) {
+        if (success) {
+            items.add(bookInfo);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void deleteBookDataFinish(BookInfo bookInfo, boolean success) {
+        if (success) {
+            items.remove(bookInfo);
+            mAdapter.notifyDataSetChanged();
+
+            //删除本地缓存
+            FileManager.getInstance().deleteFolder(FileManager.PATH + "/" + bookInfo.bookDetail.getName());
+        }
+    }
+
+    public class XListAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -229,8 +246,9 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null){
-                BookcaseView bookcaseView = (BookcaseView) getLayoutInflater().inflate(R.layout.xlist_item,null);
+            if (convertView == null) {
+                BookcaseView bookcaseView = (BookcaseView) getLayoutInflater().inflate(R.layout.xlist_item, null);
+                bookcaseView.setData(items.get(position));
                 convertView = bookcaseView;
             }
             return convertView;

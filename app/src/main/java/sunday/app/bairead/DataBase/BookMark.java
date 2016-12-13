@@ -5,8 +5,17 @@ package sunday.app.bairead.DataBase;
  * 书签
  */
 
-public class BookMark extends BookInfo {
+public class BookMark{
     private int chapterIndex;
+    private long nameId;
+
+    public long getNameId() {
+        return nameId;
+    }
+
+    public void setNameId(long nameId) {
+        this.nameId = nameId;
+    }
 
     public int getChapterIndex() {
         return chapterIndex;

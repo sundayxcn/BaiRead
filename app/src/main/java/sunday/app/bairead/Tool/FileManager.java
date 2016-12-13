@@ -185,4 +185,12 @@ public class FileManager {
 
     }
 
+
+    public void deleteFolder(String fileName){
+        File file = new File(fileName);
+        if(file.isDirectory()){
+            file.delete();
+        }
+    }
+
 }
