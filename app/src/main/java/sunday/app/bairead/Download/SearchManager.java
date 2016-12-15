@@ -23,8 +23,6 @@ public class SearchManager extends OKhttpManager {
 
     private SearchFragment searchFragment;
     private String bookName;
-    private BookDetail bookDetail;
-    private BookChapter bookChapter;
 
     public SearchManager(SearchFragment fragment){
         searchFragment = fragment;
@@ -38,7 +36,7 @@ public class SearchManager extends OKhttpManager {
         WebInfo webInfo = new WebInfo(webName,webLink,webSearchLink);
 
         String fileDir = FileManager.PATH +"/"+bookName+"/"+SEARCH_DIR;
-        FileManager.getInstance().createDir(fileDir);
+        FileManager.createDir(fileDir);
         String fileName = fileDir + "/"+"search.html";
 
         connectUrl(webInfo.getLink() + bookName, fileName,new ConnectListener() {
@@ -81,8 +79,8 @@ public class SearchManager extends OKhttpManager {
         final String chapterFile = FileManager.PATH +"/"+name+"/" + "chapter.html";
         BookInfo bookInfo = new BookInfo();
         bookInfo.bookDetail = JsoupParse.from(chapterFile,new BookDetailParse());
+        bookInfo.bookChapter  = JsoupParse.from(chapterFile,new BookChapterParse());
         searchFragment.refreshSearchResult(bookInfo);
-        bookChapter  = JsoupParse.from(chapterFile,new BookChapterParse());
     }
 
 

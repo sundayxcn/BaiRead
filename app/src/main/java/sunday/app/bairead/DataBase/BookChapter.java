@@ -2,6 +2,13 @@ package sunday.app.bairead.DataBase;
 
 import android.content.ContentValues;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.TreeSet;
+
 /**
  * Created by sunday on 2016/12/12.
  * 监听正版网站更新，
@@ -31,6 +38,9 @@ public class BookChapter{
      * 当前阅读源
      * */
     private boolean current;
+
+
+    private ArrayList<ChapterText> mChapterList;
 
 
     public static class Builder{
@@ -91,6 +101,41 @@ public class BookChapter{
         return current;
     }
 
+
+    public static class ChapterText{
+        /**
+         * 最终的网络地址和章节目录页拼接起来
+         * */
+        public ChapterText(String chapterLink,long num,String text){
+            linkHead = chapterLink;
+            webNum = num;
+            chapterText = text;
+        }
+        private final String linkHead;
+        private final String linkEnd = ".html";
+        private long webNum;
+        private String chapterText;
+        public String getLink(){
+            return linkHead + webNum + linkEnd;
+        }
+
+        public String getText(){
+            return chapterText;
+        }
+
+        public long getNum(){
+            return webNum;
+        }
+    }
+
+
+    public ChapterText getChapterIndex(int index){
+        return mChapterList.get(index);
+    }
+
+    public void setChapterList(ArrayList<ChapterText> list){
+        mChapterList = list;
+    }
 
     public void onAddToDatabase(ContentValues values){
         values.put(BookSetting.Chapter.Link,chapterLink);

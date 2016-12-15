@@ -29,33 +29,31 @@ public class FileManager {
     public static final String GB2312 = "gb2312";
 
 
-    private static FileManager mFileManager;
+//    private static FileManager mFileManager;
+//
+//    private FileManager() {
+//        createDir();
+//    }
+//
+//    public static FileManager getInstance() {
+//        if (mFileManager == null) {
+//            mFileManager = new FileManager();
+//        }
+//
+//        //boolean s = createDir();
+//
+//        return mFileManager;
+//    }
 
-    private FileManager() {
-        createDir();
+
+    public static boolean createDir() {
+
+        return createDir(PATH);
     }
 
-    public static FileManager getInstance() {
-        if (mFileManager == null) {
-            mFileManager = new FileManager();
-        }
-        return mFileManager;
-    }
+    public static boolean createDir(String dirPath) {
 
-
-    public boolean createDir() {
-
-        File file = new File(PATH);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-
-        return file.exists();
-    }
-
-    public boolean createDir(String dirPath) {
-
-        File file = new File(PATH +"/"+ dirPath);
+        File file = new File(dirPath);
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -76,7 +74,7 @@ public class FileManager {
 //    }
 
 
-    public ArrayList<String> readFileByLine(String fileName){
+    public static ArrayList<String> readFileByLine(String fileName){
         ArrayList<String> list = new ArrayList<>();
         String fileDirPath = PATH + "/" + fileName;
         try{
@@ -95,7 +93,7 @@ public class FileManager {
         return list;
     }
 
-    public String readFile(String fileName){
+    public static String readFile(String fileName){
         String fileDirPath = PATH + "/" + fileName;
         String string = null;
 
@@ -124,7 +122,7 @@ public class FileManager {
     }
 
 
-    public void writeFileByLine(String fileName,String name) throws IOException {
+    public static void writeFileByLine(String fileName,String name) throws IOException {
         String fileDirPath = PATH + "/" + fileName;
         File file = new File(fileDirPath);
 
@@ -139,7 +137,7 @@ public class FileManager {
     }
 
 
-    public void writeByte(String fileName, byte[] bytes) {
+    public static void writeByte(String fileName, byte[] bytes) {
 
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(fileName);
@@ -158,7 +156,7 @@ public class FileManager {
     /**
      * 正则表达式匹配http链接
      */
-    public String[] findMatchInFile(String fileName) {
+    public static String[] findMatchInFile(String fileName) {
         try {
             FileInputStream fin = new FileInputStream(PATH + "/" + DIR + "/" + fileName);
             int length = fin.available();
@@ -186,7 +184,7 @@ public class FileManager {
     }
 
 
-    public void deleteFolder(String fileName){
+    public static void deleteFolder(String fileName){
         File file = new File(fileName);
         if(file.isDirectory()){
             file.delete();

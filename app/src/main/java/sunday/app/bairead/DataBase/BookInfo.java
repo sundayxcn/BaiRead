@@ -6,6 +6,9 @@ package sunday.app.bairead.DataBase;
 
 public class BookInfo {
     public BookDetail bookDetail;
+
+    /**
+     * 每一个detail可以有多个chapter源，此处对应当前源信息
+     * */
     public BookChapter bookChapter;
-    public BookMark bookMark;
 }

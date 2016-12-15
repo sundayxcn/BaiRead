@@ -1,7 +1,6 @@
 package sunday.app.bairead.UI;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -13,33 +12,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-
-import java.util.ArrayList;
 
 import sunday.app.bairead.DataBase.BaiReadApplication;
-import sunday.app.bairead.DataBase.BookInfo;
 import sunday.app.bairead.DataBase.BookModel;
 import sunday.app.bairead.R;
-import sunday.app.bairead.Tool.FileManager;
 import sunday.app.bairead.Tool.NetworkTool;
-import sunday.app.bairead.View.BookcaseView;
-import sunday.app.bairead.View.XListView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, BookModel.CallBack, XListView.IXListViewListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    private static int refreshCnt = 0;
+
     SearchFragment searchFragment;
-    private XListView mListView;
-    private XListAdapter mAdapter;
-    private ArrayList<BookInfo> items = new ArrayList<>();
-    private Handler mHandler;
-    private int start = 0;
     private NetworkTool networkTool = new NetworkTool(this);
+    private BookcaseControl bookcaseControl ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,23 +54,12 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        //sunday add
+        bookcaseControl = new BookcaseControl(this);
         BaiReadApplication application = (BaiReadApplication) getApplication();
-        application.getBookModel().setCallBack(this);
-
-        geneItems();
-        mListView = (XListView) findViewById(R.id.xlist_view);
-        mListView.setPullLoadEnable(false);
-        mAdapter = new XListAdapter();
-        mListView.setAdapter(mAdapter);
-        mListView.setXListViewListener(this);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Html.fromHtml()
-            }
-        });
-        mHandler = new Handler();
-
+        BookModel bookModel = application.getBookModel();
+        bookModel.setCallBack(bookcaseControl);
+        bookModel.startLoad();
 
         registerReceiver();
 
@@ -168,91 +143,5 @@ public class MainActivity extends AppCompatActivity
         networkTool.removeReceiver();
     }
 
-    private void geneItems() {
-        for (int i = 0; i != 20; ++i) {
-            items.add(new BookInfo());
-        }
-    }
-
-    private void onLoad() {
-        mListView.stopRefresh();
-        mListView.stopLoadMore();
-        mListView.setRefreshTime("刚刚");
-    }
-
-    @Override
-    public void onRefresh() {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                start = ++refreshCnt;
-                items.clear();
-                geneItems();
-                // mAdapter.notifyDataSetChanged();
-                mAdapter = new XListAdapter();
-                mListView.setAdapter(mAdapter);
-                onLoad();
-            }
-        }, 2000);
-    }
-
-    @Override
-    public void onLoadMore() {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                geneItems();
-                mAdapter.notifyDataSetChanged();
-                onLoad();
-            }
-        }, 2000);
-    }
-
-    @Override
-    public void addBookDataFinish(BookInfo bookInfo, boolean success) {
-        if (success) {
-            items.add(bookInfo);
-            mAdapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void deleteBookDataFinish(BookInfo bookInfo, boolean success) {
-        if (success) {
-            items.remove(bookInfo);
-            mAdapter.notifyDataSetChanged();
-
-            //删除本地缓存
-            FileManager.getInstance().deleteFolder(FileManager.PATH + "/" + bookInfo.bookDetail.getName());
-        }
-    }
-
-    public class XListAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return items.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return items.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                BookcaseView bookcaseView = (BookcaseView) getLayoutInflater().inflate(R.layout.xlist_item, null);
-                bookcaseView.setData(items.get(position));
-                convertView = bookcaseView;
-            }
-            return convertView;
-        }
-    }
 
 }

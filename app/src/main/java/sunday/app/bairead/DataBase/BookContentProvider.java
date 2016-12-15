@@ -34,7 +34,7 @@ public class BookContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         bookDBHelp = new BookDBHelp(getContext());
-        BaiReadApplication application = (BaiReadApplication) getContext();
+        BaiReadApplication application = (BaiReadApplication) getContext().getApplicationContext();
         application.setBookContentProvider(this);
         return true;
     }
@@ -70,7 +70,8 @@ public class BookContentProvider extends ContentProvider {
         SqlArguments args = new SqlArguments(uri);
 
         SQLiteDatabase db = bookDBHelp.getWritableDatabase();
-        final long rowId = dbInsertAndCheck(bookDBHelp, db, args.table, null, initialValues);
+        ////dbInsertAndCheck(bookDBHelp, db, args.table, null, initialValues);
+        final long rowId = db.insert(args.table, null, initialValues);
         if (rowId <= 0) return null;
 
         uri = ContentUris.withAppendedId(uri, rowId);
@@ -100,13 +101,13 @@ public class BookContentProvider extends ContentProvider {
     }
 
 
-    private static long dbInsertAndCheck(BookDBHelp helper,
-                                         SQLiteDatabase db, String table, String nullColumnHack, ContentValues values) {
-        if (table.equals(TABLE_BOOK_DETAIL) && values.containsKey(BookSetting.Detail._ID)) {
-            throw new RuntimeException("Error: attempting to add item without specifying an id");
-        }
-        return db.insert(table, nullColumnHack, values);
-    }
+//    private static long dbInsertAndCheck(BookDBHelp helper,
+//                                         SQLiteDatabase db, String table, String nullColumnHack, ContentValues values) {
+//        if (table.equals(TABLE_BOOK_DETAIL) && values.containsKey(BookSetting.Detail._ID)) {
+//            throw new RuntimeException("Error: attempting to add item without specifying an id");
+//        }
+//        return db.insert(table, nullColumnHack, values);
+//    }
 
 
     public long generateNewId() {
@@ -144,7 +145,7 @@ public class BookContentProvider extends ContentProvider {
         }
 
         private long initializeMaxId(SQLiteDatabase db) {
-            Cursor c = db.rawQuery("SELECT MAX(_id) FROM favorites", null);
+            Cursor c = db.rawQuery("SELECT MAX(_id) FROM bookDetail", null);
 
             // get the result
             final int maxIdIndex = 0;

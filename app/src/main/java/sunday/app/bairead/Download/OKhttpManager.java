@@ -62,7 +62,7 @@ public class OKhttpManager{
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if(connectListener != null){
-                    FileManager.getInstance().writeByte(fileName,response.body().bytes());
+                    FileManager.writeByte(fileName,response.body().bytes());
                     connectListener.end(fileName);
                 }
             }

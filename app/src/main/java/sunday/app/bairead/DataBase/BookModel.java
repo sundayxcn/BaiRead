@@ -3,6 +3,7 @@ package sunday.app.bairead.DataBase;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -42,6 +43,32 @@ public class BookModel {
         this.callBack = callBack;
     }
 
+    /** Runs the specified runnable immediately if called from the main thread, otherwise it is
+     * posted on the main thread handler. */
+    private void runOnMainThread(Runnable r) {
+        runOnMainThread(r, 0);
+    }
+
+    private void runOnMainThread(Runnable r, int type) {
+        if (sWorkerThread.getThreadId() == Process.myTid()) {
+            // If we are on the worker thread, post onto the main handler
+            mHandler.post(r);
+        } else {
+            r.run();
+        }
+    }
+
+    /** Runs the specified runnable immediately if called from the worker thread, otherwise it is
+     * posted on the worker thread handler. */
+    private static void runOnWorkerThread(Runnable r) {
+        if (sWorkerThread.getThreadId() == Process.myTid()) {
+            r.run();
+        } else {
+            // If we are not on the worker thread, then post to the worker handler
+            sWorker.post(r);
+        }
+    }
+
 
     public void addBook(final BookInfo bookInfo){
         final ContentValues detailValues = new ContentValues();
@@ -64,13 +91,18 @@ public class BookModel {
 
                 Uri uri = cr.insert(BookSetting.Detail.CONTENT_URI,detailValues);
 
-                Uri uri2 = cr.insert(BookSetting.Detail.CONTENT_URI,chapterValues);
+                Uri uri2 = cr.insert(BookSetting.Chapter.CONTENT_URI,chapterValues);
 
                 boolean success = (uri != null && uri2 != null);
                 postAddCallBack(bookInfo,success);
 
             }
         });
+    }
+
+
+    public void startLoad(){
+
     }
 
     public void postAddCallBack(final BookInfo bookInfo, final boolean success){
@@ -155,32 +187,22 @@ public class BookModel {
         });
     }
 
-
-
-    /** Runs the specified runnable immediately if called from the main thread, otherwise it is
-     * posted on the main thread handler. */
-    private void runOnMainThread(Runnable r) {
-        runOnMainThread(r, 0);
-    }
-
-    private void runOnMainThread(Runnable r, int type) {
-        if (sWorkerThread.getThreadId() == Process.myTid()) {
-            // If we are on the worker thread, post onto the main handler
-            mHandler.post(r);
-        } else {
-            r.run();
+    /**
+     * 判断是否在书架中
+     * */
+    public boolean isCase(BookDetail bookDetail){
+        String name = bookDetail.getName();
+        String author = bookDetail.getAuthor();
+        final ContentResolver cr = mContext.getContentResolver();
+        Uri uri = BookSetting.Detail.CONTENT_URI;
+        Cursor cursor = cr.query(uri,null,"name = ? and author = ?",new String[]{name,author},null);
+        if(cursor.getCount() > 0){
+            cursor.close();
+            return true;
         }
+        return false;
+
     }
 
-    /** Runs the specified runnable immediately if called from the worker thread, otherwise it is
-     * posted on the worker thread handler. */
-    private static void runOnWorkerThread(Runnable r) {
-        if (sWorkerThread.getThreadId() == Process.myTid()) {
-            r.run();
-        } else {
-            // If we are not on the worker thread, then post to the worker handler
-            sWorker.post(r);
-        }
-    }
 
 }

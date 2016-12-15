@@ -15,6 +15,7 @@
     <string name="search_item_author_source">来源:</string>
     <string name="search_book_detail_button_read_text">立即阅读</string>
     <string name="search_book_detail_button_bookcase_text">加入书架</string>
+    <string name="search_book_detail_button_bookcase_add_text">已加入到书架</string>
     <string name="search_book_detail_button_cache_text">全本缓存</string>
 	
 	<string name="xlistview_header_hint_normal">下拉刷新</string>

@@ -19,6 +19,7 @@ public class BookDetail{
         final static public String IMAGE = "og:image";
         final static public String CHAPTER_LATEST = "og:novel:latest_chapter_name";
         final static public String UPDATE_TIME = "og:novel:update_time";
+        final static public String CHAPTER_URL = "og:novel:read_url";
     }
 
 
