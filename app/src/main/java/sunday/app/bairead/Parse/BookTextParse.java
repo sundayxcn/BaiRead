@@ -5,7 +5,7 @@ import org.jsoup.nodes.Document;
 public class BookTextParse extends HtmlParse{
 
     @Override
-    public <T> T parse(Document document) {
+    public String parse(Document document) {
         return null;
     }
 }

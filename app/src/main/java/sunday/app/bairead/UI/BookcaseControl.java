@@ -24,8 +24,7 @@ import sunday.app.bairead.View.XListView;
  */
 
 public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewListener{
-    private Context context;
-    private BookcaseView bookcaseView;
+    private MainActivity activity;
 
     private XListView mListView;
     private XListAdapter mAdapter;
@@ -35,9 +34,9 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
     private ArrayList<BookInfo> mBookInfoList = new ArrayList<>();
 
 
-    public BookcaseControl(MainActivity context){
-        this.context = context;
-        mListView = (XListView) context.findViewById(R.id.xlist_view);
+    public BookcaseControl( MainActivity context){
+        activity = context;
+        mListView = (XListView) activity.findViewById(R.id.xlist_view);
         mListView.setPullLoadEnable(false);
         mAdapter = new XListAdapter();
         mListView.setAdapter(mAdapter);
@@ -45,7 +44,9 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Html.fromHtml()
+                BookReadFragment bookReadFragment = new BookReadFragment();
+                bookReadFragment.setBookInfo(mBookInfoList.get(position-1));
+                bookReadFragment.show(activity);
             }
         });
 
@@ -124,7 +125,7 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                BookcaseView bookcaseView = (BookcaseView) LayoutInflater.from(context).inflate(R.layout.xlist_item, null);
+                BookcaseView bookcaseView = (BookcaseView) LayoutInflater.from(activity).inflate(R.layout.xlist_item, null);
                 bookcaseView.setData(mBookInfoList.get(position));
                 convertView = bookcaseView;
             }

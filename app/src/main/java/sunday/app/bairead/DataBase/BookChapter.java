@@ -137,7 +137,7 @@ public class BookChapter{
     }
 
 
-    public ChapterText getChapterIndex(int index){
+    public ChapterText getChapterText(int index){
         return mChapterList.get(index);
     }
 

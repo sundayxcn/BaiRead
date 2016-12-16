@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity
 
 
     SearchFragment searchFragment;
+
+
     private NetworkTool networkTool = new NetworkTool(this);
     private BookcaseControl bookcaseControl ;
 
@@ -96,8 +98,11 @@ public class MainActivity extends AppCompatActivity
             return true;
         } else if (id == R.id.action_search) {
             //转到搜索界面fragment
-            searchFragment = new SearchFragment();
-            searchFragment.show(this);
+//            searchFragment = new SearchFragment();
+//            searchFragment.show(this);
+            BaiReadApplication application = (BaiReadApplication) getApplication();
+            BookModel bookModel = application.getBookModel();
+            bookModel.startLoad();
             return true;
         }
 
