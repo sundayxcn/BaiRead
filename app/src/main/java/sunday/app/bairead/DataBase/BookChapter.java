@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeSet;
 
+import sunday.app.bairead.Tool.FileManager;
+
 /**
  * Created by sunday on 2016/12/12.
  * 监听正版网站更新，
@@ -18,6 +20,8 @@ import java.util.TreeSet;
  */
 
 public class BookChapter{
+
+    public static final String FileName = "chapter.html";
 
     /**
      * 章节目录页
@@ -102,6 +106,10 @@ public class BookChapter{
     }
 
 
+    public void setChapterIndex(int index){
+        chapterIndex = index;
+    }
+
     public static class ChapterText{
         /**
          * 最终的网络地址和章节目录页拼接起来
@@ -138,7 +146,7 @@ public class BookChapter{
     }
 
     public void onAddToDatabase(ContentValues values){
-        values.put(BookSetting.Chapter.Link,chapterLink);
+        values.put(BookSetting.Chapter.LINK,chapterLink);
         values.put(BookSetting.Chapter.INDEX,chapterIndex);
         values.put(BookSetting.Chapter.COUNT,chapterCount);
 

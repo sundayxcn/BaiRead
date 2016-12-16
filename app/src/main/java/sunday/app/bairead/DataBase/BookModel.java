@@ -8,7 +8,14 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Process;
+import android.util.Log;
 
+import java.util.ArrayList;
+
+import sunday.app.bairead.Download.SearchManager;
+import sunday.app.bairead.Parse.BookChapterParse;
+import sunday.app.bairead.Parse.JsoupParse;
+import sunday.app.bairead.Tool.FileManager;
 import sunday.app.bairead.UI.DeferredHandler;
 
 /**
@@ -19,6 +26,7 @@ public class BookModel {
     private Context mContext;
 
     public interface CallBack{
+        void loadFinish(ArrayList<BookInfo> list);
         void addBookDataFinish(BookInfo bookInfo,boolean success);
         void deleteBookDataFinish(BookInfo bookInfo,boolean success);
     }
@@ -102,8 +110,111 @@ public class BookModel {
 
 
     public void startLoad(){
+//        runOnWorkerThread(new Runnable() {
+//            @Override
+//            public void run() {
+                ArrayList<BookInfo> list = loadAllBook();
+                if(callBack != null){
+                    callBack.loadFinish(list);
+                }
+//
+//            }
+//        });
 
     }
+
+    public ArrayList<BookInfo> loadAllBook(){
+        ArrayList<BookInfo> bookList = new ArrayList<>();
+        final ContentResolver cr = mContext.getContentResolver();
+        Uri uri = BookSetting.Detail.CONTENT_URI;
+        Cursor cursor = cr.query(uri,null,null,null,null);
+
+        final int detailId = cursor.getColumnIndexOrThrow(BookSetting.Detail._ID);
+        final int detailName = cursor.getColumnIndexOrThrow(BookSetting.Detail.NAME);
+        final int detailAuthor = cursor.getColumnIndexOrThrow(BookSetting.Detail.AUTHOR);
+        final int detailCoverImageLink = cursor.getColumnIndexOrThrow(BookSetting.Detail.COVER_IMAGE_LINK);
+        final int detailDescription = cursor.getColumnIndexOrThrow(BookSetting.Detail.DESCRIPTION);
+        final int detailChapterLatest = cursor.getColumnIndexOrThrow(BookSetting.Detail.CHAPTER_LATEST);
+        final int detailUpdateTime = cursor.getColumnIndexOrThrow(BookSetting.Detail.UPDATE_TIME);
+        //final int detailType = cursor.getColumnIndexOrThrow(BookSetting.Detail.TYPE);
+
+        try {
+            while (cursor.moveToNext()){
+
+                long id = cursor.getLong(detailId);
+                String name = cursor.getString(detailName);
+                String author = cursor.getString(detailAuthor);
+                String coverImageLink = cursor.getString(detailCoverImageLink);
+                String description = cursor.getString(detailDescription);
+                String chapterLatest = cursor.getString(detailChapterLatest);
+                String updateTime  = cursor.getString(detailUpdateTime);
+
+                BookInfo bookInfo = new BookInfo();
+                bookInfo.bookDetail =  new BookDetail.Builder().setId(id)
+                        .setAuthor(author)
+                        .setName(name)
+                        .setCoverImageLink(coverImageLink)
+                        .setDescription(description)
+                        .setUpdateTime(updateTime)
+                        .setChapterLatest(chapterLatest)
+                        .build();
+                bookList.add(bookInfo);
+            }
+        }catch (Exception e){
+            bookList.clear();
+            e.printStackTrace();
+        }finally {
+            cursor.close();
+        }
+
+        uri = BookSetting.Chapter.CONTENT_URI;
+        cursor = cr.query(uri,null,"current = 1",null,null);
+        final int chapterId = cursor.getColumnIndexOrThrow(BookSetting.Chapter.ID);
+        final int chapterLink = cursor.getColumnIndexOrThrow(BookSetting.Chapter.LINK);
+        //final int chapterCount = cursor.getColumnIndexOrThrow(BookSetting.Chapter.COUNT);
+        final int chapterIndex = cursor.getColumnIndexOrThrow(BookSetting.Chapter.INDEX);
+
+        try {
+            while (cursor.moveToNext()){
+
+                long id = cursor.getLong(chapterId);
+                String link = cursor.getString(chapterLink);
+                //int count = cursor.getInt(chapterCount);
+                int index = cursor.getInt(chapterIndex);
+
+                BookInfo bookInfo = getBookInfo(bookList,id);
+                if(bookInfo == null){
+                    new Throwable("loadAllBook-error bookChapter");
+                    Log.e("sunday","loadAllBook-error bookChapter");
+                }else {
+                    String fileName = FileManager.PATH+"/"+bookInfo.bookDetail.getName()+"/"+ BookChapter.FileName;
+                    BookChapter bookChapter = JsoupParse.from(fileName,new BookChapterParse());
+                    bookChapter.setChapterIndex(index);
+                    bookInfo.bookChapter = bookChapter;
+                }
+            }
+        }catch (Exception e){
+            bookList.clear();
+            e.printStackTrace();
+        }finally {
+            cursor.close();
+        }
+
+
+        return bookList;
+    }
+
+    private  BookInfo getBookInfo(ArrayList<BookInfo> list,long id){
+        for(BookInfo bookInfo : list ){
+            if(bookInfo.bookDetail.getId() == id){
+                return bookInfo;
+            }
+        }
+
+        return null;
+    }
+
+
 
     public void postAddCallBack(final BookInfo bookInfo, final boolean success){
         if(callBack != null) {
@@ -129,11 +240,13 @@ public class BookModel {
 
     public void deleteBook(final BookInfo bookInfo){
 
-        final long id = bookInfo.bookDetail.getId();
-
         runOnWorkerThread(new Runnable() {
             @Override
             public void run() {
+
+
+                long id = bookInfo.bookDetail.getId();
+
                 ContentResolver cr = mContext.getContentResolver();
                 Uri uri = BookSetting.Detail.getContentUri(id,true);
                 cr.delete(uri,null,null);
@@ -196,11 +309,12 @@ public class BookModel {
         final ContentResolver cr = mContext.getContentResolver();
         Uri uri = BookSetting.Detail.CONTENT_URI;
         Cursor cursor = cr.query(uri,null,"name = ? and author = ?",new String[]{name,author},null);
-        if(cursor.getCount() > 0){
-            cursor.close();
-            return true;
-        }
-        return false;
+//        if(cursor.getCount() > 0){
+//            cursor.close();
+//            return true;
+//        }
+        return cursor.moveToFirst();
+//        return false;
 
     }
 

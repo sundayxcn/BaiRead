@@ -79,6 +79,13 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
     }
 
     @Override
+    public void loadFinish(ArrayList<BookInfo> list) {
+        mBookInfoList.clear();
+        mBookInfoList.addAll(list);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void addBookDataFinish(BookInfo bookInfo, boolean success) {
         if (success) {
             mBookInfoList.add(bookInfo);

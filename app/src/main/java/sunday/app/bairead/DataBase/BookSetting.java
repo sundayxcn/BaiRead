@@ -69,7 +69,7 @@ public class BookSetting {
                     BookContentProvider.PARAMETER_NOTIFY + "=" + notify);
         }
         static final String  ID = "bookId";
-        static final String  Link = "chapterLink";
+        static final String  LINK = "chapterLink";
         static final String  COUNT = "chapterCount";
         static final String  INDEX = "chapterIndex";
         static final String  CURRENT = "current";

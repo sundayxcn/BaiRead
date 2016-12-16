@@ -56,7 +56,7 @@ public class SearchManager extends OKhttpManager {
 
     private void downloadChapterLink(String link){
         if(link != null){
-            final String chapterFile = FileManager.PATH +"/"+bookName+"/" + "chapter.html";
+            final String chapterFile = FileManager.PATH +"/"+bookName+"/" + BookChapter.FileName;
             connectUrl(link, chapterFile, new ConnectListener() {
                 @Override
                 public void start(String url) {
@@ -76,7 +76,7 @@ public class SearchManager extends OKhttpManager {
 
 
     public void debugDetail(String name){
-        final String chapterFile = FileManager.PATH +"/"+name+"/" + "chapter.html";
+        final String chapterFile = FileManager.PATH +"/"+name+"/" + BookChapter.FileName;
         BookInfo bookInfo = new BookInfo();
         bookInfo.bookDetail = JsoupParse.from(chapterFile,new BookDetailParse());
         bookInfo.bookChapter  = JsoupParse.from(chapterFile,new BookChapterParse());
