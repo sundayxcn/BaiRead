@@ -28,6 +28,9 @@
         <provider
             android:authorities="sunday.app.bairead.setting"
             android:name=".DataBase.BookContentProvider"/>
+
+        <activity android:name=".UI.BookReadActivity"/>
+
     </application>
 
 </manifest>

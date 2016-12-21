@@ -1,6 +1,7 @@
 package sunday.app.bairead.UI;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
     private int start = 0;
     private ArrayList<BookInfo> mBookInfoList = new ArrayList<>();
 
+    public BookReadFragment bookReadFragment;
 
     public BookcaseControl( MainActivity context){
         activity = context;
@@ -44,13 +46,18 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BookReadFragment bookReadFragment = new BookReadFragment();
-                bookReadFragment.setBookInfo(mBookInfoList.get(position-1));
-                bookReadFragment.show(activity);
+//                bookReadFragment = new BookReadFragment();
+//                bookReadFragment.setBookInfo(mBookInfoList.get(position-1));
+//                bookReadFragment.show(activity);
+                Intent intent = new Intent();
+                intent.setClass(activity,BookReadActivity.class);
+                intent.putExtra("BookId",1);
+                activity.startActivity(intent);
             }
         });
 
     }
+
 
     private void onLoad() {
         mListView.stopRefresh();

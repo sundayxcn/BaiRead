@@ -23,24 +23,24 @@ import sunday.app.bairead.UI.DeferredHandler;
  */
 
 public class BookModel {
-    private Context mContext;
 
+    private static final HandlerThread sWorkerThread = new HandlerThread("baiRead-loader");
+    static {
+        sWorkerThread.start();
+    }
     public interface CallBack{
         void loadFinish(ArrayList<BookInfo> list);
         void addBookDataFinish(BookInfo bookInfo,boolean success);
         void deleteBookDataFinish(BookInfo bookInfo,boolean success);
     }
 
-
+    private Context mContext;
     private CallBack callBack;
-
-    private static final HandlerThread sWorkerThread = new HandlerThread("baiRead-loader");
-    static {
-        sWorkerThread.start();
-    }
-
     private final DeferredHandler mHandler = new DeferredHandler();
     private static final Handler sWorker = new Handler(sWorkerThread.getLooper());
+    private ArrayList<BookInfo> mBookInfoList = new ArrayList<>();
+
+
 
     public BookModel(Context context){
         mContext = context;
@@ -102,6 +102,9 @@ public class BookModel {
                 Uri uri2 = cr.insert(BookSetting.Chapter.CONTENT_URI,chapterValues);
 
                 boolean success = (uri != null && uri2 != null);
+                if(success) {
+                    mBookInfoList.add(bookInfo);
+                }
                 postAddCallBack(bookInfo,success);
 
             }
@@ -124,7 +127,7 @@ public class BookModel {
     }
 
     public ArrayList<BookInfo> loadAllBook(){
-        ArrayList<BookInfo> bookList = new ArrayList<>();
+        ArrayList<BookInfo> bookList = mBookInfoList;
         final ContentResolver cr = mContext.getContentResolver();
         Uri uri = BookSetting.Detail.CONTENT_URI;
         Cursor cursor = cr.query(uri,null,null,null,null);
@@ -263,7 +266,7 @@ public class BookModel {
                  * */
                 uri = BookSetting.Mark.CONTENT_URI;
                 cr.delete(uri,where,new String[]{String.valueOf(id)});
-
+                mBookInfoList.remove(bookInfo);
 
             }
         });
@@ -316,6 +319,18 @@ public class BookModel {
         return cursor.moveToFirst();
 //        return false;
 
+    }
+
+
+    public BookInfo getBookInfo(long id){
+        int count = mBookInfoList.size();
+        for(int i = 0; i< count;i++) {
+            BookInfo bookInfo = mBookInfoList.get(i);
+           if(bookInfo.bookDetail.getId() == id){
+               return bookInfo;
+           }
+        }
+        return null;
     }
 
 

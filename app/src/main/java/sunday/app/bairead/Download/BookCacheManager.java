@@ -2,10 +2,10 @@ package sunday.app.bairead.Download;
 
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 
 import sunday.app.bairead.DataBase.BookChapter;
 import sunday.app.bairead.DataBase.BookInfo;
-import sunday.app.bairead.Download.OKhttpManager;
 import sunday.app.bairead.Parse.BookTextParse;
 import sunday.app.bairead.Parse.JsoupParse;
 import sunday.app.bairead.Tool.FileManager;
@@ -54,20 +54,25 @@ public class BookCacheManager extends OKhttpManager {
         String dir = FileManager.PATH + "/" + bookInfo.bookDetail.getName()+"/"+DIR;
         FileManager.createDir(dir);
         String fileName = dir+"/"+chapterText.getNum()+ ".html";
-        connectUrl(url, fileName, new ConnectListener() {
-            @Override
-            public void start(String url) {
+        if(chapterListener != null){
+            String text = JsoupParse.from(fileName,new BookTextParse());
+            chapterListener.end(Html.fromHtml(text));
+        }
 
-            }
-
-            @Override
-            public void end(String fileName) {
-                if(chapterListener != null){
-                    String text = JsoupParse.from(fileName,new BookTextParse());
-                    chapterListener.end(Html.fromHtml(text));
-                }
-            }
-        });
+//        connectUrl(url, fileName, new ConnectListener() {
+//            @Override
+//            public void start(String url) {
+//
+//            }
+//
+//            @Override
+//            public void end(String fileName) {
+//                if(chapterListener != null){
+//                    String text = JsoupParse.from(fileName,new BookTextParse());
+//                    chapterListener.end(Html.fromHtml(text));
+//                }
+//            }
+//        });
     }
 
     public void getChapterText(BookInfo bookInfo,ChapterListener chapterListener){

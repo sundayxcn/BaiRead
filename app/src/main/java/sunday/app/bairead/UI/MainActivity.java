@@ -98,11 +98,11 @@ public class MainActivity extends AppCompatActivity
             return true;
         } else if (id == R.id.action_search) {
             //转到搜索界面fragment
-//            searchFragment = new SearchFragment();
-//            searchFragment.show(this);
-            BaiReadApplication application = (BaiReadApplication) getApplication();
-            BookModel bookModel = application.getBookModel();
-            bookModel.startLoad();
+            searchFragment = new SearchFragment();
+            searchFragment.show(this);
+//            BaiReadApplication application = (BaiReadApplication) getApplication();
+//            BookModel bookModel = application.getBookModel();
+//            bookModel.startLoad();
             return true;
         }
 

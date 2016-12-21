@@ -7,6 +7,7 @@
 
     <sunday.app.bairead.View.BookTextView
         android:id="@+id/book_read_fragment_book_text"
+        android:textSize="18dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
