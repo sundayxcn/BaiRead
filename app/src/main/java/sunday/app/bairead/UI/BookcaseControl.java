@@ -34,8 +34,6 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
     private int start = 0;
     private ArrayList<BookInfo> mBookInfoList = new ArrayList<>();
 
-    public BookReadFragment bookReadFragment;
-
     public BookcaseControl( MainActivity context){
         activity = context;
         mListView = (XListView) activity.findViewById(R.id.xlist_view);
@@ -46,9 +44,6 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                bookReadFragment = new BookReadFragment();
-//                bookReadFragment.setBookInfo(mBookInfoList.get(position-1));
-//                bookReadFragment.show(activity);
                 Intent intent = new Intent();
                 intent.setClass(activity,BookReadActivity.class);
                 intent.putExtra("BookId",1);

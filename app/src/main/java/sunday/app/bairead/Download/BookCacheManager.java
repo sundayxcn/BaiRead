@@ -1,8 +1,11 @@
 package sunday.app.bairead.Download;
 
+import android.app.AlertDialog;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
+
+import java.io.File;
 
 import sunday.app.bairead.DataBase.BookChapter;
 import sunday.app.bairead.DataBase.BookInfo;
@@ -54,25 +57,35 @@ public class BookCacheManager extends OKhttpManager {
         String dir = FileManager.PATH + "/" + bookInfo.bookDetail.getName()+"/"+DIR;
         FileManager.createDir(dir);
         String fileName = dir+"/"+chapterText.getNum()+ ".html";
-        if(chapterListener != null){
-            String text = JsoupParse.from(fileName,new BookTextParse());
-            chapterListener.end(Html.fromHtml(text));
-        }
+//        if(chapterListener != null){
+//            String text = JsoupParse.from(fileName,new BookTextParse());
+//            chapterListener.end(Html.fromHtml(text));
+//        }
+        File file = new File(fileName);
+        if(file.exists()){
+            if(chapterListener != null){
+                String text = JsoupParse.from(fileName,new BookTextParse());
+                chapterListener.end(Html.fromHtml(text));
+            }
+        }else {
+            //DialogManager.
+            //AlertDialog.Builder builder=new AlertDialog.Builder();
 
-//        connectUrl(url, fileName, new ConnectListener() {
-//            @Override
-//            public void start(String url) {
-//
-//            }
-//
-//            @Override
-//            public void end(String fileName) {
-//                if(chapterListener != null){
-//                    String text = JsoupParse.from(fileName,new BookTextParse());
-//                    chapterListener.end(Html.fromHtml(text));
-//                }
-//            }
-//        });
+            connectUrl(url, fileName, new ConnectListener() {
+                @Override
+                public void start(String url) {
+
+                }
+
+                @Override
+                public void end(String fileName) {
+                    if (chapterListener != null) {
+                        String text = JsoupParse.from(fileName, new BookTextParse());
+                        chapterListener.end(Html.fromHtml(text));
+                    }
+                }
+            });
+        }
     }
 
     public void getChapterText(BookInfo bookInfo,ChapterListener chapterListener){

@@ -2,18 +2,10 @@ package sunday.app.bairead.View;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
-import android.text.Layout;
 import android.text.Spanned;
-import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -45,6 +37,9 @@ public class BookTextView extends TextView implements View.OnClickListener{
 
     public void setChapterText(Spanned spanned) {
         text = spanned;
+        if(mHeight != 0){
+            createPageTextList();
+        }
         postInvalidate();
         setOnClickListener(this);
     }
@@ -52,12 +47,9 @@ public class BookTextView extends TextView implements View.OnClickListener{
     @Override
     protected void onDraw(Canvas canvas) {
         //super.onDraw(canvas);
-        if(pageIndex > (pageTextList.size() -1)){
-            pageIndex = pageTextList.size() -1;
-        }else if(pageIndex < 0){
-            pageIndex = 0;
+        if(pageIndex != -1) {
+            pageTextList.get(pageIndex).onDraw(canvas);
         }
-        pageTextList.get(pageIndex).onDraw(canvas);
     }
 
 
@@ -99,7 +91,7 @@ public class BookTextView extends TextView implements View.OnClickListener{
     private void createPageTextList(){
         pageTextList.clear();
         String[] textArray = String.valueOf(text).trim().split("\n\n");
-
+        pageIndex = 0;
         textPaint = new TextPaint();
         textPaint.setAntiAlias(true);
         textPaint.setTextSize(60);
@@ -134,9 +126,28 @@ public class BookTextView extends TextView implements View.OnClickListener{
 
     }
 
+    private BookReadActivity.ReadHandler handler ;
+
+    public void setReadHandler(BookReadActivity.ReadHandler readHandler){
+        handler = readHandler;
+    }
+
     @Override
     public void onClick(View v) {
         pageIndex++;
+
+        if(pageIndex > (pageTextList.size() -1)){
+            pageIndex = -1;
+            handler.sendEmptyMessage(BookReadActivity.HANDLE_MESSAGE_CHAPTER_NEXT);
+        }else if(pageIndex < 0){
+            pageIndex =-1;
+            handler.sendEmptyMessage(BookReadActivity.HANDLE_MESSAGE_CHAPTER_PREV);
+        }
+
         postInvalidate();
+
+
     }
+
+
 }
