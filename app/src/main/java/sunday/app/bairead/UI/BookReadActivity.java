@@ -32,74 +32,75 @@ public class BookReadActivity extends Activity implements BookCacheManager.Chapt
     public static final int HANDLE_MESSAGE_CHAPTER_NEXT = 100;
     public static final int HANDLE_MESSAGE_CHAPTER_PREV = 200;
 
+    private BookModel bookModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.book_read_fragment);
         getWindowManager().getDefaultDisplay().getSize(FULL_SCREEN_POINT);
         BaiReadApplication application = (BaiReadApplication) getApplication();
-        BookModel bookModel = application.getBookModel();
+        bookModel = application.getBookModel();
 
         long bookId = getIntent().getExtras().getInt("BookId");
-        bookInfo = bookModel.getBookInfo(bookId);
+        bookInfo= bookModel.getBookInfo(bookId);
         mBookTextTview = (BookTextView) findViewById(R.id.book_read_fragment_book_text);
 
         mBookTextTview.setReadHandler(new ReadHandler());
-
-
         getChapterText();
-    }
+        }
 
-    @Override
-    public void end(final Spanned text) {
+@Override
+public void end(final Spanned text) {
         runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                alertDialog.hide();
-                mBookTextTview.setChapterText(text);
-            }
+@Override
+public void run() {
+        alertDialog.hide();
+        mBookTextTview.setChapterText(text);
+        bookModel.updateBookChapter(bookInfo.bookChapter);
+        }
         });
 
-    }
+        }
 
-    public void readNextChapter(){
+public void readNextChapter(){
         int index = bookInfo.bookChapter.getChapterIndex();
         bookInfo.bookChapter.setChapterIndex(++index);
         getChapterText();
-    }
+        }
 
-    public void readPrevChapter(){
+public void readPrevChapter(){
         int index = bookInfo.bookChapter.getChapterIndex();
         bookInfo.bookChapter.setChapterIndex(--index);
         getChapterText();
-    }
+        }
 
-    private AlertDialog alertDialog;
-    private void getChapterText(){
+private AlertDialog alertDialog;
+private void getChapterText(){
         if(alertDialog == null){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this).setMessage("下载中请稍后");
-            alertDialog = builder.create();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setMessage("下载中请稍后");
+        alertDialog = builder.create();
         }
         alertDialog.show();
         BookCacheManager.getInstance().getChapterText(bookInfo,this);
-    }
+        }
 
 
-    public class ReadHandler extends Handler{
-        @Override
-        public void handleMessage(Message msg) {
-            //super.handleMessage(msg);
-            switch(msg.what){
-                case HANDLE_MESSAGE_CHAPTER_NEXT:
-                    readNextChapter();
-                    break;
-                case HANDLE_MESSAGE_CHAPTER_PREV:
-                    readPrevChapter();
-                    break;
-                default:
+public class ReadHandler extends Handler{
+    @Override
+    public void handleMessage(Message msg) {
+        //super.handleMessage(msg);
+        switch(msg.what){
+            case HANDLE_MESSAGE_CHAPTER_NEXT:
+                readNextChapter();
+                break;
+            case HANDLE_MESSAGE_CHAPTER_PREV:
+                readPrevChapter();
+                break;
+            default:
 
-            }
         }
     }
+}
 
 }

@@ -12,3 +12,20 @@ public class BookInfo {
      * */
     public BookChapter bookChapter;
 }
+
+
+ class BookBase{
+     /**
+      * 书籍唯一ID
+      */
+     protected long id;
+
+     public long getId() {
+         return id;
+     }
+
+     public void setId(long nameId) {
+         id = nameId;
+     }
+
+}

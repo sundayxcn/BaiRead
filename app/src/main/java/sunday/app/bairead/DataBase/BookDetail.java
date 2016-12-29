@@ -7,12 +7,8 @@ import android.graphics.Bitmap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class BookDetail {
+public class BookDetail extends BookBase{
 
-    /**
-     * 书籍唯一ID
-     */
-    private long id;
     /**
      * 书名
      */
@@ -72,13 +68,6 @@ public class BookDetail {
         return updateTime;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long nameId) {
-        id = nameId;
-    }
 
     public void onAddToDatabase(ContentValues values) {
         values.put(BookSetting.Detail.NAME, name);

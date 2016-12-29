@@ -19,7 +19,7 @@ import sunday.app.bairead.Tool.FileManager;
  * 按行读取，第一行为第一章
  */
 
-public class BookChapter{
+public class BookChapter extends BookBase{
 
     public static final String FileName = "chapter.html";
 

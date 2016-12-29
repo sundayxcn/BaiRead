@@ -333,5 +333,15 @@ public class BookModel {
         return null;
     }
 
+    public void updateBookChapter(BookChapter bookChapter){
+        final ContentResolver cr = mContext.getContentResolver();
+        Uri uri = BookSetting.Chapter.CONTENT_URI;
+        ContentValues values = new ContentValues();
+        int index = bookChapter.getChapterIndex();
+        values.put(BookSetting.Chapter.INDEX,index);
+        String where = BookSetting.Chapter.ID +" = ?" +" and "+BookSetting.Chapter.CURRENT +" = 1";
+        cr.update(uri,values,where,new String[]{String.valueOf(bookChapter.getId())});
+    }
+
 
 }
