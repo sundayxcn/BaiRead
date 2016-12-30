@@ -127,6 +127,7 @@ public class BookModel {
     }
 
     public ArrayList<BookInfo> loadAllBook(){
+        mBookInfoList.clear();
         ArrayList<BookInfo> bookList = mBookInfoList;
         final ContentResolver cr = mContext.getContentResolver();
         Uri uri = BookSetting.Detail.CONTENT_URI;
