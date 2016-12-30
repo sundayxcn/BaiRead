@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -42,7 +43,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private ListView mListView;
     private BookDetailView bookDetailView;
 
-    private SearchHistory searchHistory = new SearchHistory();
+    private SearchHistory searchHistory;
     private SearchLinkAdapter mSearchLinkAdapter = new SearchLinkAdapter();
 
 
@@ -69,6 +70,15 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
 
         mListView = (ListView) view.findViewById(R.id.search_fragment_list_view);
+
+
+        File file = getActivity().getCacheDir();
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        searchHistory = new SearchHistory(file.getAbsolutePath());
+
+
         mListView.setAdapter(searchHistory.getAdapter());
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -88,6 +98,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
 
         bookDetailView = (BookDetailView) view.findViewById(R.id.search_fragment_top_book_detail);
+
+
 
 
         return view;
@@ -162,11 +174,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             notifyDataSetChanged();
         }
 
-//        public void setData(ArrayList<BookDetail> list){
-//            bookDetailList.clear();
-//            bookDetailList.addAll(list);
-//            notifyDataSetChanged();
-//        }
 
         @Override
         public int getCount() {
@@ -226,10 +233,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
     /**
      * Created by sunday on 2016/12/6.
-     * 用于对搜索历史的管理，每次进入读写根目录的searchHistory文件
+     * 用于对搜索历史的管理，每次进入读写缓存目录的searchHistory文件
      */
       class SearchHistory {
-        public static final String FILE_NAME = "searchHistory.txt";
+        public String fileName = "searchHistory.txt";
         private ArrayList<String> mHistoryList = new ArrayList<>();
 
         private SearchHistoryAdapter searchHistoryAdapter = new SearchHistoryAdapter();
@@ -238,8 +245,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             return searchHistoryAdapter;
         }
 
-        SearchHistory(){
-            ArrayList<String> list = FileManager.readFileByLine(FILE_NAME);
+        SearchHistory(String fileDir){
+            fileName = fileDir + "/" + fileName;
+
+            ArrayList<String> list = FileManager.readFileByLine(fileName);
             for(String name :list){
                 mHistoryList.add(0,name);
             }
@@ -255,7 +264,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                     mHistoryList.remove(bookName);
                     mHistoryList.add(0, bookName);
                 }else {
-                    FileManager.writeFileByLine(FILE_NAME, bookName);
+                    FileManager.writeFileByLine(fileName, bookName);
                     mHistoryList.add(0, bookName);
                 }
             }catch (IOException e){

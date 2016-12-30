@@ -73,26 +73,6 @@ public class FileManager {
 //        writeByte(fileDirPath+"/"+SearchManager.SEARCH_TXT,bytes);
 //    }
 
-
-    public static ArrayList<String> readFileByLine(String fileName){
-        ArrayList<String> list = new ArrayList<>();
-        String fileDirPath = PATH + "/" + fileName;
-        try{
-            File file = new File(fileDirPath);
-            InputStream inputStream = new FileInputStream(file);
-            InputStreamReader reader = new InputStreamReader(inputStream);
-            BufferedReader buffReader= new BufferedReader(reader);
-            String  str;
-            while ((str = buffReader .readLine()) != null) {
-                list.add(str);
-            }
-            inputStream.close();
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
     public static String readFile(String fileName){
         String fileDirPath = PATH + "/" + fileName;
         String string = null;
@@ -122,15 +102,35 @@ public class FileManager {
     }
 
 
-    public static void writeFileByLine(String fileName,String name) throws IOException {
-        String fileDirPath = PATH + "/" + fileName;
-        File file = new File(fileDirPath);
 
+    public static ArrayList<String> readFileByLine(String fileName){
+        ArrayList<String> list = new ArrayList<>();
+        try{
+            File file = new File(fileName);
+            if(!file.exists()){
+                file.createNewFile();
+            }
+            InputStream inputStream = new FileInputStream(file);
+            InputStreamReader reader = new InputStreamReader(inputStream);
+            BufferedReader buffReader= new BufferedReader(reader);
+            String  str;
+            while ((str = buffReader .readLine()) != null) {
+                list.add(str);
+            }
+            inputStream.close();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public static void writeFileByLine(String fileName,String name) throws IOException {
+        File file = new File(fileName);
         if(!file.exists()){
             file.createNewFile();
         }
 
-        FileWriter fileWriter = new FileWriter(fileDirPath, true);
+        FileWriter fileWriter = new FileWriter(fileName, true);
         fileWriter.write(name);
         fileWriter.write("\r\n");
         fileWriter.close();
