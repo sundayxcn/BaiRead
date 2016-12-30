@@ -1,7 +1,10 @@
 package sunday.app.bairead.Download;
 
+import java.io.IOException;
 import java.util.HashMap;
 
+import okhttp3.Call;
+import okhttp3.Response;
 import sunday.app.bairead.DataBase.BookChapter;
 import sunday.app.bairead.DataBase.BookDetail;
 import sunday.app.bairead.DataBase.BookInfo;
@@ -28,6 +31,9 @@ public class SearchManager extends OKhttpManager {
         searchFragment = fragment;
     }
 
+    /**
+     * 搜索指定网站
+     * */
     public void searchTopWeb(final String name) {
         bookName = name;
         String webName = WebInfo.TOP_WEB[0][0];
@@ -37,9 +43,19 @@ public class SearchManager extends OKhttpManager {
 
         String fileDir = FileManager.PATH +"/"+bookName+"/"+SEARCH_DIR;
         FileManager.createDir(fileDir);
-        String fileName = fileDir + "/"+"search.html";
+        final String fileName = fileDir + "/"+"search.html";
 
-        connectUrl(webInfo.getLink() + bookName, fileName,new ConnectListener() {
+        connectUrl(webInfo.getLink() + bookName,new ConnectListener() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                FileManager.writeByte(fileName,response.body().bytes());
+            }
+
             @Override
             public void start(String url) {
 
@@ -57,7 +73,17 @@ public class SearchManager extends OKhttpManager {
     private void downloadChapterLink(String link){
         if(link != null){
             final String chapterFile = FileManager.PATH +"/"+bookName+"/" + BookChapter.FileName;
-            connectUrl(link, chapterFile, new ConnectListener() {
+            connectUrl(link, new ConnectListener() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    FileManager.writeByte(chapterFile,response.body().bytes());
+                }
+
                 @Override
                 public void start(String url) {
 

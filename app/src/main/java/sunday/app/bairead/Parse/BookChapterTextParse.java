@@ -1,13 +1,10 @@
 package sunday.app.bairead.Parse;
 
-import android.text.Html;
-import android.util.Log;
-
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class BookTextParse extends HtmlParse{
+public class BookChapterTextParse extends HtmlParse{
 
     @Override
     public String parse(Document document) {

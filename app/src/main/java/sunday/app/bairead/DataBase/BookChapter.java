@@ -19,7 +19,7 @@ import sunday.app.bairead.Tool.FileManager;
  * 按行读取，第一行为第一章
  */
 
-public class BookChapter extends BookBase{
+public class BookChapter extends BookBase {
 
     public static final String FileName = "chapter.html";
 
@@ -30,29 +30,85 @@ public class BookChapter extends BookBase{
 
     /**
      * 章节总数
-     * */
+     */
     private int chapterCount;
 
     /**
      * 阅读章节
-     * */
+     */
     private int chapterIndex;
 
     /**
      * 当前阅读源
-     * */
+     */
     private boolean current;
 
 
-    private ArrayList<ChapterText> mChapterList;
+    private ArrayList<Chapter> mChapterList;
 
 
-    public static class Builder{
+    private BookChapter(Builder builder) {
+        this.chapterLink = builder.chapterLink;
+        this.chapterCount = builder.chapterCount;
+        this.chapterIndex = builder.chapterIndex;
+        this.current = builder.current;
+    }
+
+    public int getChapterIndex() {
+        return chapterIndex;
+    }
+
+    public void setChapterIndex(int index) {
+        chapterIndex = index;
+    }
+
+    public int getChapterCount() {
+        return chapterCount;
+    }
+
+    public String getChapterLink() {
+        return chapterLink;
+    }
+
+    public boolean isCurrent() {
+        return current;
+    }
+
+    public Chapter getChapter(int index) {
+        return mChapterList.get(index);
+    }
+
+    public Chapter getCurrentChapter(){
+        return mChapterList.get(chapterIndex);
+    }
+
+    public void setChapterList(ArrayList<Chapter> list) {
+        mChapterList = list;
+    }
+
+    public ArrayList<Chapter> getChapterList() {
+        return mChapterList;
+    }
+
+    public void onAddToDatabase(ContentValues values) {
+        values.put(BookSetting.Chapter.LINK, chapterLink);
+        values.put(BookSetting.Chapter.INDEX, chapterIndex);
+        values.put(BookSetting.Chapter.COUNT, chapterCount);
+
+        /*
+         *current 为真表示使用的是当前来源
+         */
+        int source = current ? 1 : 0;
+        values.put(BookSetting.Chapter.CURRENT, source);
+    }
+
+    public static class Builder {
         private String chapterLink;
         private int chapterCount;
         private int chapterIndex;
         private boolean current;
-        public Builder(){
+
+        public Builder() {
 
         }
 
@@ -76,84 +132,49 @@ public class BookChapter extends BookBase{
             return this;
         }
 
-        public BookChapter build(){
+        public BookChapter build() {
             return new BookChapter(this);
         }
 
     }
 
-    private BookChapter(Builder builder){
-        this.chapterLink = builder.chapterLink;
-        this.chapterCount = builder.chapterCount;
-        this.chapterIndex = builder.chapterIndex;
-        this.current = builder.current;
-    }
-
-    public int getChapterIndex() {
-        return chapterIndex;
-    }
-
-    public int getChapterCount() {
-        return chapterCount;
-    }
-
-    public String getChapterLink() {
-        return chapterLink;
-    }
-
-    public boolean isCurrent() {
-        return current;
-    }
-
-
-    public void setChapterIndex(int index){
-        chapterIndex = index;
-    }
-
-    public static class ChapterText{
-        /**
-         * 最终的网络地址和章节目录页拼接起来
-         * */
-        public ChapterText(String chapterLink,long num,String text){
-            linkHead = chapterLink;
-            webNum = num;
-            chapterText = text;
-        }
+    public static class Chapter {
         private final String linkHead;
         private final String linkEnd = ".html";
+        /**
+         * 仅用于章节排序
+         */
         private long webNum;
         private String chapterText;
-        public String getLink(){
+        private String chapterTitle;
+
+        /**
+         * 最终的网络地址和章节目录页拼接起来
+         */
+        public Chapter(String chapterLink, long num, String title) {
+            linkHead = chapterLink;
+            webNum = num;
+            chapterTitle = title;
+        }
+
+        public String getLink() {
             return linkHead + webNum + linkEnd;
         }
 
-        public String getText(){
+        public String getText() {
             return chapterText;
         }
 
-        public long getNum(){
+        public void setText(String chapterText) {
+            this.chapterText = chapterText;
+        }
+
+        public long getNum() {
             return webNum;
         }
-    }
 
-
-    public ChapterText getChapterText(int index){
-        return mChapterList.get(index);
-    }
-
-    public void setChapterList(ArrayList<ChapterText> list){
-        mChapterList = list;
-    }
-
-    public void onAddToDatabase(ContentValues values){
-        values.put(BookSetting.Chapter.LINK,chapterLink);
-        values.put(BookSetting.Chapter.INDEX,chapterIndex);
-        values.put(BookSetting.Chapter.COUNT,chapterCount);
-
-        /*
-         *current 为真表示使用的是当前来源
-         */
-        int source = current ? 1 : 0;
-        values.put(BookSetting.Chapter.CURRENT,source);
+        public String getTitle() {
+            return chapterTitle;
+        }
     }
 }

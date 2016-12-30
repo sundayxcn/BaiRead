@@ -19,14 +19,14 @@ import sunday.app.bairead.UI.BookReadActivity;
 
 public class BookTextView extends TextView implements View.OnClickListener{
 
-    private Spanned text;
+    private String text;
 
     public BookTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     private  TextPaint textPaint;
-    private int pageIndex = 0;
+    private int pageIndex = -1;
     private int mHeight;
     private int mWidth;
     private int mTop;
@@ -35,8 +35,9 @@ public class BookTextView extends TextView implements View.OnClickListener{
     //分段、分行、分页
     private ArrayList<PageText> pageTextList = new ArrayList<>();
 
-    public void setChapterText(Spanned spanned) {
-        text = spanned;
+    public void setChapterText(String chapterText) {
+        text = chapterText;
+        pageIndex = 0;
         if(mHeight != 0){
             createPageTextList();
         }
@@ -63,7 +64,9 @@ public class BookTextView extends TextView implements View.OnClickListener{
             Point point = new Point();
             getDisplay().getSize(point);
             mTop = point.y - mHeight;
-            createPageTextList();
+            if(text != null) {
+                createPageTextList();
+            }
         }
 
     }
@@ -90,7 +93,7 @@ public class BookTextView extends TextView implements View.OnClickListener{
      * **/
     private void createPageTextList(){
         pageTextList.clear();
-        String[] textArray = String.valueOf(text).trim().split("\n\n");
+        String[] textArray = text.trim().split("\n\n");
         pageIndex = 0;
         textPaint = new TextPaint();
         textPaint.setAntiAlias(true);

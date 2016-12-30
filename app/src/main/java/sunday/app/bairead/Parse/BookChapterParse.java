@@ -19,16 +19,15 @@ public class BookChapterParse extends HtmlParse{
     public BookChapter parse(Document document) {
 
         final String linkHead = getChapterLink(document);
-
         Elements elements =  document.select("dd");
 
-        ArrayList<BookChapter.ChapterText> list = new ArrayList<>();
+        ArrayList<BookChapter.Chapter> list = new ArrayList<>();
         for(Element element : elements){
             String linkHref = element.select("a[href]").attr("href");
-            String chapterText = element.select("a[href]").get(0).text();
+            String chapterTitle = element.select("a[href]").get(0).text();
             String[] cs = linkHref.split("/|\\.");
             String s = cs[cs.length-2];
-            list.add(new BookChapter.ChapterText(linkHead,Long.valueOf(s),chapterText));
+            list.add(new BookChapter.Chapter(linkHead,Long.valueOf(s),chapterTitle));
         }
         sortAndRemoveDuplicate(list);
         BookChapter.Builder builder = new BookChapter.Builder().
@@ -60,10 +59,10 @@ public class BookChapterParse extends HtmlParse{
         return null;
     }
 
-    private void sortAndRemoveDuplicate(ArrayList<BookChapter.ChapterText> list){
-        Collections.sort(list, new Comparator<BookChapter.ChapterText>() {
+    private void sortAndRemoveDuplicate(ArrayList<BookChapter.Chapter> list){
+        Collections.sort(list, new Comparator<BookChapter.Chapter>() {
             @Override
-            public int compare(BookChapter.ChapterText o1, BookChapter.ChapterText o2) {
+            public int compare(BookChapter.Chapter o1, BookChapter.Chapter o2) {
                 if(o1.getNum() < o2.getNum()){
                     return -1;
                 }else{

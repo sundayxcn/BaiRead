@@ -6,13 +6,12 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PersistableBundle;
-import android.text.Spanned;
 
 import sunday.app.bairead.DataBase.BaiReadApplication;
+import sunday.app.bairead.DataBase.BookChapter;
 import sunday.app.bairead.DataBase.BookInfo;
 import sunday.app.bairead.DataBase.BookModel;
-import sunday.app.bairead.Download.BookCacheManager;
+import sunday.app.bairead.Download.BookChapterCache;
 import sunday.app.bairead.R;
 import sunday.app.bairead.View.BookTextView;
 
@@ -20,19 +19,17 @@ import sunday.app.bairead.View.BookTextView;
  * Created by sunday on 2016/12/21.
  */
 
-public class BookReadActivity extends Activity implements BookCacheManager.ChapterListener{
-
-    private BookTextView mBookTextTview;
-
-    private BookInfo bookInfo;
-
-    public static Point FULL_SCREEN_POINT = new Point();
-
+public class BookReadActivity extends Activity implements BookChapterCache.ChapterListener {
 
     public static final int HANDLE_MESSAGE_CHAPTER_NEXT = 100;
     public static final int HANDLE_MESSAGE_CHAPTER_PREV = 200;
-
+    public static Point FULL_SCREEN_POINT = new Point();
+    private BookTextView mBookTextTview;
+    private BookInfo bookInfo;
     private BookModel bookModel;
+    private AlertDialog alertDialog;
+
+    private BookChapterCache bookChapterCache = BookChapterCache.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,64 +40,50 @@ public class BookReadActivity extends Activity implements BookCacheManager.Chapt
         bookModel = application.getBookModel();
 
         long bookId = getIntent().getExtras().getInt("BookId");
-        bookInfo= bookModel.getBookInfo(bookId);
+        bookInfo = bookModel.getBookInfo(bookId);
         mBookTextTview = (BookTextView) findViewById(R.id.book_read_fragment_book_text);
 
         mBookTextTview.setReadHandler(new ReadHandler());
-        getChapterText();
-        }
 
-@Override
-public void end(final Spanned text) {
-        runOnUiThread(new Runnable() {
-@Override
-public void run() {
-        alertDialog.hide();
-        mBookTextTview.setChapterText(text);
+
+        bookChapterCache.setBookInfo(bookInfo,this);
+        bookChapterCache.initChapterRead();
+
+    }
+
+    @Override
+    public void end(BookChapter.Chapter chapter) {
         bookModel.updateBookChapter(bookInfo.bookChapter);
-        }
+        final String text = chapter.getText();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //alertDialog.hide();
+                mBookTextTview.setChapterText(text);
+            }
         });
 
-        }
+    }
 
-public void readNextChapter(){
-        int index = bookInfo.bookChapter.getChapterIndex();
-        bookInfo.bookChapter.setChapterIndex(++index);
-        getChapterText();
-        }
+    public class ReadHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            //super.handleMessage(msg);
+            switch (msg.what) {
+                case HANDLE_MESSAGE_CHAPTER_NEXT:
+                    bookChapterCache.nextChapter();
+                    break;
+                case HANDLE_MESSAGE_CHAPTER_PREV:
+                    bookChapterCache.prevChapter();
+                    break;
+                default:
 
-public void readPrevChapter(){
-        int index = bookInfo.bookChapter.getChapterIndex();
-        bookInfo.bookChapter.setChapterIndex(--index);
-        getChapterText();
-        }
-
-private AlertDialog alertDialog;
-private void getChapterText(){
-        if(alertDialog == null){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this).setMessage("下载中请稍后");
-        alertDialog = builder.create();
-        }
-        alertDialog.show();
-        BookCacheManager.getInstance().getChapterText(bookInfo,this);
-        }
-
-
-public class ReadHandler extends Handler{
-    @Override
-    public void handleMessage(Message msg) {
-        //super.handleMessage(msg);
-        switch(msg.what){
-            case HANDLE_MESSAGE_CHAPTER_NEXT:
-                readNextChapter();
-                break;
-            case HANDLE_MESSAGE_CHAPTER_PREV:
-                readPrevChapter();
-                break;
-            default:
-
+            }
         }
     }
-}
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

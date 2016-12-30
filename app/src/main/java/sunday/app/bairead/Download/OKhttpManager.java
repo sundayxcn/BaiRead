@@ -24,7 +24,7 @@ public class OKhttpManager{
     }
 
 
-    public interface ConnectListener{
+    public interface ConnectListener extends Callback{
         void start(String url);
         void end(String fileName);
     }
@@ -44,32 +44,36 @@ public class OKhttpManager{
     /**
      * 下载网址源码
      * @param url 网站地址
-     * @param fileName 保存的文件地址
      * @param connectListener 下载过程的回调
      * */
-    public void connectUrl(final String url,final String fileName,final ConnectListener connectListener) {
+    public void connectUrl(final String url,final ConnectListener connectListener) {
         if(connectListener != null){
             connectListener.start(url);
         }
         final Request request = new Request.Builder().url(url).build();
         Call call = OKhttpManager.getInstance().getOkHttpClient().newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d("sunday", "OKHttp onFailure");
-            }
+        call.enqueue(connectListener);
+    }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                //call.
-                //response.
-                //response.headers().toString();
-                //、Log.e()
-                if(connectListener != null){
-                    FileManager.writeByte(fileName,response.body().bytes());
-                    connectListener.end(fileName);
-                }
-            }
-        });
+    /**
+     * 下载网址源码
+     * @param url 网站地址
+     *  阻塞方式
+     * */
+    public Response connectUrl(final String url) {
+//        if(connectListener != null){
+//            connectListener.start(url);
+//        }
+        final Request request = new Request.Builder().url(url).build();
+        Call call = OKhttpManager.getInstance().getOkHttpClient().newCall(request);
+        //call.enqueue(connectListener);
+        try {
+            return call.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }finally {
+
+        }
     }
 }
