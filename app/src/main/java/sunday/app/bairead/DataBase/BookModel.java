@@ -193,6 +193,7 @@ public class BookModel {
                 }else {
                     String fileName = FileManager.PATH+"/"+bookInfo.bookDetail.getName()+"/"+ BookChapter.FileName;
                     BookChapter bookChapter = JsoupParse.from(fileName,new BookChapterParse());
+                    bookChapter.setId(id);
                     bookChapter.setChapterIndex(index);
                     bookInfo.bookChapter = bookChapter;
                 }
