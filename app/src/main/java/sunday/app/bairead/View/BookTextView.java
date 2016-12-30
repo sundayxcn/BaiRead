@@ -29,7 +29,6 @@ public class BookTextView extends TextView implements View.OnClickListener{
     private int pageIndex = -1;
     private int mHeight;
     private int mWidth;
-    private int mTop;
     private int paddingLeft;
 
     //分段、分行、分页
@@ -61,9 +60,6 @@ public class BookTextView extends TextView implements View.OnClickListener{
         if(mHeight != MeasureSpec.getSize(heightMeasureSpec)){
             mWidth = MeasureSpec.getSize(widthMeasureSpec);
             mHeight = MeasureSpec.getSize(heightMeasureSpec);
-            Point point = new Point();
-            getDisplay().getSize(point);
-            mTop = point.y - mHeight;
             if(text != null) {
                 createPageTextList();
             }
@@ -78,9 +74,10 @@ public class BookTextView extends TextView implements View.OnClickListener{
         public void onDraw(Canvas canvas){
             canvas.save();
             int count = lineTextList.size();
+            int top = getTop();
             for(int i = 0;i< count;i++) {
                 String s = lineTextList.get(i);
-                int height = mTop+  i * LINE_HEIGHT;
+                int height = top +  i * LINE_HEIGHT;
                 canvas.drawText(s, paddingLeft, height, textPaint);
             }
             canvas.restore();

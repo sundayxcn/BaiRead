@@ -3,9 +3,11 @@ package sunday.app.bairead.UI;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.TextView;
 
 import sunday.app.bairead.DataBase.BaiReadApplication;
 import sunday.app.bairead.DataBase.BookChapter;
@@ -23,7 +25,7 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
 
     public static final int HANDLE_MESSAGE_CHAPTER_NEXT = 100;
     public static final int HANDLE_MESSAGE_CHAPTER_PREV = 200;
-    public static Point FULL_SCREEN_POINT = new Point();
+    private TextView mBookTitleTView;
     private BookTextView mBookTextTview;
     private BookInfo bookInfo;
     private BookModel bookModel;
@@ -34,15 +36,18 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.book_read_fragment);
-        getWindowManager().getDefaultDisplay().getSize(FULL_SCREEN_POINT);
+        setContentView(R.layout.book_read_activity);
+
         BaiReadApplication application = (BaiReadApplication) getApplication();
         bookModel = application.getBookModel();
 
         long bookId = getIntent().getExtras().getInt("BookId");
         bookInfo = bookModel.getBookInfo(bookId);
-        mBookTextTview = (BookTextView) findViewById(R.id.book_read_fragment_book_text);
 
+
+        mBookTitleTView = (TextView) findViewById(R.id.book_read_activity_book_title);
+
+        mBookTextTview = (BookTextView) findViewById(R.id.book_read_activity_book_text);
         mBookTextTview.setReadHandler(new ReadHandler());
 
 
@@ -55,11 +60,13 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
     public void end(BookChapter.Chapter chapter) {
         bookModel.updateBookChapter(bookInfo.bookChapter);
         final String text = chapter.getText();
+        final String title = chapter.getTitle();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 //alertDialog.hide();
                 mBookTextTview.setChapterText(text);
+                mBookTitleTView.setText(title);
             }
         });
 
