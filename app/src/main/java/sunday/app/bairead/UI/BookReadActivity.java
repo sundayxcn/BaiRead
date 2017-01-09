@@ -3,7 +3,6 @@ package sunday.app.bairead.UI;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -33,6 +32,10 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
 
     private BookChapterCache bookChapterCache = BookChapterCache.getInstance();
 
+    public static final String EXTRAS_BOOK_ID = "BookId";
+
+    public static final Point READ_POINT = new Point();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +44,7 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
         BaiReadApplication application = (BaiReadApplication) getApplication();
         bookModel = application.getBookModel();
 
-        long bookId = getIntent().getExtras().getInt("BookId");
+        long bookId = getIntent().getExtras().getLong(EXTRAS_BOOK_ID,0);
         bookInfo = bookModel.getBookInfo(bookId);
 
 
@@ -50,6 +53,7 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
         mBookTextTview = (BookTextView) findViewById(R.id.book_read_activity_book_text);
         mBookTextTview.setReadHandler(new ReadHandler());
 
+        getWindowManager().getDefaultDisplay().getSize(READ_POINT);
 
         bookChapterCache.setBookInfo(bookInfo,this);
         bookChapterCache.initChapterRead();
@@ -78,10 +82,10 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
             //super.handleMessage(msg);
             switch (msg.what) {
                 case HANDLE_MESSAGE_CHAPTER_NEXT:
-                    bookChapterCache.nextChapter();
+                    bookChapterCache.nextChapter(BookReadActivity.this);
                     break;
                 case HANDLE_MESSAGE_CHAPTER_PREV:
-                    bookChapterCache.prevChapter();
+                    bookChapterCache.prevChapter(BookReadActivity.this);
                     break;
                 default:
 

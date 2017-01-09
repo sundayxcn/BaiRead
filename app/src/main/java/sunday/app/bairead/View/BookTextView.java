@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,12 +18,13 @@ import sunday.app.bairead.UI.BookReadActivity;
  * Created by sunday on 2016/12/16.
  */
 
-public class BookTextView extends TextView implements View.OnClickListener{
+public class BookTextView extends TextView implements View.OnTouchListener{
 
     private String text;
 
     public BookTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setOnTouchListener(this);
     }
 
     private  TextPaint textPaint;
@@ -41,7 +43,8 @@ public class BookTextView extends TextView implements View.OnClickListener{
             createPageTextList();
         }
         postInvalidate();
-        setOnClickListener(this);
+
+        //setOnClickListener(this);
     }
 
     @Override
@@ -65,6 +68,28 @@ public class BookTextView extends TextView implements View.OnClickListener{
             }
         }
 
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        int action = event.getAction();
+        switch (action){
+            case MotionEvent.ACTION_UP:
+                float x = event.getX();
+                float y = event.getY();
+                if( y>(BookReadActivity.READ_POINT.y / 3 * 2 )){
+                    readNext(true);
+                }else if(y < BookReadActivity.READ_POINT.y / 3){
+                    readNext(false);
+                }else{
+                    showSetting();
+                }
+                break;
+            default:
+                break;
+
+        }
+        return true;
     }
 
 
@@ -132,9 +157,16 @@ public class BookTextView extends TextView implements View.OnClickListener{
         handler = readHandler;
     }
 
-    @Override
-    public void onClick(View v) {
-        pageIndex++;
+
+
+
+    private void readNext(boolean next){
+        if(next){
+            pageIndex++;
+        }else{
+            pageIndex--;
+        }
+
 
         if(pageIndex > (pageTextList.size() -1)){
             pageIndex = -1;
@@ -142,12 +174,14 @@ public class BookTextView extends TextView implements View.OnClickListener{
         }else if(pageIndex < 0){
             pageIndex =-1;
             handler.sendEmptyMessage(BookReadActivity.HANDLE_MESSAGE_CHAPTER_PREV);
+        }else {
+            postInvalidate();
         }
-
-        postInvalidate();
-
 
     }
 
+    private void showSetting(){
+
+    }
 
 }

@@ -44,15 +44,20 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent();
-                intent.setClass(activity,BookReadActivity.class);
-                intent.putExtra("BookId",1);
-                activity.startActivity(intent);
+                long bookId = mBookInfoList.get(position - 1 ).bookDetail.getId();
+                readBook(activity,bookId);
             }
         });
 
     }
 
+
+    public static void readBook(Context context,long bookId){
+        Intent intent = new Intent();
+        intent.setClass(context,BookReadActivity.class);
+        intent.putExtra(BookReadActivity.EXTRAS_BOOK_ID,bookId);
+        context.startActivity(intent);
+    }
 
     private void onLoad() {
         mListView.stopRefresh();

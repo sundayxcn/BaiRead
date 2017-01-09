@@ -13,6 +13,7 @@ import sunday.app.bairead.DataBase.BaiReadApplication;
 import sunday.app.bairead.DataBase.BookInfo;
 import sunday.app.bairead.DataBase.BookModel;
 import sunday.app.bairead.R;
+import sunday.app.bairead.UI.BookcaseControl;
 
 /**
  * Created by sunday on 2016/12/8.
@@ -97,6 +98,7 @@ public class BookDetailView extends LinearLayout {
 
             switch(v.getId()){
                 case R.id.search_book_detail_button_read:
+                    BookcaseControl.readBook(application,bookInfo.bookDetail.getId());
                     break;
                 case R.id.search_book_detail_button_bookcase:
                     mBookcaseBView.setText(R.string.search_book_detail_button_bookcase_add_text);

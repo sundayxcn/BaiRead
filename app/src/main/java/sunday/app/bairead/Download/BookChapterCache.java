@@ -1,7 +1,9 @@
 package sunday.app.bairead.Download;
 
+import android.content.Context;
 import android.text.Html;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -97,19 +99,37 @@ public class BookChapterCache {
         }
     }
 
-    public void nextChapter() {
+    public void nextChapter(Context context) {
         int index = bookinfo.bookChapter.getChapterIndex() + 1;
+        if(index ==  bookinfo.bookChapter.getChapterCount()){
+            Toast.makeText(context,"已到最后一章",Toast.LENGTH_SHORT).show();
+            return;
+        }
         bookinfo.bookChapter.setChapterIndex(index);
         updateChapterCache(index);
 
     }
 
-    public void prevChapter() {
+    public void prevChapter(Context context) {
         int index = bookinfo.bookChapter.getChapterIndex() - 1;
-        BookChapter.Chapter chapter = bookinfo.bookChapter.getChapter(index);
-        if (chapter.getText() != null) {
-            chapterListener.end(chapter);
+        if(index < 0 ){
+            Toast.makeText(context,"已到第一章",Toast.LENGTH_SHORT).show();
+            return;
         }
+        bookinfo.bookChapter.setChapterIndex(index);
+        BookChapter.Chapter chapter = bookinfo.bookChapter.getChapter(index);
+        if (chapter.getText() == null) {
+            if(isChapterExists(index)){
+                final String fileName = fullDir + "/" + chapter.getNum() + ".html";
+                String text = JsoupParse.from(fileName, new BookChapterTextParse());
+                text = String.valueOf(Html.fromHtml(text));
+                chapter.setText(text);
+                chapterListener.end(chapter);
+            }else{
+
+            }
+        }
+        chapterListener.end(chapter);
     }
 
     /**

@@ -156,8 +156,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             if(bookName.length() > 0) {
                 searchHistory.addHistory(bookName);
 
-                new SearchManager(SearchFragment.this).debugDetail(bookName);
-                //new SearchManager(SearchFragment.this).searchTopWeb(bookName);
+                //new SearchManager(SearchFragment.this).debugDetail(bookName);
+                new SearchManager(SearchFragment.this).searchTopWeb(bookName);
             }
         }else{
             Toast.makeText(getContext(),"open the network",Toast.LENGTH_SHORT).show();

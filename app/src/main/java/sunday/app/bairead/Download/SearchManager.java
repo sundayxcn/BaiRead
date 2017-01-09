@@ -41,8 +41,7 @@ public class SearchManager extends OKhttpManager {
         String webSearchLink = WebInfo.TOP_WEB[0][2];
         WebInfo webInfo = new WebInfo(webName,webLink,webSearchLink);
 
-        String fileDir = FileManager.PATH +"/"+bookName+"/"+SEARCH_DIR;
-        FileManager.createDir(fileDir);
+        final String fileDir = FileManager.PATH +"/"+bookName+"/"+SEARCH_DIR;
         final String fileName = fileDir + "/"+"search.html";
 
         connectUrl(webInfo.getLink() + bookName,new ConnectListener() {
@@ -54,19 +53,17 @@ public class SearchManager extends OKhttpManager {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 FileManager.writeByte(fileName,response.body().bytes());
+                HashMap<String,String> hashMap =  JsoupParse.from(fileName,new BaiduSearchParse());
+                String chapterLink = hashMap.get(bookName);
+                downloadChapterLink(chapterLink);
             }
 
             @Override
             public void start(String url) {
 
+                FileManager.createDir(fileDir);
             }
 
-            @Override
-            public void end(String fileName) {
-                HashMap<String,String> hashMap =  JsoupParse.from(fileName,new BaiduSearchParse());
-                String chapterLink = hashMap.get(bookName);
-                downloadChapterLink(chapterLink);
-            }
         });
     }
 
@@ -82,6 +79,10 @@ public class SearchManager extends OKhttpManager {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     FileManager.writeByte(chapterFile,response.body().bytes());
+                    BookInfo bookInfo = new BookInfo();
+                    bookInfo.bookDetail = JsoupParse.from(chapterFile,new BookDetailParse());
+                    bookInfo.bookChapter  = JsoupParse.from(chapterFile,new BookChapterParse());
+                    searchFragment.refreshSearchResult(bookInfo);
                 }
 
                 @Override
@@ -89,13 +90,6 @@ public class SearchManager extends OKhttpManager {
 
                 }
 
-                @Override
-                public void end(String fileName) {
-                    BookInfo bookInfo = new BookInfo();
-                    bookInfo.bookDetail = JsoupParse.from(chapterFile,new BookDetailParse());
-                    bookInfo.bookChapter  = JsoupParse.from(chapterFile,new BookChapterParse());
-                    searchFragment.refreshSearchResult(bookInfo);
-                }
             });
         }
     }
