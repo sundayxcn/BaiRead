@@ -95,6 +95,12 @@ public class BookChapterCache {
             startCache();
         }else{
             int index = bookinfo.bookChapter.getChapterIndex();
+            //缓存当前章节的前后5章
+            if(index - MAX_CACHE /2 < 0){
+                index = 0;
+            }else{
+                index = index - MAX_CACHE/2;
+            }
             product.setIndex(index);
         }
     }
@@ -128,8 +134,10 @@ public class BookChapterCache {
             }else{
 
             }
+        }else{
+            updateChapterCache(index);
         }
-        chapterListener.end(chapter);
+        //chapterListener.end(chapter);
     }
 
     /**

@@ -97,4 +97,30 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
     protected void onDestroy() {
         super.onDestroy();
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int action = event.getAction();
+        switch (action){
+            case MotionEvent.ACTION_UP:
+                float x = event.getX();
+                float y = event.getY();
+                if( y>(BookReadActivity.READ_POINT.y / 3 * 2 )){
+                    mBookTextTview.readNext(true);
+                }else if(y < BookReadActivity.READ_POINT.y / 3){
+                    mBookTextTview.readNext(false);
+                }else{
+                    showSetting();
+                }
+                break;
+            default:
+                break;
+
+        }
+        return true;
+    }
+
+    private void showSetting(){
+
+    }
 }

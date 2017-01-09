@@ -18,13 +18,12 @@ import sunday.app.bairead.UI.BookReadActivity;
  * Created by sunday on 2016/12/16.
  */
 
-public class BookTextView extends TextView implements View.OnTouchListener{
+public class BookTextView extends TextView {
 
     private String text;
 
     public BookTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setOnTouchListener(this);
     }
 
     private  TextPaint textPaint;
@@ -69,29 +68,6 @@ public class BookTextView extends TextView implements View.OnTouchListener{
         }
 
     }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        int action = event.getAction();
-        switch (action){
-            case MotionEvent.ACTION_UP:
-                float x = event.getX();
-                float y = event.getY();
-                if( y>(BookReadActivity.READ_POINT.y / 3 * 2 )){
-                    readNext(true);
-                }else if(y < BookReadActivity.READ_POINT.y / 3){
-                    readNext(false);
-                }else{
-                    showSetting();
-                }
-                break;
-            default:
-                break;
-
-        }
-        return true;
-    }
-
 
     class PageText{
         public static final int LINE_HEIGHT = 80;
@@ -160,7 +136,7 @@ public class BookTextView extends TextView implements View.OnTouchListener{
 
 
 
-    private void readNext(boolean next){
+    public void readNext(boolean next){
         if(next){
             pageIndex++;
         }else{
@@ -177,10 +153,6 @@ public class BookTextView extends TextView implements View.OnTouchListener{
         }else {
             postInvalidate();
         }
-
-    }
-
-    private void showSetting(){
 
     }
 
