@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/book_read_setting_panel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@color/colorDark"
+        android:id="@+id/book_read_setting_panel_top_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_alignParentRight="true"
+            android:src="@drawable/book_read_setting_panel_source"
+            android:id="@+id/book_read_setting_panel_source"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </RelativeLayout>
+
+
+
+    <LinearLayout
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@color/colorDark"
+        android:id="@+id/book_read_setting_panel_bottom_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:layout_weight="1"
+            android:src="@drawable/book_read_setting_panel_chapter"
+            android:id="@+id/book_read_setting_panel_chapter_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_weight="1"
+            android:src="@drawable/book_read_setting_panel_bookmark"
+            android:id="@+id/book_read_setting_panel_book_mark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_weight="1"
+            android:src="@drawable/book_read_setting_panel_font"
+            android:id="@+id/book_read_setting_panel_text_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_weight="1"
+            android:src="@drawable/book_read_setting_panel_more"
+            android:id="@+id/book_read_setting_panel_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</RelativeLayout>

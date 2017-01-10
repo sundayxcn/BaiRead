@@ -140,6 +140,12 @@ public class BookChapterCache {
         //chapterListener.end(chapter);
     }
 
+    public void setChapter(int index){
+        bookinfo.bookChapter.setChapterIndex(index);
+        initChapterRead();
+    }
+
+
     /**
      * 消费者
      * 生产一个章节之后，收到通知，如果生产的章节是要显示的章节则显示，并且从缓存中移除

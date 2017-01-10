@@ -20,26 +20,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="18dp" />
-
-
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/book_read_setting_panel"
+    <include
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        layout="@layout/book_read_setting_panel"/>
 
-
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-
-    </LinearLayout>
-
-    </RelativeLayout>
 
 </FrameLayout>
