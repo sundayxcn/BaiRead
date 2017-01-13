@@ -3,18 +3,27 @@ package sunday.app.bairead.UI;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Headers;
+import okhttp3.Response;
 import sunday.app.bairead.DataBase.BookChapter;
 import sunday.app.bairead.DataBase.BookDetail;
 import sunday.app.bairead.DataBase.BookInfo;
 import sunday.app.bairead.DataBase.BookModel;
+import sunday.app.bairead.Download.OKhttpManager;
+import sunday.app.bairead.Parse.BookChapterParse;
+import sunday.app.bairead.Parse.JsoupParse;
 import sunday.app.bairead.R;
 import sunday.app.bairead.Tool.FileManager;
 import sunday.app.bairead.View.BookcaseView;
@@ -91,6 +100,8 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
         mBookInfoList.clear();
         mBookInfoList.addAll(list);
         mAdapter.notifyDataSetChanged();
+        checkAllNewChapter();
+
     }
 
     @Override
@@ -139,5 +150,72 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
             return convertView;
         }
     }
+
+
+    private void checkNewChapter(final BookInfo bookInfo){
+        String url = bookInfo.bookChapter.getChapterLink();
+        OKhttpManager.getInstance().connectUrl(url, new OKhttpManager.ConnectListener() {
+            @Override
+            public void start(String url) {
+
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                //Log.e("sunday","checkNewChapter-");
+                //Response cacheResponse = response.cacheResponse();
+                Response netWorkResponse = response.networkResponse();
+                if(netWorkResponse != null){
+                    final String chapterFile = FileManager.PATH +"/"+bookInfo.bookDetail.getName()+"/" + BookChapter.FileName;
+                    FileManager.writeByte(chapterFile,netWorkResponse.body().bytes());
+                    bookInfo.bookChapter = JsoupParse.from(chapterFile, new BookChapterParse());
+                    //newChapterList.add(bookInfo);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            BookcaseView bookcaseView = indexOf(bookInfo.bookDetail.getId());
+                            if(bookcaseView != null){
+                                bookcaseView.setData(bookInfo);
+                                bookcaseView.setUpdate();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+
+    //private ArrayList<BookInfo> newChapterList = new ArrayList<>();
+
+    public void checkAllNewChapter(){
+        for(BookInfo bookInfo : mBookInfoList ) {
+            checkNewChapter(bookInfo);
+        }
+    }
+
+
+
+
+
+    public BookcaseView indexOf(long bookId){
+        int count = mListView.getChildCount();
+        for(int i = 0;i<count;i++){
+            View view = mListView.getChildAt(i);
+            if(view instanceof BookcaseView){
+                long id = (long) view.getTag();
+                if(id == bookId){
+                    return (BookcaseView) view;
+                }
+            }
+        }
+        return  null;
+    }
+
 
 }

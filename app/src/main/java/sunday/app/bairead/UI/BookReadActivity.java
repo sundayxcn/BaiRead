@@ -134,13 +134,11 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
                 RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         layoutParams.setMargins(0, 0, 500, 0);
         settingPanel.addView(chapterListView, layoutParams);
-        showSettingLong();
     }
 
     private void hideChapterList() {
         settingPanel.removeView(chapterListView);
         chapterListView = null;
-        showSettingShort();
     }
 
     @Override
@@ -149,6 +147,7 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
         switch (v.getId()) {
             case R.id.book_read_setting_panel_chapter_menu:
                 showChapterList();
+                showSettingLong();
                 break;
             case R.id.book_read_setting_panel_book_mark:
 
@@ -216,6 +215,7 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
     public void onBackPressed() {
         if (chapterListView != null) {
             hideChapterList();
+            showSettingShort();
         } else {
             super.onBackPressed();
         }

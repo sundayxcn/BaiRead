@@ -109,10 +109,10 @@ public class BookChapterCache {
         int index = bookinfo.bookChapter.getChapterIndex() + 1;
         if(index ==  bookinfo.bookChapter.getChapterCount()){
             Toast.makeText(context,"已到最后一章",Toast.LENGTH_SHORT).show();
-            return;
+        }else {
+            bookinfo.bookChapter.setChapterIndex(index);
+            updateChapterCache(index);
         }
-        bookinfo.bookChapter.setChapterIndex(index);
-        updateChapterCache(index);
 
     }
 
@@ -201,11 +201,12 @@ public class BookChapterCache {
             while (isProductRun) {
                 synchronized (mChapterCacheMap) {
                     try {
-
-                        while (mChapterCacheMap.size() == MAX_CACHE) {
+                        int maxIndex = bookinfo.bookChapter.getChapterCount();
+                        while (mChapterCacheMap.size() == MAX_CACHE || index == maxIndex) {
                             Log.e("sunday", "章节缓存已满10章");
                             mChapterCacheMap.wait();
                         }
+
                         final BookChapter.Chapter chapter = bookinfo.bookChapter.getChapter(index);
                         final String fileName = fullDir + "/" + chapter.getNum() + ".html";
                         boolean currentFile = isChapterExists(index);

@@ -78,11 +78,13 @@ public class SearchManager extends OKhttpManager {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    FileManager.writeByte(chapterFile,response.body().bytes());
-                    BookInfo bookInfo = new BookInfo();
-                    bookInfo.bookDetail = JsoupParse.from(chapterFile,new BookDetailParse());
-                    bookInfo.bookChapter  = JsoupParse.from(chapterFile,new BookChapterParse());
-                    searchFragment.refreshSearchResult(bookInfo);
+                    if(response.networkResponse() != null) {
+                        FileManager.writeByte(chapterFile, response.body().bytes());
+                        BookInfo bookInfo = new BookInfo();
+                        bookInfo.bookDetail = JsoupParse.from(chapterFile, new BookDetailParse());
+                        bookInfo.bookChapter = JsoupParse.from(chapterFile, new BookChapterParse());
+                        searchFragment.refreshSearchResult(bookInfo);
+                    }
                 }
 
                 @Override

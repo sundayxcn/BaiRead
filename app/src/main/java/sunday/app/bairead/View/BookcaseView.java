@@ -50,6 +50,15 @@ public class BookcaseView extends RelativeLayout {
         mBookNameTview.setText(name);
         mBookChapterLatestTview.setText(chapterLatest);
         mBookChapterIndexTview.setText(chapterText);
+        setTag(bookInfo.bookDetail.getId());
+    }
+
+    public void setUpdate(){
+        mBookChapterUpdateTview.setVisibility(VISIBLE);
+    }
+
+    public void hideUpdate(){
+        mBookChapterUpdateTview.setVisibility(INVISIBLE);
     }
 
 }

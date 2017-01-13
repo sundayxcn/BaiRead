@@ -2,8 +2,12 @@ package sunday.app.bairead.Download;
 
 import android.util.Log;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
+import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -17,10 +21,13 @@ import sunday.app.bairead.Tool.FileManager;
  */
 public class OKhttpManager{
     private static OKhttpManager mOKhttpManager;
-    private OkHttpClient okHttpClient = new OkHttpClient();
+    private OkHttpClient okHttpClient;
 
     private void OKhttpManager() {
-
+        int cacheSize = 10 * 1024 * 1024; // 10 MiB
+//        String cacheDirectory =
+//        Cache cache = new Cache(cacheDirectory, cacheSize);
+//        okHttpClient.cache();
     }
 
 
@@ -38,6 +45,14 @@ public class OKhttpManager{
     }
 
     public OkHttpClient getOkHttpClient() {
+        if(okHttpClient == null){
+            long cacheSize = 10 * 1024 * 1024; // 10 MiB
+
+            File cacheDirectory = new File(FileManager.PATH+"/"+"cache");
+            Cache cache = new Cache(cacheDirectory, cacheSize);
+            okHttpClient = new OkHttpClient.Builder().cache(cache).build();
+        }
+
         return okHttpClient;
     }
 
@@ -50,7 +65,14 @@ public class OKhttpManager{
         if(connectListener != null){
             connectListener.start(url);
         }
-        final Request request = new Request.Builder().url(url).build();
+        //CacheControl cacheControl = new CacheControl.Builder().maxStale(365, TimeUnit.DAYS).build();
+        //cacheControl.m
+        //cacheControl.
+        final Request request = new Request.Builder().url(url)
+//                .cacheControl(cacheControl)
+//                .addHeader("If-None-Match","\"8051533a2e6cd21:0\"")
+//                .addHeader("If-Modified-Since","Wed, 11 Jan 2017 17:14:55 GMT")
+                .build();
         Call call = OKhttpManager.getInstance().getOkHttpClient().newCall(request);
         call.enqueue(connectListener);
     }
