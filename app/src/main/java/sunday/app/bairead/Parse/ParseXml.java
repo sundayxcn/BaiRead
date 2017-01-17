@@ -7,13 +7,10 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by sunday on 2016/9/13.
+ * Created by sunday on 2017/1/16.
  */
 
-
-public  class JsoupParse{
-    public static final String TAG = "snuday";
-
+public abstract class ParseXml {
 
     enum Charset{
         UTF8,
@@ -30,28 +27,28 @@ public  class JsoupParse{
         }
     }
 
+    public abstract <T> T parse(String fileName);
 
-    public static <T> T from(String fileName, HtmlParse documentParse) {
+    public Document getDocument(String fileName){
         try {
             File input = new File(fileName);
-            Document mDocument = Jsoup.parse(input, Charset.UTF8.toString());
-            T data = documentParse.parse(mDocument);
-            return data;
+            return Jsoup.parse(input, Charset.UTF8.toString());
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public static <T> T from(File file, HtmlParse documentParse) {
-        try {
-            Document mDocument = Jsoup.parse(file, Charset.UTF8.toString());
-            T data = documentParse.parse(mDocument);
-            return data;
-        } catch (IOException e) {
+    public static <T extends ParseXml> T createParse(Class<T> clz){
+        ParseXml parseXml = null;
+        try{
+            parseXml = (ParseXml) Class.forName(clz.getName()).newInstance();
+        }catch (Exception e){
             e.printStackTrace();
-            return null;
         }
+
+        return  (T) parseXml;
     }
+
 
 }

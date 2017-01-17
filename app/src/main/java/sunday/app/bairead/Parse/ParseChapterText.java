@@ -4,10 +4,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class BookChapterTextParse extends HtmlParse{
+/**
+ * Created by sunday on 2017/1/17.
+ */
+
+public class ParseChapterText extends ParseXml {
 
     @Override
-    public String parse(Document document) {
+    public String parse(String fileName) {
+
+        Document document = getDocument(fileName);
+        if(document == null) return null;
         String s = "content_read";
         Elements elements = document.getElementsByClass(s);
         for (Element element : elements) {

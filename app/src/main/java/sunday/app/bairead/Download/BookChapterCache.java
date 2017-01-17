@@ -13,8 +13,8 @@ import java.util.HashMap;
 import okhttp3.Response;
 import sunday.app.bairead.DataBase.BookChapter;
 import sunday.app.bairead.DataBase.BookInfo;
-import sunday.app.bairead.Parse.BookChapterTextParse;
-import sunday.app.bairead.Parse.JsoupParse;
+import sunday.app.bairead.Parse.ParseChapterText;
+import sunday.app.bairead.Parse.ParseXml;
 import sunday.app.bairead.Tool.FileManager;
 
 /**
@@ -27,8 +27,6 @@ public class BookChapterCache {
 
     public static final String DIR = "chapterCache";
     private static int MAX_CACHE = 10;
-    private static BookChapterCache bookCacheManager;
-
     private BookInfo bookinfo;
 
     private HashMap<Integer, BookChapter.Chapter> mChapterCacheMap = new HashMap<>();
@@ -42,11 +40,12 @@ public class BookChapterCache {
 
     }
 
+    private static class BookChapterCacheHolder{
+        private static final BookChapterCache sInstance = new BookChapterCache();
+    }
+
     public static BookChapterCache getInstance() {
-        if (bookCacheManager == null) {
-            bookCacheManager = new BookChapterCache();
-        }
-        return bookCacheManager;
+        return BookChapterCacheHolder.sInstance;
     }
 
     /**
@@ -127,7 +126,8 @@ public class BookChapterCache {
         if (chapter.getText() == null) {
             if(isChapterExists(index)){
                 final String fileName = fullDir + "/" + chapter.getNum() + ".html";
-                String text = JsoupParse.from(fileName, new BookChapterTextParse());
+                ParseXml.createParse(ParseChapterText.class).parse(fileName);
+                String text = ParseXml.createParse(ParseChapterText.class).parse(fileName);
                 text = String.valueOf(Html.fromHtml(text));
                 chapter.setText(text);
                 chapterListener.end(chapter);
@@ -216,7 +216,7 @@ public class BookChapterCache {
                             FileManager.writeByte(fileName, response.body().bytes());
                         }
 
-                        String text = JsoupParse.from(fileName, new BookChapterTextParse());
+                        String text =  ParseXml.createParse(ParseChapterText.class).parse(fileName);
                         text = String.valueOf(Html.fromHtml(text));
                         chapter.setText(text);
                         Integer integer = Integer.valueOf(index);

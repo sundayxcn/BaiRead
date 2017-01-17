@@ -6,13 +6,12 @@ import java.util.HashMap;
 import okhttp3.Call;
 import okhttp3.Response;
 import sunday.app.bairead.DataBase.BookChapter;
-import sunday.app.bairead.DataBase.BookDetail;
 import sunday.app.bairead.DataBase.BookInfo;
 import sunday.app.bairead.DataBase.WebInfo;
-import sunday.app.bairead.Parse.BaiduSearchParse;
-import sunday.app.bairead.Parse.BookChapterParse;
-import sunday.app.bairead.Parse.BookDetailParse;
-import sunday.app.bairead.Parse.JsoupParse;
+import sunday.app.bairead.Parse.ParseChapter;
+import sunday.app.bairead.Parse.ParseDetail;
+import sunday.app.bairead.Parse.ParseSearch;
+import sunday.app.bairead.Parse.ParseXml;
 import sunday.app.bairead.Tool.FileManager;
 import sunday.app.bairead.UI.SearchFragment;
 
@@ -53,7 +52,7 @@ public class SearchManager extends OKhttpManager {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 FileManager.writeByte(fileName,response.body().bytes());
-                HashMap<String,String> hashMap =  JsoupParse.from(fileName,new BaiduSearchParse());
+                HashMap<String,String> hashMap =  ParseXml.createParse(ParseSearch.class).parse(fileName);
                 String chapterLink = hashMap.get(bookName);
                 downloadChapterLink(chapterLink);
             }
@@ -81,8 +80,8 @@ public class SearchManager extends OKhttpManager {
                     if(response.networkResponse() != null) {
                         FileManager.writeByte(chapterFile, response.body().bytes());
                         BookInfo bookInfo = new BookInfo();
-                        bookInfo.bookDetail = JsoupParse.from(chapterFile, new BookDetailParse());
-                        bookInfo.bookChapter = JsoupParse.from(chapterFile, new BookChapterParse());
+                        bookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).parse(chapterFile);
+                        bookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).parse(chapterFile);
                         searchFragment.refreshSearchResult(bookInfo);
                     }
                 }
@@ -100,8 +99,8 @@ public class SearchManager extends OKhttpManager {
     public void debugDetail(String name){
         final String chapterFile = FileManager.PATH +"/"+name+"/" + BookChapter.FileName;
         BookInfo bookInfo = new BookInfo();
-        bookInfo.bookDetail = JsoupParse.from(chapterFile,new BookDetailParse());
-        bookInfo.bookChapter  = JsoupParse.from(chapterFile,new BookChapterParse());
+        bookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).parse(chapterFile);
+        bookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).parse(chapterFile);
         searchFragment.refreshSearchResult(bookInfo);
     }
 

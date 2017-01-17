@@ -12,9 +12,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import sunday.app.bairead.Download.SearchManager;
-import sunday.app.bairead.Parse.BookChapterParse;
-import sunday.app.bairead.Parse.JsoupParse;
+import sunday.app.bairead.Parse.ParseChapter;
+import sunday.app.bairead.Parse.ParseXml;
 import sunday.app.bairead.Tool.FileManager;
 import sunday.app.bairead.UI.DeferredHandler;
 
@@ -192,7 +191,7 @@ public class BookModel {
                     Log.e("sunday","loadAllBook-error bookChapter");
                 }else {
                     String fileName = FileManager.PATH+"/"+bookInfo.bookDetail.getName()+"/"+ BookChapter.FileName;
-                    BookChapter bookChapter = JsoupParse.from(fileName,new BookChapterParse());
+                    BookChapter bookChapter = ParseXml.createParse(ParseChapter.class).parse(fileName);
                     bookChapter.setId(id);
                     bookChapter.setChapterIndex(index);
                     bookInfo.bookChapter = bookChapter;

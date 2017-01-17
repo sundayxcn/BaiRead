@@ -8,9 +8,15 @@ import java.util.HashMap;
 
 import sunday.app.bairead.DataBase.BookDetail;
 
-public class BookDetailParse extends HtmlParse {
+/**
+ * Created by sunday on 2017/1/16.
+ */
+
+public class ParseDetail extends ParseXml {
     @Override
-    public BookDetail parse(Document document) {
+    public BookDetail parse(String fileName) {
+        Document document = getDocument(fileName);
+        if(document == null) return null;
         //获取meta标签属性-start
         HashMap<String ,String> metaMap = new HashMap<>();
         Elements elements =  document.select("meta");
@@ -38,5 +44,4 @@ public class BookDetailParse extends HtmlParse {
 
         return builder.build();
     }
-
 }

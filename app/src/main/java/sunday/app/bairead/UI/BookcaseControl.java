@@ -3,7 +3,6 @@ package sunday.app.bairead.UI;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +11,15 @@ import android.widget.BaseAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.Call;
-import okhttp3.Headers;
 import okhttp3.Response;
 import sunday.app.bairead.DataBase.BookChapter;
-import sunday.app.bairead.DataBase.BookDetail;
 import sunday.app.bairead.DataBase.BookInfo;
 import sunday.app.bairead.DataBase.BookModel;
 import sunday.app.bairead.Download.OKhttpManager;
-import sunday.app.bairead.Parse.BookChapterParse;
-import sunday.app.bairead.Parse.JsoupParse;
+import sunday.app.bairead.Parse.ParseChapter;
+import sunday.app.bairead.Parse.ParseXml;
 import sunday.app.bairead.R;
 import sunday.app.bairead.Tool.FileManager;
 import sunday.app.bairead.View.BookcaseView;
@@ -173,7 +169,7 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
                 if(netWorkResponse != null){
                     final String chapterFile = FileManager.PATH +"/"+bookInfo.bookDetail.getName()+"/" + BookChapter.FileName;
                     FileManager.writeByte(chapterFile,netWorkResponse.body().bytes());
-                    bookInfo.bookChapter = JsoupParse.from(chapterFile, new BookChapterParse());
+                    bookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).parse(chapterFile);
                     //newChapterList.add(bookInfo);
                     mHandler.post(new Runnable() {
                         @Override

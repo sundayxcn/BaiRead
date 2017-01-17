@@ -7,16 +7,21 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 
 import sunday.app.bairead.DataBase.BookChapter;
 import sunday.app.bairead.DataBase.BookDetail;
 
+/**
+ * Created by sunday on 2017/1/16.
+ */
 
-public class BookChapterParse extends HtmlParse{
-
+public class ParseChapter extends ParseXml {
     @Override
-    public BookChapter parse(Document document) {
+    public BookChapter parse(String fileName) {
+        Document document = getDocument(fileName);
+
+
+        if(document == null) return null;
 
         final String linkHead = getChapterLink(document);
         Elements elements =  document.select("dd");
@@ -78,5 +83,4 @@ public class BookChapterParse extends HtmlParse{
             }
         }
     }
-
 }
