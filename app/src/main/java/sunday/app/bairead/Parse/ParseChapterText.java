@@ -13,7 +13,7 @@ public class ParseChapterText extends ParseXml {
     @Override
     public String parse(String fileName) {
 
-        Document document = getDocument(fileName);
+        Document document = getDocument(fileName,Charset.GB2312);
         if(document == null) return null;
         String s = "content_read";
         Elements elements = document.getElementsByClass(s);

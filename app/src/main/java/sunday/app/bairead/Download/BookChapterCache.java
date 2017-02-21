@@ -126,7 +126,7 @@ public class BookChapterCache {
         if (chapter.getText() == null) {
             if(isChapterExists(index)){
                 final String fileName = fullDir + "/" + chapter.getNum() + ".html";
-                ParseXml.createParse(ParseChapterText.class).parse(fileName);
+                //ParseXml.createParse(ParseChapterText.class).parse(fileName);
                 String text = ParseXml.createParse(ParseChapterText.class).parse(fileName);
                 text = String.valueOf(Html.fromHtml(text));
                 chapter.setText(text);

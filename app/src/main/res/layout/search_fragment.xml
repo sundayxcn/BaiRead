@@ -59,6 +59,14 @@
 
             android:layout_marginLeft="@dimen/default_padding_left" />
 
+
+        <TextView
+            android:id="@+id/search_fragment_not_find_book"
+            android:text="@string/search_fragment_not_find_book_text"
+            android:layout_width="match_parent"
+            android:visibility="invisible"
+            android:layout_height="match_parent" />
+
         <include
             android:id="@+id/search_fragment_top_book_detail"
             layout="@layout/search_book_detail"

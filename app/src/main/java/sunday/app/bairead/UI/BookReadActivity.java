@@ -132,7 +132,7 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
 
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        layoutParams.setMargins(0, 0, 500, 0);
+        layoutParams.setMargins(0, 0, 200, 0);
         settingPanel.addView(chapterListView, layoutParams);
     }
 

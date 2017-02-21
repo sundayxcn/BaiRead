@@ -17,7 +17,8 @@
     <string name="search_book_detail_button_bookcase_text">加入书架</string>
     <string name="search_book_detail_button_bookcase_add_text">已加入到书架</string>
     <string name="search_book_detail_button_cache_text">全本缓存</string>
-	
+	<string name="search_fragment_not_find_book_text">找不到这本书</string>
+
 	<string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>
     <string name="xlistview_header_hint_loading">正在加载...</string>

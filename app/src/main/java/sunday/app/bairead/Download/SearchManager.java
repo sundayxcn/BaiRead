@@ -1,5 +1,8 @@
 package sunday.app.bairead.Download;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -46,12 +49,13 @@ public class SearchManager extends OKhttpManager {
         connectUrl(webInfo.getLink() + bookName,new ConnectListener() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                Log.e("sunday","onFailure");
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 FileManager.writeByte(fileName,response.body().bytes());
+                response.body().close();
                 HashMap<String,String> hashMap =  ParseXml.createParse(ParseSearch.class).parse(fileName);
                 String chapterLink = hashMap.get(bookName);
                 downloadChapterLink(chapterLink);
@@ -72,18 +76,19 @@ public class SearchManager extends OKhttpManager {
             connectUrl(link, new ConnectListener() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-
+                    Log.e("sunday","onFailure");
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    if(response.networkResponse() != null) {
+                    //if(response.networkResponse() != null) {
                         FileManager.writeByte(chapterFile, response.body().bytes());
+                        response.body().close();
                         BookInfo bookInfo = new BookInfo();
                         bookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).parse(chapterFile);
                         bookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).parse(chapterFile);
                         searchFragment.refreshSearchResult(bookInfo);
-                    }
+                    //}
                 }
 
                 @Override
@@ -92,7 +97,11 @@ public class SearchManager extends OKhttpManager {
                 }
 
             });
+        //sunday-change for dont find book
+        }else{
+            searchFragment.refreshSearchResult(null);
         }
+        //sunday-change for dont find book
     }
 
 

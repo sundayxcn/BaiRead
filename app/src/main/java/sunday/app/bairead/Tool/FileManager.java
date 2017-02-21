@@ -114,7 +114,7 @@ public class FileManager {
             InputStreamReader reader = new InputStreamReader(inputStream);
             BufferedReader buffReader= new BufferedReader(reader);
             String  str;
-            while ((str = buffReader .readLine()) != null) {
+            while ((str = buffReader.readLine()) != null) {
                 list.add(str);
             }
             inputStream.close();

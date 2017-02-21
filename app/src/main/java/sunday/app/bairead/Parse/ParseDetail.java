@@ -15,7 +15,7 @@ import sunday.app.bairead.DataBase.BookDetail;
 public class ParseDetail extends ParseXml {
     @Override
     public BookDetail parse(String fileName) {
-        Document document = getDocument(fileName);
+        Document document = getDocument(fileName,Charset.GB2312);
         if(document == null) return null;
         //获取meta标签属性-start
         HashMap<String ,String> metaMap = new HashMap<>();

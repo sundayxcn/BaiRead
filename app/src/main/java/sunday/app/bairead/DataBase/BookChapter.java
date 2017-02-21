@@ -31,7 +31,7 @@ public class BookChapter extends BookBase {
     /**
      * 章节总数
      */
-    private int chapterCount;
+    //private int chapterCount;
 
     /**
      * 阅读章节
@@ -49,7 +49,7 @@ public class BookChapter extends BookBase {
 
     private BookChapter(Builder builder) {
         this.chapterLink = builder.chapterLink;
-        this.chapterCount = builder.chapterCount;
+        //this.chapterCount = builder.chapterCount;
         this.chapterIndex = builder.chapterIndex;
         this.current = builder.current;
     }
@@ -63,7 +63,7 @@ public class BookChapter extends BookBase {
     }
 
     public int getChapterCount() {
-        return chapterCount;
+        return mChapterList.size();
     }
 
     public String getChapterLink() {
@@ -93,7 +93,7 @@ public class BookChapter extends BookBase {
     public void onAddToDatabase(ContentValues values) {
         values.put(BookSetting.Chapter.LINK, chapterLink);
         values.put(BookSetting.Chapter.INDEX, chapterIndex);
-        values.put(BookSetting.Chapter.COUNT, chapterCount);
+        values.put(BookSetting.Chapter.COUNT, mChapterList.size());
 
         /*
          *current 为真表示使用的是当前来源
@@ -136,6 +136,12 @@ public class BookChapter extends BookBase {
             return new BookChapter(this);
         }
 
+    }
+
+
+    public Chapter getLastChapter(){
+        int count = mChapterList.size();
+        return mChapterList.get(count - 1);
     }
 
     public static class Chapter {

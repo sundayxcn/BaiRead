@@ -18,8 +18,7 @@ import sunday.app.bairead.DataBase.BookDetail;
 public class ParseChapter extends ParseXml {
     @Override
     public BookChapter parse(String fileName) {
-        Document document = getDocument(fileName);
-
+        Document document = getDocument(fileName,Charset.GB2312);
 
         if(document == null) return null;
 

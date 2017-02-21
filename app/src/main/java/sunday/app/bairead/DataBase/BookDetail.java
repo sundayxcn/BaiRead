@@ -52,6 +52,11 @@ public class BookDetail extends BookBase{
         return author;
     }
 
+
+    public void setChapterLatest(String title){
+        chapterLatest = title;
+    }
+
     public String getChapterLatest() {
         return chapterLatest;
     }

@@ -42,6 +42,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private EditText mEditText;
     private ListView mListView;
     private BookDetailView bookDetailView;
+    private TextView mNotFindTextView;
 
     private SearchHistory searchHistory;
     private SearchLinkAdapter mSearchLinkAdapter = new SearchLinkAdapter();
@@ -71,6 +72,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
         mListView = (ListView) view.findViewById(R.id.search_fragment_list_view);
 
+        mNotFindTextView = (TextView) view.findViewById(R.id.search_fragment_not_find_book);
 
         File file = getActivity().getCacheDir();
         if(!file.exists()){
@@ -141,10 +143,15 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (mListView.getAdapter() == searchHistory.getAdapter()) {
-                    mListView.setAdapter(mSearchLinkAdapter);
+                if (bookInfo == null) {
+                    Toast.makeText(getContext(), getString(R.string.search_fragment_not_find_book_text), Toast.LENGTH_SHORT).show();
+                } else {
+
+                    if (mListView.getAdapter() == searchHistory.getAdapter()) {
+                        mListView.setAdapter(mSearchLinkAdapter);
+                    }
+                    mSearchLinkAdapter.addData(bookInfo);
                 }
-                mSearchLinkAdapter.addData(bookInfo);
             }
         });
     }

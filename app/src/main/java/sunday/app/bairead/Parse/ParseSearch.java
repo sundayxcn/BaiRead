@@ -14,7 +14,7 @@ public class ParseSearch extends ParseXml {
     @Override
     public HashMap<String,String> parse(String fileName) {
 
-        Document document = getDocument(fileName);
+        Document document = getDocument(fileName,Charset.UTF8);
         if(document == null) return null;
 
         String s = "result-game-item-detail";

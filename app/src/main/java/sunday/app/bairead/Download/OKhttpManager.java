@@ -1,13 +1,9 @@
 package sunday.app.bairead.Download;
 
-import android.util.Log;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
-import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -20,14 +16,10 @@ import sunday.app.bairead.Tool.FileManager;
  * Created by sunday on 2016/9/14.
  */
 public class OKhttpManager{
-    private static OKhttpManager mOKhttpManager;
+    private static OKhttpManager mOKhttpManager = new OKhttpManager();
     private OkHttpClient okHttpClient;
 
     private void OKhttpManager() {
-        int cacheSize = 10 * 1024 * 1024; // 10 MiB
-//        String cacheDirectory =
-//        Cache cache = new Cache(cacheDirectory, cacheSize);
-//        okHttpClient.cache();
     }
 
 
@@ -37,10 +29,6 @@ public class OKhttpManager{
     }
 
     public static OKhttpManager getInstance() {
-        if (mOKhttpManager == null) {
-            mOKhttpManager = new OKhttpManager();
-
-        }
         return mOKhttpManager;
     }
 
@@ -66,8 +54,6 @@ public class OKhttpManager{
             connectListener.start(url);
         }
         //CacheControl cacheControl = new CacheControl.Builder().maxStale(365, TimeUnit.DAYS).build();
-        //cacheControl.m
-        //cacheControl.
         final Request request = new Request.Builder().url(url)
 //                .cacheControl(cacheControl)
 //                .addHeader("If-None-Match","\"8051533a2e6cd21:0\"")

@@ -260,7 +260,7 @@ public class BookModel {
                 /*删除和本书相关的所有来源信息
                  * */
                 uri = BookSetting.Chapter.CONTENT_URI;
-                String where = "nameId = ?";
+                String where = BookSetting.Chapter.ID + "= ?";
                 cr.delete(uri,where,new String[]{String.valueOf(id)});
 
                 /*删除和本书相关的所有书签

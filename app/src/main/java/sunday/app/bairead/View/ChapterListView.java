@@ -24,6 +24,9 @@ public class ChapterListView extends ListView {
         super(context);
         mContext = context;
         setBackgroundResource(R.color.colorChapterListBg);
+        setFastScrollEnabled(true);
+        //setScrollBarStyle(SCROLLBARS_INSIDE_OVERLAY);
+        //set
     }
 
 

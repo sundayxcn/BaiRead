@@ -14,14 +14,16 @@ public abstract class ParseXml {
 
     enum Charset{
         UTF8,
-        GB2312;
-
+        GB2312,
+        GBK;
         @Override
         public String toString() {
             if (this == UTF8) {
                 return "UTF-8";
             } else if (this == GB2312) {
                 return "gb2312";
+            } else if(this == GBK){
+                return "gbk";
             }
             return null;
         }
@@ -38,6 +40,17 @@ public abstract class ParseXml {
             return null;
         }
     }
+
+    public Document getDocument(String fileName,Charset charset){
+        try {
+            File input = new File(fileName);
+            return Jsoup.parse(input, charset.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     public static <T extends ParseXml> T createParse(Class<T> clz){
         ParseXml parseXml = null;
