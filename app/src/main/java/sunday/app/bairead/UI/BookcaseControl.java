@@ -6,11 +6,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +30,6 @@ import sunday.app.bairead.Parse.ParseXml;
 import sunday.app.bairead.R;
 import sunday.app.bairead.Tool.FileManager;
 import sunday.app.bairead.View.BookcaseView;
-import sunday.app.bairead.View.XListView;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -35,44 +37,78 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  * Created by sunday on 2016/12/15.
  */
 
-public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewListener{
+public class BookcaseControl implements BookModel.CallBack {
     private MainActivity activity;
 
-    private XListView mListView;
+    private ListView mListView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private XListAdapter mAdapter;
-    private static int refreshCnt = 0;
     private Handler mHandler = new Handler();
-    private int start = 0;
     private ArrayList<BookInfo> mBookInfoList = new ArrayList<>();
 
     private AlertDialog mDeleteBookDialog;
 
-    public BookcaseControl( MainActivity context){
+
+    private int bookCount;
+
+    synchronized void updateBookBegin() {
+        bookCount = mBookInfoList.size();
+    }
+
+    synchronized void updateBookReduce(final String bookTitle) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(activity, "已更新" + bookTitle, Toast.LENGTH_SHORT).show();
+                bookCount--;
+                if (bookCount == 0) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+    }
+
+    public BookcaseControl(MainActivity context) {
         activity = context;
-        mListView = (XListView) activity.findViewById(R.id.xlist_view);
-        mListView.setPullLoadEnable(false);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) activity.findViewById(R.id.swipe_refresh_layout);
+        //swipeRefreshLayout.set
+        swipeRefreshLayout.setColorSchemeColors(0xFFFF0000);
+        //swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorPrimary);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                checkAllNewChapter();
+                updateBookBegin();
+            }
+        });
+        //swipeRefreshLayout.setProgressBackgroundColorSchemeColor(activity.getResources().);
+        mListView = (ListView) activity.findViewById(R.id.xlist_view);
+        //mListView.setPullLoadEnable(false);
         mAdapter = new XListAdapter();
         mListView.setAdapter(mAdapter);
-        mListView.setXListViewListener(this);
+        // mListView.setXListViewListener(this);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mBookId = mBookInfoList.get(position - 1 ).bookDetail.getId();
-                readBook(activity,mBookId);
+                mBookId = mBookInfoList.get(position - 1).bookDetail.getId();
+                readBook(activity, mBookId);
             }
         });
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 //final BookInfo bookInfo = mBookInfoList.get(position);
-                if(mDeleteBookDialog == null) {
+                if (mDeleteBookDialog == null) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setMessage("是否从书架中移除")
                             .setNegativeButton("yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     //the position has problem
-                                    BookInfo bookInfo = mBookInfoList.get(position-1);
+                                    BookInfo bookInfo = mBookInfoList.get(position - 1);
                                     BaiReadApplication application = (BaiReadApplication) activity.getApplication();
                                     BookModel bookModel = application.getBookModel();
                                     bookModel.deleteBook(bookInfo);
@@ -95,39 +131,12 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
 
     private long mBookId;
 
-    public static void readBook(Context context,long bookId){
+    public static void readBook(Context context, long bookId) {
         Intent intent = new Intent();
-        intent.setClass(context,BookReadActivity.class);
-        intent.putExtra(BookReadActivity.EXTRAS_BOOK_ID,bookId);
+        intent.setClass(context, BookReadActivity.class);
+        intent.putExtra(BookReadActivity.EXTRAS_BOOK_ID, bookId);
         intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
-    }
-
-    private void onLoad() {
-        mListView.stopRefresh();
-        mListView.stopLoadMore();
-        mListView.setRefreshTime("刚刚");
-    }
-
-    @Override
-    public void onRefresh() {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                onLoad();
-            }
-        }, 2000);
-    }
-
-    @Override
-    public void onLoadMore() {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mAdapter.notifyDataSetChanged();
-                onLoad();
-            }
-        }, 2000);
     }
 
     @Override
@@ -135,8 +144,6 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
         mBookInfoList.clear();
         mBookInfoList.addAll(list);
         mAdapter.notifyDataSetChanged();
-        checkAllNewChapter();
-
     }
 
     @Override
@@ -187,7 +194,7 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
     }
 
 
-    private void checkNewChapter(final BookInfo bookInfo){
+    private void checkNewChapter(final BookInfo bookInfo) {
         String url = bookInfo.bookChapter.getChapterLink();
         OKhttpManager.getInstance().connectUrl(url, new OKhttpManager.ConnectListener() {
             @Override
@@ -197,7 +204,7 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
 
             @Override
             public void onFailure(Call call, IOException e) {
-
+                updateBookReduce("网络超时");
             }
 
             @Override
@@ -205,13 +212,13 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
                 //Log.e("sunday","checkNewChapter-");
                 //Response cacheResponse = response.cacheResponse();
                 //Response netWorkResponse = response.networkResponse();
-                if(response != null && response.body() != null){
-                    final String chapterFile = FileManager.PATH +"/"+bookInfo.bookDetail.getName()+"/" + BookChapter.FileName;
-                    FileManager.writeByte(chapterFile,response.body().bytes());
+                if (response != null && response.body() != null) {
+                    final String chapterFile = FileManager.PATH + "/" + bookInfo.bookDetail.getName() + "/" + BookChapter.FileName;
+                    FileManager.writeByte(chapterFile, response.body().bytes());
                     response.body().close();
                     BookChapter bookChapter = ParseXml.createParse(ParseChapter.class).parse(chapterFile);
                     //bookInfo.bookChapter
-                    if(bookInfo.bookChapter.getChapterCount() != bookChapter.getChapterCount()) {
+                    if (bookInfo.bookChapter.getChapterCount() != bookChapter.getChapterCount()) {
                         bookInfo.bookChapter.setChapterList(bookChapter.getChapterList());
                         bookInfo.bookDetail.setChapterLatest(bookInfo.bookChapter.getLastChapter().getTitle());
                         //newChapterList.add(bookInfo);
@@ -227,6 +234,7 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
                         });
                     }
                 }
+                updateBookReduce(bookInfo.bookDetail.getName());
             }
         });
     }
@@ -234,39 +242,37 @@ public class BookcaseControl implements BookModel.CallBack,XListView.IXListViewL
 
     //private ArrayList<BookInfo> newChapterList = new ArrayList<>();
 
-    public void checkAllNewChapter(){
-        for(BookInfo bookInfo : mBookInfoList ) {
+    public void checkAllNewChapter() {
+        for (BookInfo bookInfo : mBookInfoList) {
             checkNewChapter(bookInfo);
         }
     }
 
 
-
-    public void refreshIndex(){
+    public void refreshIndex() {
         BookcaseView bookcaseView = indexOf(mBookId);
         BaiReadApplication application = (BaiReadApplication) activity.getApplication();
         BookModel bookModel = application.getBookModel();
         BookInfo bookInfo = bookModel.getBookInfo(mBookId);
-        if(bookcaseView != null){
+        if (bookcaseView != null) {
             bookcaseView.setData(bookInfo);
             bookcaseView.hideUpdate();
         }
     }
 
 
-
-    public BookcaseView indexOf(long bookId){
+    public BookcaseView indexOf(long bookId) {
         int count = mListView.getChildCount();
-        for(int i = 0;i<count;i++){
+        for (int i = 0; i < count; i++) {
             View view = mListView.getChildAt(i);
-            if(view instanceof BookcaseView){
+            if (view instanceof BookcaseView) {
                 long id = (long) view.getTag();
-                if(id == bookId){
+                if (id == bookId) {
                     return (BookcaseView) view;
                 }
             }
         }
-        return  null;
+        return null;
     }
 
 
