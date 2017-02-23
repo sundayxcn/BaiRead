@@ -17,7 +17,7 @@ public class BookcaseView extends RelativeLayout {
     private TextView mBookChapterLatestTview;
     private TextView mBookChapterIndexTview;
     private TextView mBookChapterUpdateTview;
-
+    private TextView mBookUpdateTimeTview;
 
 
     public BookcaseView(Context context, AttributeSet attrs) {
@@ -39,17 +39,19 @@ public class BookcaseView extends RelativeLayout {
         mBookChapterLatestTview = (TextView) findViewById(R.id.xlist_item_chapter_latest);
         mBookChapterIndexTview = (TextView) findViewById(R.id.xlist_item_chapter_index);
         mBookChapterUpdateTview = (TextView) findViewById(R.id.xlist_item_chapter_update);
+        mBookUpdateTimeTview = (TextView) findViewById(R.id.xlist_item_update_time);
     }
 
     public void setData(BookInfo bookInfo){
         String name = bookInfo.bookDetail.getName();
         String chapterLatest = bookInfo.bookDetail.getChapterLatest();
-        int chapterIndex = bookInfo.bookChapter.getChapterIndex();
+        int chapterIndex = bookInfo.bookChapter.getChapterIndex() + 1;
         int chapterCount = bookInfo.bookChapter.getChapterCount();
         String chapterText = String.valueOf(chapterIndex)+"/"+String.valueOf(chapterCount);
         mBookNameTview.setText(name);
         mBookChapterLatestTview.setText(chapterLatest);
         mBookChapterIndexTview.setText(chapterText);
+        mBookUpdateTimeTview.setText(bookInfo.bookDetail.getUpdateTime());
         setTag(bookInfo.bookDetail.getId());
     }
 

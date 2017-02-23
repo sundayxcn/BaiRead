@@ -44,6 +44,10 @@ public class BookDetail extends BookBase{
         this.id = builder.id;
     }
 
+    public void setUpdateTime(String time){
+        updateTime = time;
+    }
+
     public String getName() {
         return name;
     }

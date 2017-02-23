@@ -22,10 +22,12 @@ import okhttp3.Call;
 import okhttp3.Response;
 import sunday.app.bairead.DataBase.BaiReadApplication;
 import sunday.app.bairead.DataBase.BookChapter;
+import sunday.app.bairead.DataBase.BookDetail;
 import sunday.app.bairead.DataBase.BookInfo;
 import sunday.app.bairead.DataBase.BookModel;
 import sunday.app.bairead.Download.OKhttpManager;
 import sunday.app.bairead.Parse.ParseChapter;
+import sunday.app.bairead.Parse.ParseDetail;
 import sunday.app.bairead.Parse.ParseXml;
 import sunday.app.bairead.R;
 import sunday.app.bairead.Tool.FileManager;
@@ -93,7 +95,7 @@ public class BookcaseControl implements BookModel.CallBack {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mBookId = mBookInfoList.get(position - 1).bookDetail.getId();
+                mBookId = mBookInfoList.get(position).bookDetail.getId();
                 readBook(activity, mBookId);
             }
         });
@@ -108,7 +110,7 @@ public class BookcaseControl implements BookModel.CallBack {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     //the position has problem
-                                    BookInfo bookInfo = mBookInfoList.get(position - 1);
+                                    BookInfo bookInfo = mBookInfoList.get(position);
                                     BaiReadApplication application = (BaiReadApplication) activity.getApplication();
                                     BookModel bookModel = application.getBookModel();
                                     bookModel.deleteBook(bookInfo);
@@ -216,10 +218,12 @@ public class BookcaseControl implements BookModel.CallBack {
                     final String chapterFile = FileManager.PATH + "/" + bookInfo.bookDetail.getName() + "/" + BookChapter.FileName;
                     FileManager.writeByte(chapterFile, response.body().bytes());
                     response.body().close();
+                    BookDetail bookDetail = ParseXml.createParse(ParseDetail.class).parse(chapterFile);
                     BookChapter bookChapter = ParseXml.createParse(ParseChapter.class).parse(chapterFile);
                     //bookInfo.bookChapter
                     if (bookInfo.bookChapter.getChapterCount() != bookChapter.getChapterCount()) {
                         bookInfo.bookChapter.setChapterList(bookChapter.getChapterList());
+                        bookInfo.bookDetail.setUpdateTime(bookDetail.getUpdateTime());
                         bookInfo.bookDetail.setChapterLatest(bookInfo.bookChapter.getLastChapter().getTitle());
                         //newChapterList.add(bookInfo);
                         mHandler.post(new Runnable() {
