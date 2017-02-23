@@ -111,6 +111,30 @@ public class BookModel {
     }
 
 
+    public void updateBook(BookInfo bookInfo){
+        final ContentResolver cr = mContext.getContentResolver();
+        Uri uri = BookSetting.Detail.CONTENT_URI;
+        ContentValues values = new ContentValues();
+        String latest = bookInfo.bookDetail.getChapterLatest();
+        String updateTime = bookInfo.bookDetail.getUpdateTime();
+        values.put(BookSetting.Detail.CHAPTER_LATEST,latest);
+        values.put(BookSetting.Detail.UPDATE_TIME,updateTime);
+        String where = BookSetting.Detail._ID +" = ?" ;
+        cr.update(uri,values,where,new String[]{String.valueOf(bookInfo.bookDetail.getId())});
+
+        //final ContentResolver cr = mContext.getContentResolver();
+        uri = BookSetting.Chapter.CONTENT_URI;
+        values = new ContentValues();
+        int chapterCount = bookInfo.bookChapter.getChapterCount();
+        int chapterIndex = bookInfo.bookChapter.getChapterIndex();
+        values.put(BookSetting.Chapter.COUNT,chapterCount);
+        values.put(BookSetting.Chapter.INDEX,chapterIndex);
+        where = BookSetting.Chapter.ID +" = ?" ;
+        cr.update(uri,values,where,new String[]{String.valueOf(bookInfo.bookDetail.getId())});
+
+    }
+
+
     public void startLoad(){
 //        runOnWorkerThread(new Runnable() {
 //            @Override
@@ -343,6 +367,5 @@ public class BookModel {
         String where = BookSetting.Chapter.ID +" = ?" +" and "+BookSetting.Chapter.CURRENT +" = 1";
         cr.update(uri,values,where,new String[]{String.valueOf(bookChapter.getId())});
     }
-
 
 }

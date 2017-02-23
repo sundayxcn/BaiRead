@@ -225,6 +225,9 @@ public class BookcaseControl implements BookModel.CallBack {
                         bookInfo.bookChapter.setChapterList(bookChapter.getChapterList());
                         bookInfo.bookDetail.setUpdateTime(bookDetail.getUpdateTime());
                         bookInfo.bookDetail.setChapterLatest(bookInfo.bookChapter.getLastChapter().getTitle());
+                        BaiReadApplication application = (BaiReadApplication) activity.getApplication();
+                        BookModel bookModel = application.getBookModel();
+                        bookModel.updateBook(bookInfo);
                         //newChapterList.add(bookInfo);
                         mHandler.post(new Runnable() {
                             @Override
