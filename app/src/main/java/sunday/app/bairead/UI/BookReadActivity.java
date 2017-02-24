@@ -8,12 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import sunday.app.bairead.DataBase.BaiReadApplication;
 import sunday.app.bairead.DataBase.BookChapter;
@@ -21,47 +16,30 @@ import sunday.app.bairead.DataBase.BookInfo;
 import sunday.app.bairead.DataBase.BookModel;
 import sunday.app.bairead.Download.BookChapterCache;
 import sunday.app.bairead.R;
+import sunday.app.bairead.View.BookReadSettingPanelView;
 import sunday.app.bairead.View.BookTextView;
-import sunday.app.bairead.View.ChapterListView;
 
 /**
  * Created by sunday on 2016/12/21.
  */
 
-public class BookReadActivity extends Activity implements BookChapterCache.ChapterListener, View.OnClickListener {
+public class BookReadActivity extends Activity implements BookChapterCache.ChapterListener{
 
     public static final int HANDLE_MESSAGE_CHAPTER_NEXT = 100;
     public static final int HANDLE_MESSAGE_CHAPTER_PREV = 200;
     public static final int HANDLE_MESSAGE_CHAPTER_INDEX = 300;
     public static final String EXTRAS_BOOK_ID = "BookId";
     public static final Point READ_POINT = new Point();
-    Handler handler = new Handler();
+
     private TextView mBookTitleTView;
     private BookTextView mBookTextTview;
     private BookInfo bookInfo;
     private BookModel bookModel;
     private AlertDialog alertDialog;
 
-
-    //private
-
-    //public Handler handler;
     private BookChapterCache bookChapterCache = BookChapterCache.getInstance();
-    private RelativeLayout settingPanel;
-    private ChapterListView chapterListView;
-    private Runnable showSettingRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hideSetting();
-        }
-    };
-    private AdapterView.OnItemClickListener chapterOnItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            bookChapterCache.setChapter(position);
-            hideChapterList();
-        }
-    };
+    private BookReadSettingPanelView settingPanel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,26 +63,19 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
         bookChapterCache.setBookInfo(bookInfo, this);
         bookChapterCache.initChapterRead();
 
+        settingPanel = (BookReadSettingPanelView) findViewById(R.id.book_read_setting_panel);
+        settingPanel.setOnChangeListener(bookId, new BookReadSettingPanelView.OnChangeListener() {
+            @Override
+            public void chapterChange(int chapterIndex) {
+                bookChapterCache.setChapter(chapterIndex);
+            }
 
-        setupPanelView();
+            @Override
+            public void textSizeChange(int textSize, int lineSize) {
 
-    }
-
-    private void setupPanelView() {
-        settingPanel = (RelativeLayout) findViewById(R.id.book_read_setting_panel);
+            }
+        });
         settingPanel.setVisibility(View.INVISIBLE);
-        RelativeLayout settingTopPanel = (RelativeLayout) findViewById(R.id.book_read_setting_panel_top_panel);
-        LinearLayout settingBottomPanel = (LinearLayout) findViewById(R.id.book_read_setting_panel_bottom_panel);
-        setOnClick(settingTopPanel);
-        setOnClick(settingBottomPanel);
-    }
-
-    private void setOnClick(ViewGroup viewGroup) {
-        int count = viewGroup.getChildCount();
-        for (int i = 0; i < count; i++) {
-            View v = viewGroup.getChildAt(i);
-            v.setOnClickListener(this);
-        }
     }
 
     @Override
@@ -121,47 +92,6 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
             }
         });
 
-    }
-
-    //private void hide
-
-    private void showChapterList() {
-        chapterListView = new ChapterListView(this);
-        chapterListView.setBookInfo(bookInfo);
-        chapterListView.setOnItemClickListener(chapterOnItemClickListener);
-
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        layoutParams.setMargins(0, 0, 200, 0);
-        settingPanel.addView(chapterListView, layoutParams);
-    }
-
-    private void hideChapterList() {
-        settingPanel.removeView(chapterListView);
-        chapterListView = null;
-    }
-
-    @Override
-    public void onClick(View v) {
-        showSettingShort();
-        switch (v.getId()) {
-            case R.id.book_read_setting_panel_chapter_menu:
-                showChapterList();
-                showSettingLong();
-                break;
-            case R.id.book_read_setting_panel_book_mark:
-
-                //break;
-            case R.id.book_read_setting_panel_text_font:
-                //break;
-            case R.id.book_read_setting_panel_more:
-                //break;
-            case R.id.book_read_setting_panel_source:
-                //break;
-                Toast.makeText(BookReadActivity.this, "等待开发", Toast.LENGTH_SHORT).show();
-            default:
-                break;
-        }
     }
 
     @Override
@@ -181,10 +111,10 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
                 } else if (y < BookReadActivity.READ_POINT.y / 3) {
                     mBookTextTview.readNext(false);
                 } else {
-                    if (settingPanel.getVisibility() == View.VISIBLE) {
-                        hideSetting();
-                    } else {
-                        showSettingShort();
+                    if(settingPanel.isShow()){
+                        settingPanel.hide();
+                    }else{
+                        settingPanel.show();
                     }
                 }
                 break;
@@ -195,27 +125,10 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
         return true;
     }
 
-    private void showSettingShort() {
-        settingPanel.setVisibility(View.VISIBLE);
-        handler.removeCallbacks(showSettingRunnable);
-        handler.postDelayed(showSettingRunnable, 2000);
-    }
-
-    private void showSettingLong() {
-        settingPanel.setVisibility(View.VISIBLE);
-        handler.removeCallbacks(showSettingRunnable);
-    }
-
-    private void hideSetting() {
-        settingPanel.setVisibility(View.INVISIBLE);
-
-    }
-
     @Override
     public void onBackPressed() {
-        if (chapterListView != null) {
-            hideChapterList();
-            showSettingShort();
+        if (settingPanel.isShow()) {
+            settingPanel.hide();
         } else {
             super.onBackPressed();
         }

@@ -95,7 +95,7 @@ public class BookTextView extends TextView {
         pageIndex = 0;
         textPaint = new TextPaint();
         textPaint.setAntiAlias(true);
-        textPaint.setTextSize(60);
+        textPaint.setTextSize(50);
         paddingLeft = 0;
         ArrayList<String> lineTextList = new ArrayList<>();
         for(String str : textArray) {
