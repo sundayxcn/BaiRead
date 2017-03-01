@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import sunday.app.bairead.DataBase.BaiReadApplication;
 import sunday.app.bairead.DataBase.BookChapter;
 import sunday.app.bairead.DataBase.BookInfo;
 import sunday.app.bairead.DataBase.BookModel;
+import sunday.app.bairead.Download.BookChapterCache;
 import sunday.app.bairead.R;
 import sunday.app.bairead.Tool.PreferenceSetting;
 
@@ -152,15 +154,17 @@ public class BookReadSettingPanelView extends RelativeLayout{
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                TextView textView = new TextView(getContext());
-                textView.setHeight(100);
-                convertView = textView;
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.chapter_list_item,null,false);
             }
-            TextView view = (TextView) convertView;
-            String text = chapterArrayList.get(position).getTitle();
+            TextView view = (TextView) convertView.findViewById(R.id.chapter_list_item_text);
+            BookChapter.Chapter chapter = chapterArrayList.get(position);
+            String text = chapter.getTitle();
             view.setText(text);
+            TextView cacheTextview = (TextView) convertView.findViewById(R.id.chapter_list_item_cache_text);
+            boolean isCache = BookChapterCache.getInstance().isChapterExists(position);
+            cacheTextview.setVisibility(isCache ? VISIBLE : INVISIBLE);
 
-            return view;
+            return convertView;
         }
     }
 

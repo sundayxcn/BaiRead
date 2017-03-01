@@ -166,16 +166,17 @@ public class BookChapterCache {
         }
     }
 
-    private boolean isChapterExists(int chapterIndex) {
+    public boolean isChapterExists(int chapterIndex) {
         String fileName = fullDir + "/" + bookinfo.bookChapter.getChapter(chapterIndex).getNum() + ".html";
         File file = new File(fileName);
         return file.exists();
     }
 
-    private boolean isChapterExists(String fileName) {
+    private static boolean isChapterExists(String fileName) {
         File file = new File(fileName);
         return file.exists();
     }
+
 
     //private  Thread customer  = new Customer();
     private void startCache() {

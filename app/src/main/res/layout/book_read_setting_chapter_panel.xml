@@ -7,10 +7,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
 
         <TextView
             android:id="@+id/book_read_setting_panel_chapter_list_title"
+            android:textColor="@color/colorWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
@@ -20,15 +22,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/activity_horizontal_margin" />
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:textColor="@drawable/button_background" />
     </RelativeLayout>
 
 
     <ListView
-
         android:id="@+id/book_read_setting_panel_chapter_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_padding_left"
+        android:layout_marginRight="@dimen/default_padding_left"
         android:fastScrollEnabled="true" />
 
 

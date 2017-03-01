@@ -136,16 +136,22 @@ public class BookModel {
 
 
     public void startLoad(){
-//        runOnWorkerThread(new Runnable() {
-//            @Override
-//            public void run() {
-                ArrayList<BookInfo> list = loadAllBook();
+        runOnWorkerThread(new Runnable() {
+            @Override
+            public void run() {
+                final ArrayList<BookInfo> list = loadAllBook();
                 if(callBack != null){
-                    callBack.loadFinish(list);
+                    runOnMainThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callBack.loadFinish(list);
+                        }
+                    });
+
                 }
-//
-//            }
-//        });
+
+            }
+        });
 
     }
 
