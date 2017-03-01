@@ -104,22 +104,24 @@ public class BookChapterCache {
         }
     }
 
-    public void nextChapter(Context context) {
+    public boolean nextChapter(Context context) {
         int index = bookinfo.bookChapter.getChapterIndex() + 1;
         if(index ==  bookinfo.bookChapter.getChapterCount()){
             Toast.makeText(context,"已到最后一章",Toast.LENGTH_SHORT).show();
+            return true;
         }else {
             bookinfo.bookChapter.setChapterIndex(index);
             updateChapterCache(index);
+            return false;
         }
 
     }
 
-    public void prevChapter(Context context) {
+    public boolean prevChapter(Context context) {
         int index = bookinfo.bookChapter.getChapterIndex() - 1;
         if(index < 0 ){
             Toast.makeText(context,"已到第一章",Toast.LENGTH_SHORT).show();
-            return;
+            return true;
         }
         bookinfo.bookChapter.setChapterIndex(index);
         BookChapter.Chapter chapter = bookinfo.bookChapter.getChapter(index);
@@ -138,6 +140,7 @@ public class BookChapterCache {
             updateChapterCache(index);
         }
         //chapterListener.end(chapter);
+        return false;
     }
 
     public void setChapter(int index){
@@ -214,6 +217,9 @@ public class BookChapterCache {
                             String url = chapter.getLink();
                             Response response = OKhttpManager.getInstance().connectUrl(url);
                             FileManager.writeByte(fileName, response.body().bytes());
+                        }else{
+                            //存在一个bug，本地文件没有内容，可能是网络中断产生的问题
+                            //解决方式：检查文件有效性，如果无效，删除掉，重新下载
                         }
 
                         String text =  ParseXml.createParse(ParseChapterText.class).parse(fileName);

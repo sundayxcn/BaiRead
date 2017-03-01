@@ -70,15 +70,24 @@ public class BookTextView extends TextView {
     }
 
     class PageText{
-        public static final int LINE_HEIGHT = 80;
+        public int mHeight = 80;
         public ArrayList<String> lineTextList = new ArrayList<>();
+
+        public PageText(int height){
+            mHeight = height;
+        }
+
+        public int getHeight(){
+            return mHeight;
+        }
+
         public void onDraw(Canvas canvas){
             canvas.save();
             int count = lineTextList.size();
             int top = getTop();
             for(int i = 0;i< count;i++) {
                 String s = lineTextList.get(i);
-                int height = top +  i * LINE_HEIGHT;
+                int height = top +  i * mHeight;
                 canvas.drawText(s, paddingLeft, height, textPaint);
             }
             canvas.restore();
@@ -95,7 +104,7 @@ public class BookTextView extends TextView {
         pageIndex = 0;
         textPaint = new TextPaint();
         textPaint.setAntiAlias(true);
-        textPaint.setTextSize(50);
+        textPaint.setTextSize(textSize);
         paddingLeft = 0;
         ArrayList<String> lineTextList = new ArrayList<>();
         for(String str : textArray) {
@@ -112,14 +121,15 @@ public class BookTextView extends TextView {
         }
 
         //根据高度计算一页能放多少行
-        int lineCount = (int) Math.ceil(mHeight / PageText.LINE_HEIGHT);
-        PageText pageText = new PageText();
+        PageText pageText = new PageText(textSize+lineSize);
+        int lineCount = (int) Math.ceil(mHeight / pageText.getHeight());
+
         pageTextList.add(pageText);
 
         for(int i = 0 ,j = 0; i < lineTextList.size();i++,j++){
             if(j == lineCount){
                 j = 0;
-                pageText = new PageText();
+                pageText = new PageText(textSize+lineSize);
                 pageTextList.add(pageText);
             }
             pageText.lineTextList.add(lineTextList.get(i));
@@ -154,6 +164,27 @@ public class BookTextView extends TextView {
             postInvalidate();
         }
 
+    }
+
+    private int textSize;
+    private int lineSize;
+
+
+    public void setTextSize(int textSize,int lineSize){
+        this.textSize = textSize;
+        this.lineSize = lineSize;
+    }
+
+    public void setLast(boolean isLast){
+        if(isLast){
+            pageIndex = pageTextList.size() -1;
+        }
+    }
+
+    public void setBegin(boolean isBegin){
+        if(isBegin){
+            pageIndex = 0;
+        }
     }
 
 }

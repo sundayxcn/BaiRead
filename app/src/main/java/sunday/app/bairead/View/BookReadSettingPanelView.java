@@ -24,6 +24,7 @@ import sunday.app.bairead.DataBase.BookChapter;
 import sunday.app.bairead.DataBase.BookInfo;
 import sunday.app.bairead.DataBase.BookModel;
 import sunday.app.bairead.R;
+import sunday.app.bairead.Tool.PreferenceSetting;
 
 
 /**
@@ -31,14 +32,7 @@ import sunday.app.bairead.R;
  */
 
 public class BookReadSettingPanelView extends RelativeLayout{
-    public static final String PREFS = "ReadSetting";
-    public static final String PREFS_KEY_TEXT_SIZE = "textSize";
-    public static final String PREFS_KEY_LINE_SIZE = "lineSize";
-    /*
-     * 0：正序
-     * 1：逆序
-     * */
-    public static final String PREFS_KEY_CHAPTER_ORDER = "chapterOrder";
+
     private int textSize;
     private int lineSize;
     private int chapterOrder;
@@ -97,10 +91,11 @@ public class BookReadSettingPanelView extends RelativeLayout{
                     //showSettingLong();
                     break;
                 case R.id.book_read_setting_panel_book_mark:
-
+                    //showBookTextSizePanel();
                     //break;
                 case R.id.book_read_setting_panel_text_font:
-                    //break;
+                    showBookTextSizePanel();
+                    break;
                 case R.id.book_read_setting_panel_more:
                     //break;
                 case R.id.book_read_setting_panel_source:
@@ -113,15 +108,16 @@ public class BookReadSettingPanelView extends RelativeLayout{
     };
 
     public void loadConfig(){
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(PREFS, Activity.MODE_PRIVATE);
-        textSize = sharedPreferences.getInt(PREFS_KEY_TEXT_SIZE,60);
-        lineSize = sharedPreferences.getInt(PREFS_KEY_LINE_SIZE,20);
-        chapterOrder = sharedPreferences.getInt(PREFS_KEY_CHAPTER_ORDER,0);
+        PreferenceSetting preferenceSetting = PreferenceSetting.getInstance(getContext());
+
+        textSize = preferenceSetting.getIntValue(PreferenceSetting.KEY_TEXT_SIZE,60);
+        lineSize = preferenceSetting.getIntValue(PreferenceSetting.KEY_LINE_SIZE,20);
+        chapterOrder = preferenceSetting.getIntValue(PreferenceSetting.KEY_CHAPTER_ORDER,0);
     }
 
     public void saveConfig(String key,int value){
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(PREFS, Activity.MODE_PRIVATE);
-        sharedPreferences.edit().putInt(key,value).commit();
+        PreferenceSetting preferenceSetting = PreferenceSetting.getInstance(getContext());
+        preferenceSetting.putIntValue(key,value);
     }
 
 
@@ -178,10 +174,10 @@ public class BookReadSettingPanelView extends RelativeLayout{
         bookNameView.setText(bookInfo.bookDetail.getName());
 
 
-        if(chapterAdapter == null){
+        //if(chapterAdapter == null){
             chapterAdapter = new ChapterAdapter();
             chapterAdapter.setBookInfo(bookInfo);
-        }
+        //}
         ListView chapterListView = (ListView) chapterPanel.findViewById(R.id.book_read_setting_panel_chapter_list);
         chapterListView.setAdapter(chapterAdapter);
         chapterListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -189,7 +185,7 @@ public class BookReadSettingPanelView extends RelativeLayout{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (onChangeListener != null) {
                     if(chapterOrder == 1){
-                        position = chapterAdapter.getCount() - position;
+                        position = chapterAdapter.getCount() - position -1;
                     }
                     hide();
                     onChangeListener.chapterChange(position);
@@ -207,7 +203,7 @@ public class BookReadSettingPanelView extends RelativeLayout{
             @Override
             public void onClick(View v) {
                 chapterOrder = 1 - chapterOrder;
-                saveConfig(PREFS_KEY_CHAPTER_ORDER,chapterOrder);
+                saveConfig(PreferenceSetting.KEY_CHAPTER_ORDER,chapterOrder);
                 String orderString = chapterOrder == 0 ? "正序":"逆序";
                 chapterOrderButtonView.setText(orderString);
                 Collections.reverse(chapterAdapter.getChapterArrayList());
@@ -223,6 +219,9 @@ public class BookReadSettingPanelView extends RelativeLayout{
     }
 
 
+    private void showBookTextSizePanel(){
+
+    }
 
 
 
@@ -243,20 +242,12 @@ public class BookReadSettingPanelView extends RelativeLayout{
         }
     }
 
-//    public void show(ShowType showType){
-//        show();
-//        hideAllChild();
-//        switch (showType){
-//            case CHAPTER:
-//
-//        }
-//
-//    }
 
     public void hide(){
         if(chapterPanel != null){
             removeView(chapterPanel);
             chapterPanel = null;
+            chapterAdapter = null;
         }
         setVisibility(GONE);
     }

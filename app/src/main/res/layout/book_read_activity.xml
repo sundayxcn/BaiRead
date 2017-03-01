@@ -13,7 +13,7 @@
             android:id="@+id/book_read_activity_book_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="22dp" />
+            android:textSize="15dp" />
 
         <sunday.app.bairead.View.BookTextView
             android:id="@+id/book_read_activity_book_text"
