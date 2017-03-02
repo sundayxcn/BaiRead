@@ -19,6 +19,10 @@ public class PreferenceSetting {
     * */
     public static final String KEY_LINE_SIZE = "lineSize";
     /*
+    * 左右边距空白
+    * */
+    public static final String KEY_MARGIN_SIZE = "marginSize";
+    /*
      * 章节列表
      * 0：正序
      * 1：逆序
@@ -43,6 +47,10 @@ public class PreferenceSetting {
 
     public int getIntValue(String key,int defaultValue){
         return sharedPreferences.getInt(key,defaultValue);
+    }
+
+    public int getIntValue(String key){
+        return sharedPreferences.getInt(key,0);
     }
 
 }

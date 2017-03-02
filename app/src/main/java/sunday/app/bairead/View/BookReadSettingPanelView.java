@@ -35,10 +35,9 @@ import sunday.app.bairead.Tool.PreferenceSetting;
 
 public class BookReadSettingPanelView extends RelativeLayout{
 
-    private int textSize;
-    private int lineSize;
     private int chapterOrder;
     private ChapterPanel chapterPanel;
+    private BookReadSettingTextSizePanel bookReadSettingTextSizePanel;
 
     private long bookId;
 
@@ -77,13 +76,18 @@ public class BookReadSettingPanelView extends RelativeLayout{
         this.onChangeListener = onChangeListener;
     }
 
-    public interface OnChangeListener{
+    public interface OnChangeListener {
         void chapterChange(int chapterIndex);
-        void textSizeChange(int textSize,int lineSize);
+
+        void textSizeChange(int textSize);
+
+        void lineSizeChange(int lineSize);
+
+        void marginSizeChange(int marginSize);
     }
 
     private OnChangeListener onChangeListener;
-
+    private ChapterAdapter chapterAdapter;
     private OnClickListener buttonOnClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -111,9 +115,6 @@ public class BookReadSettingPanelView extends RelativeLayout{
 
     public void loadConfig(){
         PreferenceSetting preferenceSetting = PreferenceSetting.getInstance(getContext());
-
-        textSize = preferenceSetting.getIntValue(PreferenceSetting.KEY_TEXT_SIZE,60);
-        lineSize = preferenceSetting.getIntValue(PreferenceSetting.KEY_LINE_SIZE,20);
         chapterOrder = preferenceSetting.getIntValue(PreferenceSetting.KEY_CHAPTER_ORDER,0);
     }
 
@@ -168,7 +169,6 @@ public class BookReadSettingPanelView extends RelativeLayout{
         }
     }
 
-    private ChapterAdapter chapterAdapter;
     private void showChapterList() {
         chapterPanel = (ChapterPanel) LayoutInflater.from(getContext()).inflate(R.layout.book_read_setting_chapter_panel, null, false);
         BaiReadApplication application = (BaiReadApplication) getContext().getApplicationContext();
@@ -188,8 +188,8 @@ public class BookReadSettingPanelView extends RelativeLayout{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (onChangeListener != null) {
-                    if(chapterOrder == 1){
-                        position = chapterAdapter.getCount() - position -1;
+                    if (chapterOrder == 1) {
+                        position = chapterAdapter.getCount() - position - 1;
                     }
                     hide();
                     onChangeListener.chapterChange(position);
@@ -222,12 +222,82 @@ public class BookReadSettingPanelView extends RelativeLayout{
         addView(chapterPanel, layoutParams);
     }
 
+    private void showBookTextSizePanel() {
+        bookReadSettingTextSizePanel = (BookReadSettingTextSizePanel) LayoutInflater.from(getContext()).inflate(R.layout.book_read_setting_size_panel, null, false);
 
-    private void showBookTextSizePanel(){
+        LinearLayout textSizeLine = (LinearLayout) bookReadSettingTextSizePanel.findViewById(R.id.book_read_setting_size_text);
+        TextView textSizeTitle = (TextView) textSizeLine.findViewById(R.id.book_read_setting_size_line_title);
+        Button textSizeReduceButton = (Button) textSizeLine.findViewById(R.id.book_read_setting_size_line_button_reduce);
+        Button textSizeAddButton = (Button) textSizeLine.findViewById(R.id.book_read_setting_size_line_button_add);
+        textSizeTitle.setText("文字");
+        textSizeReduceButton.setTag(PreferenceSetting.KEY_TEXT_SIZE);
+        textSizeAddButton.setTag(PreferenceSetting.KEY_TEXT_SIZE);
+        textSizeReduceButton.setOnClickListener(sizeOnReduceClickListener);
+        textSizeAddButton.setOnClickListener(sizeOnAddClickListener);
+
+        LinearLayout lineSizeLine = (LinearLayout) bookReadSettingTextSizePanel.findViewById(R.id.book_read_setting_size_line);
+        TextView lineSizeTitle = (TextView) lineSizeLine.findViewById(R.id.book_read_setting_size_line_title);
+        lineSizeTitle.setText("行间距");
+        Button lineSizeReduceButton = (Button) lineSizeLine.findViewById(R.id.book_read_setting_size_line_button_reduce);
+        lineSizeReduceButton.setTag(PreferenceSetting.KEY_LINE_SIZE);
+        lineSizeReduceButton.setOnClickListener(sizeOnReduceClickListener);
+        Button lineSizeAddButton = (Button) lineSizeLine.findViewById(R.id.book_read_setting_size_line_button_add);
+        lineSizeAddButton.setTag(PreferenceSetting.KEY_LINE_SIZE);
+        lineSizeAddButton.setOnClickListener(sizeOnAddClickListener);
+
+
+        LinearLayout marginSizeLine = (LinearLayout) bookReadSettingTextSizePanel.findViewById(R.id.book_read_setting_size_margin);
+        TextView marginSizeTitle = (TextView) marginSizeLine.findViewById(R.id.book_read_setting_size_line_title);
+        marginSizeTitle.setText("边距");
+        Button marginSizeReduceButton = (Button) marginSizeLine.findViewById(R.id.book_read_setting_size_line_button_reduce);
+        marginSizeReduceButton.setTag(PreferenceSetting.KEY_MARGIN_SIZE);
+        marginSizeReduceButton.setOnClickListener(sizeOnReduceClickListener);
+        Button marginSizeAddButton = (Button) marginSizeLine.findViewById(R.id.book_read_setting_size_line_button_add);
+        marginSizeAddButton.setTag(PreferenceSetting.KEY_MARGIN_SIZE);
+        marginSizeAddButton.setOnClickListener(sizeOnAddClickListener);
+
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        //layoutParams.setMargins(0, 0, 200, 0);
+        addView(bookReadSettingTextSizePanel, layoutParams);
 
     }
 
+    private OnClickListener sizeOnReduceClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String key = (String) v.getTag();
+            int value = PreferenceSetting.getInstance(getContext()).getIntValue(key);
+            value-=6;
+            PreferenceSetting.getInstance(getContext()).putIntValue(key,value);
+            changeListener(key,value);
+    }
+    };
 
+    private OnClickListener sizeOnAddClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String key = (String) v.getTag();
+            int value = PreferenceSetting.getInstance(getContext()).getIntValue(key);
+            value+=6;
+            PreferenceSetting.getInstance(getContext()).putIntValue(key,value);
+            changeListener(key,value);
+        }
+    };
+
+    public void changeListener(String key,int value){
+        if(onChangeListener != null){
+            if(PreferenceSetting.KEY_TEXT_SIZE.equals(key)){
+                onChangeListener.textSizeChange(value);
+            }else if(PreferenceSetting.KEY_LINE_SIZE.equals(key)){
+                onChangeListener.lineSizeChange(value);
+            }else if(PreferenceSetting.KEY_MARGIN_SIZE.equals(key)){
+                onChangeListener.marginSizeChange(value);
+            }
+        }
+    }
 
     public void show(){
         setVisibility(VISIBLE);
@@ -252,6 +322,9 @@ public class BookReadSettingPanelView extends RelativeLayout{
             removeView(chapterPanel);
             chapterPanel = null;
             chapterAdapter = null;
+        }else if(bookReadSettingTextSizePanel != null){
+            removeView(bookReadSettingTextSizePanel);
+            bookReadSettingTextSizePanel = null;
         }
         setVisibility(GONE);
     }
@@ -259,5 +332,7 @@ public class BookReadSettingPanelView extends RelativeLayout{
     public boolean isShow(){
         return getVisibility() == VISIBLE;
     }
+
+
 
 }

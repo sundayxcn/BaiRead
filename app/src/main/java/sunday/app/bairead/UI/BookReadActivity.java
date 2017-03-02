@@ -59,7 +59,10 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
         mBookTextTview = (BookTextView) findViewById(R.id.book_read_activity_book_text);
         int textSize = PreferenceSetting.getInstance(this).getIntValue(PreferenceSetting.KEY_TEXT_SIZE,50);
         int lineSize = PreferenceSetting.getInstance(this).getIntValue(PreferenceSetting.KEY_LINE_SIZE,45);
-        mBookTextTview.setTextSize(textSize,lineSize);
+        int marginSize = PreferenceSetting.getInstance(this).getIntValue(PreferenceSetting.KEY_MARGIN_SIZE,0);
+        mBookTextTview.setTextSize(textSize);
+        mBookTextTview.setLineSize(lineSize);
+        mBookTextTview.setMarginSize(marginSize);
         mBookTextTview.setReadHandler(new ReadHandler());
 
         getWindowManager().getDefaultDisplay().getSize(READ_POINT);
@@ -75,8 +78,20 @@ public class BookReadActivity extends Activity implements BookChapterCache.Chapt
             }
 
             @Override
-            public void textSizeChange(int textSize, int lineSize) {
-                mBookTextTview.setTextSize(textSize,lineSize);
+            public void textSizeChange(int textSize) {
+                mBookTextTview.setTextSize(textSize);
+                mBookTextTview.postInvalidate();
+            }
+
+            @Override
+            public void lineSizeChange(int lineSize) {
+                mBookTextTview.setLineSize(lineSize);
+                mBookTextTview.postInvalidate();
+            }
+
+            @Override
+            public void marginSizeChange(int marginSize) {
+                mBookTextTview.setMarginSize(marginSize);
                 mBookTextTview.postInvalidate();
             }
         });

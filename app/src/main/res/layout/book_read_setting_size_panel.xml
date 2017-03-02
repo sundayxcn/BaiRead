@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sunday.app.bairead.View.BookReadSettingTextSizePanel xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#ffffffff"
+    android:layout_height="wrap_content">
+
+    <include
+        android:id="@+id/book_read_setting_size_text"
+        layout="@layout/book_read_setting_size_line"/>
+
+    <include
+        android:id="@+id/book_read_setting_size_line"
+        layout="@layout/book_read_setting_size_line"/>
+
+    <include
+        android:id="@+id/book_read_setting_size_margin"
+        layout="@layout/book_read_setting_size_line"/>
+
+</sunday.app.bairead.View.BookReadSettingTextSizePanel>

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import sunday.app.bairead.Tool.PreferenceSetting;
 import sunday.app.bairead.UI.BookReadActivity;
 
 /**
@@ -31,7 +32,7 @@ public class BookTextView extends TextView {
     private int mHeight;
     private int mWidth;
     private int paddingLeft;
-
+    private int marginSize;
     //分段、分行、分页
     private ArrayList<PageText> pageTextList = new ArrayList<>();
 
@@ -88,7 +89,7 @@ public class BookTextView extends TextView {
             for(int i = 0;i< count;i++) {
                 String s = lineTextList.get(i);
                 int height = top +  i * mHeight;
-                canvas.drawText(s, paddingLeft, height, textPaint);
+                canvas.drawText(s, paddingLeft + marginSize, height, textPaint);
             }
             canvas.restore();
         }
@@ -99,6 +100,9 @@ public class BookTextView extends TextView {
      * 然后将行封装进每一页的结构中，在刷新过程中按页刷新
      * **/
     private void createPageTextList(){
+        if(text == null){
+            return;
+        }
         pageTextList.clear();
         String[] textArray = text.trim().split("\n\n");
         pageIndex = 0;
@@ -110,12 +114,12 @@ public class BookTextView extends TextView {
         for(String str : textArray) {
             str = "    "+str;//增加行首空格
             //测量一行能放几个字符，然后进行裁剪
-            int count = textPaint.breakText(str, true, mWidth - paddingLeft * 2 , null);
+            int count = textPaint.breakText(str, true, mWidth - paddingLeft * 2 - marginSize * 2 , null);
             while(str.length() > count){
                 String line = str.substring(0,count);
                 lineTextList.add(line);
                 str = str.substring(count, str.length());
-                count = textPaint.breakText(str, true, mWidth - paddingLeft * 2, null);
+                count = textPaint.breakText(str, true, mWidth - paddingLeft * 2 - marginSize * 2, null);
             }
             lineTextList.add(str);
         }
@@ -170,9 +174,19 @@ public class BookTextView extends TextView {
     private int lineSize;
 
 
-    public void setTextSize(int textSize,int lineSize){
+    public void setTextSize(int textSize){
         this.textSize = textSize;
+        createPageTextList();
+    }
+
+    public void setLineSize(int lineSize){
         this.lineSize = lineSize;
+        createPageTextList();
+    }
+
+    public void setMarginSize(int marginSize){
+        this.marginSize = marginSize;
+        createPageTextList();
     }
 
     public void setLast(boolean isLast){
