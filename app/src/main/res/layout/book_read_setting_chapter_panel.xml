@@ -12,18 +12,16 @@
 
         <TextView
             android:id="@+id/book_read_setting_panel_chapter_list_title"
-            android:textColor="@color/colorWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorWhite" />
 
         <Button
             android:id="@+id/book_read_setting_panel_chapter_list_order_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TextButton"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:textColor="@drawable/button_background" />
+             />
     </RelativeLayout>
 
 

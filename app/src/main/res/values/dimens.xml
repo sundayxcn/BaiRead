@@ -16,4 +16,6 @@
     <dimen name="search_fragment_list_item_chapter_text_size">16dp</dimen>
     <dimen name="search_fragment_list_item_author_text_size">13dp</dimen>
     <dimen name="search_fragment_book_detail_description_height">80dp</dimen>
+
+    <dimen name="button_text_style_text_size">16dp</dimen>
 </resources>

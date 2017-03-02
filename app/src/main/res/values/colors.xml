@@ -8,4 +8,5 @@
     <color name="colorWhite">#FFFFFFFF</color>
     <color name="colorDark">#FF000000</color>
     <color name="colorChapterListBg">#FFC0C0C0</color>
+    <color name="colorButtonPress">#28282828</color>
 </resources>

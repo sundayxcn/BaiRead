@@ -6,63 +6,52 @@
 
 
     <RelativeLayout
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:background="@color/colorDark"
         android:id="@+id/book_read_setting_panel_top_panel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
 
         <ImageView
-            android:layout_alignParentRight="true"
-            android:src="@drawable/book_read_setting_panel_source"
             android:id="@+id/book_read_setting_panel_source"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/book_read_setting_panel_source" />
 
 
     </RelativeLayout>
 
 
-
     <LinearLayout
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:background="@color/colorDark"
         android:id="@+id/book_read_setting_panel_bottom_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        >
 
-
-        <ImageView
-            android:layout_weight="1"
-            android:src="@drawable/book_read_setting_panel_chapter"
+        <Button
             android:id="@+id/book_read_setting_panel_chapter_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            style="@style/TextWeightButton"
+            android:text="@string/book_read_setting_bottom_button_text_chapter" />
 
-        <ImageView
-            android:layout_weight="1"
-            android:src="@drawable/book_read_setting_panel_bookmark"
+        <Button
             android:id="@+id/book_read_setting_panel_book_mark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            style="@style/TextWeightButton"
+            android:text="@string/book_read_setting_bottom_button_text_mark" />
 
-        <ImageView
-            android:layout_weight="1"
-            android:src="@drawable/book_read_setting_panel_font"
+        <Button
             android:id="@+id/book_read_setting_panel_text_font"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            style="@style/TextWeightButton"
+            android:text="@string/book_read_setting_bottom_button_text_size" />
 
-        <ImageView
-            android:layout_weight="1"
-            android:src="@drawable/book_read_setting_panel_more"
+        <Button
             android:id="@+id/book_read_setting_panel_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            style="@style/TextWeightButton"
+            android:text="@string/book_read_setting_bottom_button_text_more" />
 
     </LinearLayout>
 
