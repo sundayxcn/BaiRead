@@ -83,15 +83,21 @@ public class MainActivity extends BaseActivity
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final int fPosition = position;
-                showConfirmDialog(new DialogListener() {
+                showConfirmDialog("是否从书架中删除","确定","取消",new DialogListener() {
                     @Override
-                    public void confirmed() {
+                    public void onCancel() {
+
+                    }
+
+                    @Override
+                    public void onConfirmed() {
                         BookInfo bookInfo = (BookInfo) booklistAdapter.getItem(fPosition);
                         booklistAdapter.getBookInfoList().remove(bookInfo);
                         booklistAdapter.notifyDataSetChanged();
 
                         bookcasePresenter.deleteBook(bookInfo);
                     }
+
                 });
                 return true;
             }

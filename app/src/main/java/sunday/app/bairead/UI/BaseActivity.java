@@ -1,5 +1,7 @@
 package sunday.app.bairead.UI;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 
 /**
@@ -10,7 +12,8 @@ public class BaseActivity extends AppCompatActivity {
 
 
     protected interface DialogListener{
-        void confirmed();
+        void onCancel();
+        void onConfirmed();
     }
 
 
@@ -22,8 +25,28 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
-    protected void showConfirmDialog(DialogListener dialogListener){
+    AlertDialog confirmDialog;
+    protected void showConfirmDialog(String string,String confirmText,String cancelText,final DialogListener dialogListener) {
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(string)
+                .setNegativeButton(confirmText, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //the position has problem
+                        confirmDialog.dismiss();
+                        dialogListener.onConfirmed();
+                    }
+                })
+                .setPositiveButton(cancelText, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        confirmDialog.dismiss();
+                        dialogListener.onCancel();
+                    }
+                });
+        confirmDialog = builder.create();
+        confirmDialog.show();
     }
 
 }
