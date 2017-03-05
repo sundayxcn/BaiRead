@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -25,13 +26,14 @@ import sunday.app.bairead.View.BookcaseView;
 import sunday.app.bairead.presenter.BookcasePresenter;
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener ,BookcasePresenter.IBookcasePresenterListener{
+        implements NavigationView.OnNavigationItemSelectedListener, BookcasePresenter.IBookcasePresenterListener {
 
     SearchFragment searchFragment;
 
     private NetworkTool networkTool = new NetworkTool(this);
     private BookcasePresenter bookcasePresenter;
     private ListView mListView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private BookListAdapter booklistAdapter = new BookListAdapter();
 
     @Override
@@ -53,56 +55,20 @@ public class MainActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-
         setupView();
-        bookcasePresenter = new BookcasePresenter(this,this);
+        bookcasePresenter = new BookcasePresenter(this, this);
         bookcasePresenter.init();
         registerReceiver();
 
     }
 
-
-    public class BookListAdapter extends BaseAdapter {
-
-        private ArrayList<BookInfo> bookInfos;
-
-        public void setBookInfoList(ArrayList<BookInfo> list){
-            bookInfos = list;
-        }
-
-        @Override
-        public int getCount() {
-            return bookInfos.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return bookInfos.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                BookcaseView bookcaseView = (BookcaseView) LayoutInflater.from(MainActivity.this).inflate(R.layout.xlist_item, null);
-                bookcaseView.setData(bookInfos.get(position));
-                convertView = bookcaseView;
-            }
-            return convertView;
-        }
-    }
-
-    private void setupView(){
-        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh_layout);
+    private void setupView() {
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(0xFFFF0000);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                bookcasePresenter.checkNewChapter();
+                bookcasePresenter.checkNewChapter(booklistAdapter.getBookInfoList());
             }
         });
         mListView = (ListView) findViewById(R.id.xlist_view);
@@ -110,20 +76,28 @@ public class MainActivity extends BaseActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BookInfo bookInfo = (BookInfo) booklistAdapter.getItem(position);
-                BookcasePresenter.readBook(getBaseContext(),bookInfo);
+                BookcasePresenter.readBook(getBaseContext(), bookInfo);
             }
         });
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                BookInfo bookInfo = (BookInfo) booklistAdapter.getItem(position);
-                bookcasePresenter.deleteBook(bookInfo);
+                final int fPosition = position;
+                showConfirmDialog(new DialogListener() {
+                    @Override
+                    public void confirmed() {
+                        BookInfo bookInfo = (BookInfo) booklistAdapter.getItem(fPosition);
+                        booklistAdapter.getBookInfoList().remove(bookInfo);
+                        booklistAdapter.notifyDataSetChanged();
+
+                        bookcasePresenter.deleteBook(bookInfo);
+                    }
+                });
                 return true;
             }
         });
 
     }
-
 
     @Override
     protected void onResume() {
@@ -208,7 +182,6 @@ public class MainActivity extends BaseActivity
         networkTool.removeReceiver();
     }
 
-
     @Override
     public void loadBookStart() {
         showProgressDialog("");
@@ -223,7 +196,105 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onNewChapterBook(ArrayList<BookInfo> bookList) {
+    public void onCheckNewChapter(BookInfo bookInfo) {
+        ViewHolder viewHolder = indexOf(bookInfo.bookDetail.getId());
+        if (viewHolder != null) {
+            viewHolder.setValue(bookInfo);
+        }
 
     }
+
+    @Override
+    public void onCheckFinish() {
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    public ViewHolder indexOf(long bookId) {
+        int count = mListView.getChildCount();
+        for (int i = 0; i < count; i++) {
+            View view = mListView.getChildAt(i);
+            if (view instanceof BookcaseView) {
+                ViewHolder viewHolder = (ViewHolder) view.getTag();
+                if (viewHolder.getBookId() == bookId) {
+                    return viewHolder;
+                }
+            }
+        }
+        return null;
+    }
+
+    class ViewHolder {
+        TextView nameTView;
+        TextView chapterLatestTView;
+        TextView chapterIndexTView;
+        TextView updateImageTView;
+        TextView updateTimeTView;
+        private long bookId;
+
+        ViewHolder(ViewGroup parent) {
+            nameTView = (TextView) parent.findViewById(R.id.xlist_item_name);
+            chapterLatestTView = (TextView) parent.findViewById(R.id.xlist_item_chapter_latest);
+            chapterIndexTView = (TextView) parent.findViewById(R.id.xlist_item_chapter_index);
+            updateImageTView = (TextView) parent.findViewById(R.id.xlist_item_chapter_update);
+            updateTimeTView = (TextView) parent.findViewById(R.id.xlist_item_update_time);
+        }
+
+        public void setValue(BookInfo bookInfo) {
+            String name = bookInfo.bookDetail.getName();
+            String chapterLatest = bookInfo.bookDetail.getChapterLatest();
+            int chapterIndex = bookInfo.bookChapter.getChapterIndex() + 1;
+            int chapterCount = bookInfo.bookChapter.getChapterCount();
+            String chapterText = String.valueOf(chapterIndex) + "/" + String.valueOf(chapterCount);
+            nameTView.setText(name);
+            chapterLatestTView.setText(chapterLatest);
+            chapterIndexTView.setText(chapterText);
+            updateTimeTView.setText(bookInfo.bookDetail.getUpdateTime());
+            bookId = bookInfo.bookDetail.getId();
+        }
+
+        public long getBookId() {
+            return bookId;
+        }
+    }
+
+    public class BookListAdapter extends BaseAdapter {
+
+        private ArrayList<BookInfo> bookInfos;
+
+        public ArrayList<BookInfo> getBookInfoList() {
+            return bookInfos;
+        }
+
+        public void setBookInfoList(ArrayList<BookInfo> list) {
+            bookInfos = list;
+        }
+
+        @Override
+        public int getCount() {
+            return bookInfos.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return bookInfos.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(MainActivity.this).inflate(R.layout.xlist_item, null);
+                ViewHolder viewHolder = new ViewHolder((ViewGroup) convertView);
+                convertView.setTag(viewHolder);
+            }
+            ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder.setValue(bookInfos.get(position));
+            return convertView;
+        }
+    }
+
 }

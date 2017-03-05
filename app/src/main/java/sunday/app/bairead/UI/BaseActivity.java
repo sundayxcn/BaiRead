@@ -9,11 +9,20 @@ import android.support.v7.app.AppCompatActivity;
 public class BaseActivity extends AppCompatActivity {
 
 
+    protected interface DialogListener{
+        void confirmed();
+    }
+
+
     protected void showProgressDialog(String text){
 
     }
 
     protected void hideProgressDialog(){
+
+    }
+
+    protected void showConfirmDialog(DialogListener dialogListener){
 
     }
 
