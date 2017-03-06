@@ -14,8 +14,8 @@ import java.util.ArrayList;
 
 import sunday.app.bairead.Parse.ParseChapter;
 import sunday.app.bairead.Parse.ParseXml;
+import sunday.app.bairead.Tool.DeferredHandler;
 import sunday.app.bairead.Tool.FileManager;
-import sunday.app.bairead.UI.DeferredHandler;
 
 /**
  * Created by sunday on 2016/12/13.

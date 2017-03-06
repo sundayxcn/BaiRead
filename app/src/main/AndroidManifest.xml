@@ -29,7 +29,9 @@
             android:authorities="sunday.app.bairead.setting"
             android:name=".DataBase.BookContentProvider"/>
 
-        <activity android:name=".UI.BookReadActivity"/>
+        <activity android:name=".UI.BookReadActivity"
+            android:theme="@style/BaseAppTheme"
+            />
 
     </application>
 

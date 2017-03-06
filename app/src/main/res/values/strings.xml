@@ -31,4 +31,6 @@
     <string name="book_read_setting_bottom_button_text_mark">书签</string>
     <string name="book_read_setting_bottom_button_text_size">字体</string>
     <string name="book_read_setting_bottom_button_text_more">更多</string>
+    <string name="book_read_setting_top_panel_mark_add_text">添加书签</string>
+    <string name="book_read_setting_top_panel_source_text">换源</string>
 </resources>

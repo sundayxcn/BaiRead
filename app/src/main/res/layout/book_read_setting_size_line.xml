@@ -4,11 +4,11 @@
     android:layout_height="wrap_content">
 
     <Button
-        android:layout_weight="1"
+        style="@style/TextWeightButton"
+        android:textColor="@color/colorDark"
         android:id="@+id/book_read_setting_size_line_button_reduce"
         android:text="-"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+         />
     <TextView
         android:id="@+id/book_read_setting_size_line_title"
         android:gravity="center"
@@ -16,9 +16,9 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:layout_weight="1"
+        android:textColor="@color/colorDark"
+        style="@style/TextWeightButton"
         android:id="@+id/book_read_setting_size_line_button_add"
         android:text="+"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+ />
 </LinearLayout>

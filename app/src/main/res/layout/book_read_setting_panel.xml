@@ -10,15 +10,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp">
+        >
 
-        <ImageView
-            android:id="@+id/book_read_setting_panel_source"
+        <TextView
+            android:id="@+id/book_read_setting_panel_title"
+            android:textColor="@color/colorWhite"
+            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_marginRight="50dp"
+            android:textSize="@dimen/button_text_style_small_text_size"
+            style="@style/TextButton"
+            android:id="@+id/book_read_setting_panel_mark_add"
             android:layout_alignParentRight="true"
-            android:src="@drawable/book_read_setting_panel_source" />
+            android:text="@string/book_read_setting_top_panel_mark_add_text" />
+
+        <Button
+            android:layout_width="50dp"
+            android:textSize="@dimen/button_text_style_small_text_size"
+            style="@style/TextButton"
+            android:id="@+id/book_read_setting_panel_source"
+            android:layout_alignParentRight="true"
+            android:text="@string/book_read_setting_top_panel_source_text" />
 
 
     </RelativeLayout>

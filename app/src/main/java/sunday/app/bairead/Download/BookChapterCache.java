@@ -132,7 +132,7 @@ public class BookChapterCache {
                 String text = ParseXml.createParse(ParseChapterText.class).parse(fileName);
                 text = String.valueOf(Html.fromHtml(text));
                 chapter.setText(text);
-                chapterListener.end(chapter);
+                chapterListener.cacheEnd(chapter);
             }else{
 
             }
@@ -161,7 +161,7 @@ public class BookChapterCache {
             }
             BookChapter.Chapter chapter = bookinfo.bookChapter.getCurrentChapter();
             if (chapterListener != null) {
-                chapterListener.end(chapter);
+                chapterListener.cacheEnd(chapter);
             }
         }
     }
@@ -186,7 +186,7 @@ public class BookChapterCache {
     }
 
     public interface ChapterListener {
-        void end(BookChapter.Chapter chapter);
+        void cacheEnd(BookChapter.Chapter chapter);
     }
 
 //    public void stopCache(){
