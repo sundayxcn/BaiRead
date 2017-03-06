@@ -11,6 +11,7 @@ public class BookInfo {
      * 每一个detail可以有多个chapter源，此处对应当前源信息
      * */
     public BookChapter bookChapter;
+
 }
 
 

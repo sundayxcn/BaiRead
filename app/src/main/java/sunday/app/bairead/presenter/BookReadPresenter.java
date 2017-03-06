@@ -1,6 +1,7 @@
 package sunday.app.bairead.presenter;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Handler;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import sunday.app.bairead.DataBase.BaiReadApplication;
 import sunday.app.bairead.DataBase.BookChapter;
 import sunday.app.bairead.DataBase.BookInfo;
+import sunday.app.bairead.DataBase.BookMarkInfo;
 import sunday.app.bairead.Download.BookChapterCache;
 import sunday.app.bairead.Tool.PreferenceSetting;
 import sunday.app.bairead.View.BookTextView;
@@ -40,6 +42,8 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
 
     private BookInfo bookInfo;
 
+    private ArrayList<BookMarkInfo> bookMarkList;
+
     private IBookReadPresenterListener bookReadPresenterListener;
 
     public BookReadPresenter(Context c,IBookReadPresenterListener bookReadPresenterListener,long bookId){
@@ -54,6 +58,18 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
         BookChapterCache bookChapterCache = BookChapterCache.getInstance();
         bookChapterCache.setBookInfo(bookInfo,this);
         bookChapterCache.initChapterRead();
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
+                bookMarkList = baiReadApplication.getBookModel().loadBookMark();
+                for(BookMarkInfo info : bookMarkList){
+                    info.text = BookChapterCache.getInstance().getMarkText(info.chapterIndex);
+                    info.title = BookChapterCache.getInstance().getMarkTitle(info.chapterIndex);
+                }
+                return null;
+            }
+        }.execute();
     }
 
 
@@ -120,8 +136,35 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
      * 指定章节重新缓存
      * @param chapterIndex 章节序号
      * */
-    public void setChapterIndex(int chapterIndex){
+    public static void setChapterIndex(int chapterIndex){
         BookChapterCache.getInstance().setChapter(chapterIndex);
+    }
+
+    public ArrayList<BookMarkInfo> getBookMarkList(){
+        return bookMarkList;
+    }
+
+
+    public void addBookMark(){
+        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
+        BookMarkInfo bookMarkInfo = new BookMarkInfo();
+        bookMarkInfo.setNameId(bookId);
+        int chapterIndex = bookInfo.bookChapter.getChapterIndex();
+        bookMarkInfo.chapterIndex = chapterIndex;
+        bookMarkInfo.text = BookChapterCache.getInstance().getMarkText(chapterIndex);
+        bookMarkInfo.title = BookChapterCache.getInstance().getMarkTitle(chapterIndex);
+        bookMarkList.add(bookMarkInfo);
+        baiReadApplication.getBookModel().addBookMark(bookMarkInfo);
+    }
+
+    public void deleteBookMark(){
+        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
+        baiReadApplication.getBookModel().deleteBookAllMark(bookInfo.bookDetail.getId());
+    }
+
+    public void deleteBookMark(BookMarkInfo bookMarkInfo){
+        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
+        baiReadApplication.getBookModel().deleteBookMark(bookMarkInfo);
     }
 
 }

@@ -48,6 +48,11 @@ public class BookChapterCache {
         return BookChapterCacheHolder.sInstance;
     }
 
+    public BookInfo getBookInfo(){
+        return bookinfo;
+    }
+
+
     /**
      * 下载所有章节到本地
      */
@@ -192,6 +197,40 @@ public class BookChapterCache {
 //    public void stopCache(){
 //        isProductRun = false;
 //    }
+
+    public int getCurrentIndex(){
+        return bookinfo.bookChapter.getChapterIndex();
+    }
+
+
+    public String getMarkTitle(int chapterIndex){
+        return bookinfo.bookChapter.getChapter(chapterIndex).getTitle();
+    }
+
+    public String getMarkText(int chapterIndex){
+        final BookChapter.Chapter chapter = bookinfo.bookChapter.getChapter(chapterIndex);
+        final String fileName = fullDir + "/" + chapter.getNum() + ".html";
+        boolean currentFile = isChapterExists(chapterIndex);
+        try {
+            if (!currentFile) {
+                String url = chapter.getLink();
+                Response response = OKhttpManager.getInstance().connectUrl(url);
+                FileManager.writeByte(fileName, response.body().bytes());
+            }else{
+                //存在一个bug，本地文件没有内容，可能是网络中断产生的问题
+                //解决方式：检查文件有效性，如果无效，删除掉，重新下载
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+            return null;
+        }
+
+        String text =  ParseXml.createParse(ParseChapterText.class).parse(fileName);
+        String textT = String.valueOf(Html.fromHtml(text)).trim();
+        int length = textT.length() > 100 ? 100 : textT.length();
+        return textT.substring(0,length);
+    }
+
 
     /**
      * 生产者-内存缓存

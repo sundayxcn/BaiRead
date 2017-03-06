@@ -16,6 +16,7 @@ import sunday.app.bairead.Parse.ParseChapter;
 import sunday.app.bairead.Parse.ParseXml;
 import sunday.app.bairead.Tool.DeferredHandler;
 import sunday.app.bairead.Tool.FileManager;
+import sunday.app.bairead.Tool.DeferredHandler;
 
 /**
  * Created by sunday on 2016/12/13.
@@ -27,14 +28,15 @@ public class BookModel {
     static {
         sWorkerThread.start();
     }
-    public interface CallBack{
-        void loadFinish(ArrayList<BookInfo> list);
-        void addBookDataFinish(BookInfo bookInfo,boolean success);
-        void deleteBookDataFinish(BookInfo bookInfo,boolean success);
-    }
+//    public interface CallBack{
+//        void loadBookFinish(ArrayList<BookInfo> list);
+//        void loadBookMarkFinish(ArrayList<BookMarkInfo> list);
+//        void addBookDataFinish(BookInfo bookInfo,boolean success);
+//        void deleteBookDataFinish(BookInfo bookInfo,boolean success);
+//    }
 
     private Context mContext;
-    private CallBack callBack;
+    //private CallBack callBack;
     private final DeferredHandler mHandler = new DeferredHandler();
     private static final Handler sWorker = new Handler(sWorkerThread.getLooper());
     private ArrayList<BookInfo> mBookInfoList = new ArrayList<>();
@@ -46,9 +48,9 @@ public class BookModel {
     }
 
 
-    public void setCallBack(CallBack callBack){
-        this.callBack = callBack;
-    }
+//    public void setCallBack(CallBack callBack){
+//        this.callBack = callBack;
+//    }
 
     /** Runs the specified runnable immediately if called from the main thread, otherwise it is
      * posted on the main thread handler. */
@@ -104,7 +106,7 @@ public class BookModel {
                 if(success) {
                     mBookInfoList.add(bookInfo);
                 }
-                postAddCallBack(bookInfo,success);
+                //postAddCallBack(bookInfo,success);
 
             }
         });
@@ -135,25 +137,25 @@ public class BookModel {
     }
 
 
-    public void startLoad(){
-        runOnWorkerThread(new Runnable() {
-            @Override
-            public void run() {
-                final ArrayList<BookInfo> list = loadAllBook();
-                if(callBack != null){
-                    runOnMainThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            callBack.loadFinish(list);
-                        }
-                    });
-
-                }
-
-            }
-        });
-
-    }
+//    public void startLoad(){
+//        runOnWorkerThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                final ArrayList<BookInfo> list = loadAllBook();
+//                if(callBack != null){
+//                    runOnMainThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            callBack.loadFinish(list);
+//                        }
+//                    });
+//
+//                }
+//
+//            }
+//        });
+//
+//    }
 
     public ArrayList<BookInfo> loadAllBook(){
         mBookInfoList.clear();
@@ -250,27 +252,27 @@ public class BookModel {
 
 
 
-    public void postAddCallBack(final BookInfo bookInfo, final boolean success){
-        if(callBack != null) {
-            runOnMainThread(new Runnable() {
-                @Override
-                public void run() {
-                    callBack.addBookDataFinish(bookInfo,success);
-                }
-            });
-        }
-    }
-
-    public void postDeleteCallBack(final BookInfo bookInfo, final boolean success){
-        if(callBack != null) {
-            runOnMainThread(new Runnable() {
-                @Override
-                public void run() {
-                    callBack.deleteBookDataFinish(bookInfo,success);
-                }
-            });
-        }
-    }
+//    public void postAddCallBack(final BookInfo bookInfo, final boolean success){
+//        if(callBack != null) {
+//            runOnMainThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    callBack.addBookDataFinish(bookInfo,success);
+//                }
+//            });
+//        }
+//    }
+//
+//    public void postDeleteCallBack(final BookInfo bookInfo, final boolean success){
+//        if(callBack != null) {
+//            runOnMainThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    callBack.deleteBookDataFinish(bookInfo,success);
+//                }
+//            });
+//        }
+//    }
 
     public void deleteBook(final BookInfo bookInfo){
 
@@ -285,7 +287,7 @@ public class BookModel {
                 Uri uri = BookSetting.Detail.getContentUri(id,true);
                 cr.delete(uri,null,null);
 
-                postDeleteCallBack(bookInfo,(uri != null));
+                //postDeleteCallBack(bookInfo,(uri != null));
 
                 /*删除和本书相关的所有来源信息
                  * */
@@ -305,9 +307,9 @@ public class BookModel {
     }
 
 
-    public void addBookMark(BookMark bookMark){
-        long nameId = bookMark.getChapterIndex();
-        int chapterIndex = bookMark.getChapterIndex();
+    public void addBookMark(BookMarkInfo bookMark){
+        long nameId = bookMark.nameId;
+        int chapterIndex = bookMark.chapterIndex;
         final ContentResolver cr = mContext.getContentResolver();
         final ContentValues values = new ContentValues();
         values.put(BookSetting.Mark.ID,nameId);
@@ -321,8 +323,25 @@ public class BookModel {
         });
     }
 
-    public void deleteBookMark(BookMark bookMark){
-        final int index = bookMark.getChapterIndex();
+
+
+
+
+    public void deleteBookAllMark(final long bookId){
+        runOnWorkerThread(new Runnable() {
+            @Override
+            public void run() {
+                String where = BookSetting.Mark.ID + " = ?";
+                ContentResolver cr = mContext.getContentResolver();
+                Uri uri = BookSetting.Mark.CONTENT_URI;
+                cr.delete(uri,where,new String[]{String.valueOf(bookId)});
+                cr.delete(uri,null,null);
+            }
+        });
+    }
+
+    public void deleteBookMark(BookMarkInfo bookMark){
+        final int index = bookMark.chapterIndex;
         runOnWorkerThread(new Runnable() {
             @Override
             public void run() {
@@ -333,6 +352,34 @@ public class BookModel {
             }
         });
     }
+
+    public ArrayList<BookMarkInfo> loadBookMark(){
+        ArrayList<BookMarkInfo> list = new ArrayList<>();
+        final ContentResolver cr = mContext.getContentResolver();
+        Uri uri = BookSetting.Mark.CONTENT_URI;
+        Cursor cursor = cr.query(uri,null,null,null,null);
+
+        final int markId = cursor.getColumnIndexOrThrow(BookSetting.Mark.ID);
+        final int markIndex = cursor.getColumnIndexOrThrow(BookSetting.Mark.INDEX);
+        try {
+            while (cursor.moveToNext()){
+
+                long id = cursor.getLong(markId);
+                int chapterIndex = cursor.getInt(markIndex);
+                BookMarkInfo bookMarkInfo = new BookMarkInfo();
+                bookMarkInfo.nameId = id;
+                bookMarkInfo.chapterIndex = chapterIndex;
+                list.add(bookMarkInfo);
+            }
+        }catch (Exception e){
+            list.clear();
+            e.printStackTrace();
+        }finally {
+            cursor.close();
+        }
+        return list;
+    }
+
 
     /**
      * 判断是否在书架中

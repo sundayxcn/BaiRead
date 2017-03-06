@@ -11,7 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 public class BaseActivity extends AppCompatActivity {
 
 
-    protected interface DialogListener{
+    public interface DialogListener{
         void onCancel();
         void onConfirmed();
     }
@@ -26,7 +26,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     AlertDialog confirmDialog;
-    protected void showConfirmDialog(String string,String confirmText,String cancelText,final DialogListener dialogListener) {
+    public void showConfirmDialog(String string,String confirmText,String cancelText,final DialogListener dialogListener) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(string)

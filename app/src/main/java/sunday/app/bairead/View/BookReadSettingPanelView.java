@@ -18,8 +18,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import sunday.app.bairead.DataBase.BookChapter;
+import sunday.app.bairead.DataBase.BookMarkInfo;
 import sunday.app.bairead.R;
 import sunday.app.bairead.Tool.PreferenceSetting;
+import sunday.app.bairead.UI.BaseActivity;
+import sunday.app.bairead.UI.BookReadActivity;
 import sunday.app.bairead.presenter.BookReadPresenter;
 
 
@@ -33,9 +36,11 @@ public class BookReadSettingPanelView extends RelativeLayout {
     LinearLayout settingBottomPanel;
     private boolean chapterOrder;
     private ChapterPanel chapterPanel;
+    private BookMarkPanel bookMarkPanel;
     private BookReadSettingTextSizePanel bookReadSettingTextSizePanel;
     private Button chapterOrderButtonView;
     private ChapterAdapter chapterAdapter;
+    private MarkAdapter markAdapter;
     private BookReadPresenter bookReadPresenter;
     private OnClickListener sizeOnReduceClickListener = new OnClickListener() {
         @Override
@@ -75,8 +80,8 @@ public class BookReadSettingPanelView extends RelativeLayout {
                     showChapterList();
                     break;
                 case R.id.book_read_setting_panel_book_mark:
-                    //showBookTextSizePanel();
-                    //break;
+                    showMarkPanel();
+                    break;
                 case R.id.book_read_setting_panel_text_font:
                     showBookTextSizePanel();
                     break;
@@ -86,6 +91,10 @@ public class BookReadSettingPanelView extends RelativeLayout {
                 case R.id.book_read_setting_panel_source:
                     //break;
                     Toast.makeText(getContext(), "开发中", Toast.LENGTH_SHORT).show();
+                case R.id.book_read_setting_panel_mark_add:
+                    bookReadPresenter.addBookMark();
+                    Toast.makeText(getContext(), "已添加到书签", Toast.LENGTH_SHORT).show();
+                    break;
                 default:
                     break;
             }
@@ -183,6 +192,67 @@ public class BookReadSettingPanelView extends RelativeLayout {
     }
 
 
+    private void showMarkPanel(){
+        bookMarkPanel = (BookMarkPanel)LayoutInflater.from(getContext()).inflate(R.layout.book_read_setting_mark_panel, null, false);
+        TextView titleView = (TextView) bookMarkPanel.findViewById(R.id.book_read_setting_panel_mark_title);
+        titleView.setText(bookReadPresenter.getBookName());
+        Button markDeleteButton = (Button) bookMarkPanel.findViewById(R.id.book_read_setting_panel_mark_delete_button);
+        markDeleteButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BookReadActivity bookReadActivity = (BookReadActivity) getContext();
+                bookReadActivity.showConfirmDialog("清空标签", "确定", "取消", new BaseActivity.DialogListener() {
+                    @Override
+                    public void onCancel() {
+
+                    }
+
+                    @Override
+                    public void onConfirmed() {
+                        bookReadPresenter.deleteBookMark();
+                    }
+                });
+            }
+        });
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        ListView bookListView = (ListView) bookMarkPanel.findViewById(R.id.book_read_setting_panel_mark_list);
+        ArrayList<BookMarkInfo> list = bookReadPresenter.getBookMarkList();
+        markAdapter = new MarkAdapter(list);
+        bookListView.setAdapter(markAdapter);
+        bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BookMarkInfo bookMarkInfo = (BookMarkInfo) markAdapter.getItem(position);
+                BookReadPresenter.setChapterIndex(bookMarkInfo.chapterIndex);
+                hide();
+            }
+        });
+        bookListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                final BookMarkInfo bookMarkInfo = (BookMarkInfo) markAdapter.getItem(position);
+                BookReadActivity bookReadActivity = (BookReadActivity) getContext();
+                bookReadActivity.showConfirmDialog("删除标签\n"+bookMarkInfo.title, "确定", "取消", new BaseActivity.DialogListener() {
+                    @Override
+                    public void onCancel() {
+
+                    }
+
+                    @Override
+                    public void onConfirmed() {
+                        markAdapter.removeItem(bookMarkInfo);
+                        bookReadPresenter.deleteBookMark(bookMarkInfo);
+                    }
+                });
+
+                return true;
+            }
+        });
+        addView(bookMarkPanel, layoutParams);
+    }
+
+
     private void setupTypeView(View parent, String title, String key) {
         TextView titleView = (TextView) parent.findViewById(R.id.book_read_setting_size_line_title);
         Button reduceButton = (Button) parent.findViewById(R.id.book_read_setting_size_line_button_reduce);
@@ -202,7 +272,6 @@ public class BookReadSettingPanelView extends RelativeLayout {
                 {"行间距", PreferenceSetting.KEY_LINE_SIZE},
                 {"边距", PreferenceSetting.KEY_MARGIN_SIZE}
         };
-
 
         int childCount = bookReadSettingTextSizePanel.getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -229,6 +298,9 @@ public class BookReadSettingPanelView extends RelativeLayout {
         } else if (bookReadSettingTextSizePanel != null) {
             removeView(bookReadSettingTextSizePanel);
             bookReadSettingTextSizePanel = null;
+        }else if (bookMarkPanel != null) {
+            removeView(bookMarkPanel);
+            bookMarkPanel = null;
         }
         setVisibility(GONE);
     }
@@ -293,5 +365,53 @@ public class BookReadSettingPanelView extends RelativeLayout {
         }
     }
 
+    public static class MarkViewHolder{
+        TextView titleView;
+        TextView textView;
+    }
+
+    public class MarkAdapter extends BaseAdapter{
+
+        private ArrayList<BookMarkInfo> list;
+        public MarkAdapter(ArrayList<BookMarkInfo> markItemInfoArrayList){
+            list = markItemInfoArrayList;
+        }
+
+        public void removeItem(BookMarkInfo bookMarkInfo){
+            list.remove(bookMarkInfo);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return list.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if(convertView == null){
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.mark_list_item, null, false);
+                MarkViewHolder markViewHolder = new MarkViewHolder();
+                markViewHolder.titleView = (TextView) convertView.findViewById(R.id.mark_list_item_title);
+                markViewHolder.textView = (TextView) convertView.findViewById(R.id.mark_list_item_text);
+                convertView.setTag(markViewHolder);
+            }
+
+            MarkViewHolder markViewHolder = (MarkViewHolder) convertView.getTag();
+            markViewHolder.titleView.setText(list.get(position).title);
+            markViewHolder.textView.setText(list.get(position).text);
+            return convertView;
+        }
+    }
 
 }

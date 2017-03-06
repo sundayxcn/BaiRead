@@ -33,4 +33,5 @@
     <string name="book_read_setting_bottom_button_text_more">更多</string>
     <string name="book_read_setting_top_panel_mark_add_text">添加书签</string>
     <string name="book_read_setting_top_panel_source_text">换源</string>
+    <string name="book_read_setting_top_button_delete_mark_text">清空书签</string>
 </resources>
