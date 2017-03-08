@@ -24,7 +24,8 @@ public class BookSearchPresenter {
     public interface IBookSearchListener{
         void historyAddFinish(String name);
         void historyLoadFinish(ArrayList<String> list);
-        void bookSearchFinish(ArrayList<BookInfo> bookInfoArrayList);
+        void bookSearchStart(ArrayList<BookInfo> bookInfoArrayList);
+        void bookSearchFinish();
     }
 
     private Handler handler = new Handler();
@@ -83,8 +84,26 @@ public class BookSearchPresenter {
         }
     }
 
+    public void clearHistory(Context context){
+        File file = context.getCacheDir();
+        if (file.exists()) {
+            final String fullName = file.getAbsolutePath() + "/" + fileName;
+            new AsyncTask<Void, Void, Void>() {
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    FileManager.deleteFile(fullName);
+                    return null;
+                }
+            }.execute();
+        }
+
+    }
+
+
     public void searchBook(String name){
         booksearchList = new ArrayList<>();
+        bookSearchListener.bookSearchStart(booksearchList);
             SearchManager searchManager = new SearchManager(new SearchManager.ISearchListener() {
                 @Override
                 public void searchFinish(final BookInfo bookInfo) {
@@ -93,7 +112,7 @@ public class BookSearchPresenter {
                         public void run() {
                             Log.e("sunday","bookName = "+bookInfo.bookDetail.getName());
                             booksearchList.add(bookInfo);
-                            bookSearchListener.bookSearchFinish(booksearchList);
+                            bookSearchListener.bookSearchFinish();
                         }
                     });
                 }

@@ -9,6 +9,7 @@
     <string name="search_text">搜索</string>
     <string name="search_edit_text_hint">请输入书名</string>
     <string name="search_text_history">历史搜索</string>
+    <string name="search_text_history_delete_text">清除</string>
     <string name="search_item_author_text">作者:</string>
     <string name="search_item_author_chapter_latest">最新章节:</string>
     <string name="search_item_author_update_time">最后更新:</string>

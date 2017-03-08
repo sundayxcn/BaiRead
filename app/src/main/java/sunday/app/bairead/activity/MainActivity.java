@@ -25,7 +25,6 @@ import sunday.app.bairead.R;
 import sunday.app.bairead.tool.NetworkTool;
 import sunday.app.bairead.presenter.BookcasePresenter;
 import sunday.app.bairead.tool.NewChapterShow;
-import sunday.app.bairead.tool.Temp;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, BookcasePresenter.IBookcasePresenterListener {
@@ -42,7 +41,7 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        //TextView textView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -192,15 +191,15 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void loadBookStart() {
-        showProgressDialog("");
+        showProgressDialog();
     }
 
     @Override
     public void loadBookFinish(ArrayList<BookInfo> bookList) {
-        hideProgressDialog();
         booklistAdapter = new BookListAdapter();
         booklistAdapter.setBookInfoList(bookList);
         mListView.setAdapter(booklistAdapter);
+        hideProgressDialog();
     }
 
     @Override
@@ -214,7 +213,7 @@ public class MainActivity extends BaseActivity
         if(NewChapterShow.getInstance().isHaveNewChapter()){
             showToast("更新完毕");
         }else{
-            showToast("更新完毕,无最新章节");
+            showToast("更新完毕,无新章节");
         }
 
         swipeRefreshLayout.setRefreshing(false);

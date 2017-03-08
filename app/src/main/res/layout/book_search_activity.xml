@@ -40,40 +40,44 @@
     </LinearLayout>
 
 
-    <FrameLayout
-        android:layout_below="@id/book_search_top_panel"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/book_search_top_panel">
 
-        <LinearLayout
-            android:id="@+id/book_search_history_panel"
+        <TextView
+            android:id="@+id/book_search_history"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="@dimen/default_image_button_height"
+            android:layout_marginLeft="@dimen/default_padding_left"
+            android:gravity="center_vertical"
+            android:text="@string/search_text_history" />
 
-            <TextView
-                android:id="@+id/book_search_history"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/default_image_button_height"
-                android:layout_marginLeft="@dimen/default_padding_left"
-                android:gravity="center_vertical"
-                android:text="@string/search_text_history" />
-
-            <ListView
-                android:id="@+id/book_search_history_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/default_padding_left" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/book_search_history_delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/default_image_button_height"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/default_padding_left"
+            android:background="@drawable/button_background"
+            android:text="@string/search_text_history_delete_text"
+            />
 
         <ListView
-            android:visibility="invisible"
-            android:id="@+id/book_search_book_list_view"
+            android:layout_below="@id/book_search_history"
+            android:id="@+id/book_search_history_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/default_padding_left" />
 
-    </FrameLayout>
+        <ListView
+            android:id="@+id/book_search_book_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/default_padding_left"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
 
 
     <TextView
