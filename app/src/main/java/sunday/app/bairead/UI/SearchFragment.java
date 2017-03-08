@@ -144,7 +144,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             @Override
             public void run() {
                 if (bookInfo == null) {
-                    Toast.makeText(getContext(), getString(R.string.search_fragment_not_find_book_text), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
                 } else {
 
                     if (mListView.getAdapter() == searchHistory.getAdapter()) {
@@ -164,7 +164,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 searchHistory.addHistory(bookName);
 
                 //new SearchManager(SearchFragment.this).debugDetail(bookName);
-                new SearchManager(SearchFragment.this).searchTopWeb(bookName);
+                //new SearchManager(SearchFragment.this).searchTopWeb(bookName);
             }
         }else{
             Toast.makeText(getContext(),"open the network",Toast.LENGTH_SHORT).show();
@@ -266,7 +266,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         }
 
         public void addHistory(String bookName){
-            try {
+
                 if(mHistoryList.contains(bookName)){
                     mHistoryList.remove(bookName);
                     mHistoryList.add(0, bookName);
@@ -274,11 +274,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                     FileManager.writeFileByLine(fileName, bookName);
                     mHistoryList.add(0, bookName);
                 }
-            }catch (IOException e){
-                e.printStackTrace();
-            }finally {
-                searchHistoryAdapter.notifyDataSetChanged();
-            }
+
         }
 
 

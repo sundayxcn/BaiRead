@@ -1,5 +1,6 @@
 package sunday.app.bairead.UI;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -24,6 +25,8 @@ import sunday.app.bairead.R;
 import sunday.app.bairead.Tool.NetworkTool;
 import sunday.app.bairead.View.BookcaseView;
 import sunday.app.bairead.presenter.BookcasePresenter;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, BookcasePresenter.IBookcasePresenterListener {
@@ -108,6 +111,10 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
+        //解决阅读完后回到书架界面 当前章节显示未更新
+        if(booklistAdapter != null){
+            booklistAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -141,8 +148,14 @@ public class MainActivity extends BaseActivity
             return true;
         } else if (id == R.id.action_search) {
             //转到搜索界面fragment
-            searchFragment = new SearchFragment();
-            searchFragment.show(this);
+//            searchFragment = new SearchFragment();
+//            searchFragment.show(this);
+            Intent intent = new Intent();
+            intent.setClass(this, BookSearchActivity.class);
+            //long bookId = bookInfo.bookDetail.getId();
+            //intent.putExtra(BookReadActivity.EXTRAS_BOOK_ID, bookId);
+            //intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
             return true;
         }
 

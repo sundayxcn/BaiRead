@@ -38,7 +38,7 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
 
     private Context context;
     private Handler handler = new Handler();
-    private long bookId ;
+
 
     private BookInfo bookInfo;
 
@@ -48,7 +48,6 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
 
     public BookReadPresenter(Context c,IBookReadPresenterListener bookReadPresenterListener,long bookId){
         context = c;
-        this.bookId = bookId;
         this.bookReadPresenterListener = bookReadPresenterListener;
         BaiReadApplication baiReadApplication = (BaiReadApplication)c.getApplicationContext();
         bookInfo = baiReadApplication.getBookModel().getBookInfo(bookId);
@@ -62,7 +61,7 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
             @Override
             protected Void doInBackground(Void... params) {
                 BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-                bookMarkList = baiReadApplication.getBookModel().loadBookMark();
+                bookMarkList = baiReadApplication.getBookModel().loadBookMark(bookInfo.bookDetail.getId());
                 for(BookMarkInfo info : bookMarkList){
                     info.text = BookChapterCache.getInstance().getMarkText(info.chapterIndex);
                     info.title = BookChapterCache.getInstance().getMarkTitle(info.chapterIndex);
@@ -108,10 +107,17 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
 
     public void ChapterNext(){
         BookChapterCache.getInstance().nextChapter(context);
+        updateDataBookIndex();
     }
 
     public void ChapterPrev(){
         BookChapterCache.getInstance().prevChapter(context);
+        updateDataBookIndex();
+    }
+
+    public void updateDataBookIndex(){
+        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
+        baiReadApplication.getBookModel().updateBookChapter(bookInfo.bookChapter);
     }
 
     public String getBookName(){
@@ -136,8 +142,9 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
      * 指定章节重新缓存
      * @param chapterIndex 章节序号
      * */
-    public static void setChapterIndex(int chapterIndex){
+    public void setChapterIndex(int chapterIndex){
         BookChapterCache.getInstance().setChapter(chapterIndex);
+        updateDataBookIndex();
     }
 
     public ArrayList<BookMarkInfo> getBookMarkList(){
@@ -148,7 +155,7 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
     public void addBookMark(){
         BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
         BookMarkInfo bookMarkInfo = new BookMarkInfo();
-        bookMarkInfo.setNameId(bookId);
+        bookMarkInfo.setNameId(bookInfo.bookDetail.getId());
         int chapterIndex = bookInfo.bookChapter.getChapterIndex();
         bookMarkInfo.chapterIndex = chapterIndex;
         bookMarkInfo.text = BookChapterCache.getInstance().getMarkText(chapterIndex);

@@ -42,7 +42,9 @@ public class BookDownload {
 
             @Override
             public void onFailure(Call call, IOException e) {
-
+                if(downloadListener != null){
+                    downloadListener.onNewChapter(null);
+                }
             }
 
             @Override

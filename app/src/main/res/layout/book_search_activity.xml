@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    >
+
+
+    <LinearLayout
+        android:id="@+id/book_search_top_panel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_tool_bar_height"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+
+
+        <ImageButton
+            android:id="@+id/book_search_button_back"
+            android:layout_width="@dimen/default_image_button_width"
+            android:layout_height="match_parent"
+            android:background="@color/colorTransparent"
+            android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha" />
+
+        <EditText
+            android:id="@+id/book_search_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="@string/search_edit_text_hint"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorGray" />
+
+        <Button
+            android:id="@+id/book_search_button_search"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/colorTransparent"
+            android:text="@string/search_text"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:layout_below="@id/book_search_top_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/book_search_history_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/book_search_history"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_image_button_height"
+                android:layout_marginLeft="@dimen/default_padding_left"
+                android:gravity="center_vertical"
+                android:text="@string/search_text_history" />
+
+            <ListView
+                android:id="@+id/book_search_history_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/default_padding_left" />
+        </LinearLayout>
+
+        <ListView
+            android:visibility="invisible"
+            android:id="@+id/book_search_book_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/default_padding_left" />
+
+    </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/book_search_book_dont_find"
+        android:text="@string/book_search_book_dont_find_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        />
+
+
+</RelativeLayout>

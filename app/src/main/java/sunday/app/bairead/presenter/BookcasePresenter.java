@@ -85,7 +85,7 @@ public class BookcasePresenter{
         BookDownload bookDownload = new BookDownload(new BookDownload.DownloadListener() {
             @Override
             public void onNewChapter(final BookInfo bookInfo) {
-                if(checkFinish()){
+                if(checkFinish() || bookInfo == null){
                     runOnMainThread(new Runnable() {
                         @Override
                         public void run() {

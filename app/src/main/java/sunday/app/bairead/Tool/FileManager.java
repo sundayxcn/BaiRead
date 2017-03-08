@@ -46,19 +46,14 @@ public class FileManager {
 //    }
 
 
-    public static boolean createDir() {
-
-        return createDir(PATH);
-    }
-
-    public static boolean createDir(String dirPath) {
+       public static String createDir(String dirPath) {
 
         File file = new File(dirPath);
         if (!file.exists()) {
             file.mkdirs();
         }
 
-        return file.exists();
+        return dirPath;
     }
 
 
@@ -124,16 +119,19 @@ public class FileManager {
         return list;
     }
 
-    public static void writeFileByLine(String fileName,String name) throws IOException {
-        File file = new File(fileName);
-        if(!file.exists()){
-            file.createNewFile();
+    public static void writeFileByLine(String fileName,String name) {
+        try {
+            File file = new File(fileName);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileWriter fileWriter = new FileWriter(fileName, true);
+            fileWriter.write(name);
+            fileWriter.write("\r\n");
+            fileWriter.close();
+        }catch (IOException e){
+            e.printStackTrace();
         }
-
-        FileWriter fileWriter = new FileWriter(fileName, true);
-        fileWriter.write(name);
-        fileWriter.write("\r\n");
-        fileWriter.close();
     }
 
 

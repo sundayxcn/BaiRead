@@ -33,6 +33,13 @@
             android:theme="@style/BaseAppTheme"
             />
 
+        <activity android:name=".UI.BookSearchActivity"
+            android:theme="@style/BaseAppTheme"
+            />
+
+        <activity android:name=".UI.BookDetailActivity"
+            />
+
     </application>
 
 </manifest>

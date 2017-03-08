@@ -4,7 +4,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -25,28 +28,29 @@ import sunday.app.bairead.UI.SearchFragment;
 public class SearchManager extends OKhttpManager {
 
     public static final String SEARCH_DIR = "search";
+    private ISearchListener searchListener;
 
-    private SearchFragment searchFragment;
-    private String bookName;
-
-    public SearchManager(SearchFragment fragment){
-        searchFragment = fragment;
+    public interface ISearchListener{
+        void searchFinish(BookInfo bookInfo);
     }
+
+    public SearchManager(ISearchListener searchListener){
+        this.searchListener = searchListener;
+    }
+
 
     /**
      * 搜索指定网站
      * */
     public void searchTopWeb(final String name) {
-        bookName = name;
         String webName = WebInfo.TOP_WEB[0][0];
         String webLink = WebInfo.TOP_WEB[0][1];
         String webSearchLink = WebInfo.TOP_WEB[0][2];
         WebInfo webInfo = new WebInfo(webName,webLink,webSearchLink);
 
-        final String fileDir = FileManager.PATH +"/"+bookName+"/"+SEARCH_DIR;
-        final String fileName = fileDir + "/"+"search.html";
+        final String fileName = getFullName(name,"search.html");
 
-        connectUrl(webInfo.getLink() + bookName,new ConnectListener() {
+        connectUrl(webInfo.getLink() + name,new ConnectListener() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("sunday","onFailure");
@@ -57,22 +61,37 @@ public class SearchManager extends OKhttpManager {
                 FileManager.writeByte(fileName,response.body().bytes());
                 response.body().close();
                 HashMap<String,String> hashMap =  ParseXml.createParse(ParseSearch.class).parse(fileName);
-                String chapterLink = hashMap.get(bookName);
-                downloadChapterLink(chapterLink);
+                //String chapterLink = hashMap.get(bookName);
+                Iterator iter = hashMap.entrySet().iterator();
+                while (iter.hasNext()) {
+                    Map.Entry entry = (Map.Entry) iter.next();
+                    String bookName = (String) entry.getKey();
+                    String link = (String) entry.getValue();
+                    downloadChapterLink(bookName,link);
+                }
+
             }
 
             @Override
             public void start(String url) {
-
-                FileManager.createDir(fileDir);
+                //createFileDir(name);
             }
 
         });
     }
 
-    private void downloadChapterLink(String link){
+
+    public String getFullName(String bookName,String fileName){
+        return createFileDir(bookName) + "/" + fileName;
+    }
+
+    public String createFileDir(String bookName){
+         return FileManager.createDir(FileManager.PATH +"/"+bookName);
+    }
+
+    private void downloadChapterLink(final String bookName, String link){
         if(link != null){
-            final String chapterFile = FileManager.PATH +"/"+bookName+"/" + BookChapter.FileName;
+            final String chapterFile = getFullName(bookName,BookChapter.FileName);
             connectUrl(link, new ConnectListener() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -87,19 +106,19 @@ public class SearchManager extends OKhttpManager {
                         BookInfo bookInfo = new BookInfo();
                         bookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).parse(chapterFile);
                         bookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).parse(chapterFile);
-                        searchFragment.refreshSearchResult(bookInfo);
+                        searchListener.searchFinish(bookInfo);
                     //}
                 }
 
                 @Override
                 public void start(String url) {
-
+                    //createFileDir(bookName);
                 }
 
             });
         //sunday-change for dont find book
         }else{
-            searchFragment.refreshSearchResult(null);
+            searchListener.searchFinish(null);
         }
         //sunday-change for dont find book
     }
@@ -110,7 +129,8 @@ public class SearchManager extends OKhttpManager {
         BookInfo bookInfo = new BookInfo();
         bookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).parse(chapterFile);
         bookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).parse(chapterFile);
-        searchFragment.refreshSearchResult(bookInfo);
+        searchListener.searchFinish(bookInfo);
+        //searchFragment.refreshSearchResult(bookInfo);
     }
 
 

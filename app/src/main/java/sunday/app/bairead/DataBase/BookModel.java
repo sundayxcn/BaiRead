@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Process;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,7 @@ import sunday.app.bairead.Parse.ParseXml;
 import sunday.app.bairead.Tool.DeferredHandler;
 import sunday.app.bairead.Tool.FileManager;
 import sunday.app.bairead.Tool.DeferredHandler;
+import sunday.app.bairead.Tool.Temp;
 
 /**
  * Created by sunday on 2016/12/13.
@@ -92,6 +94,7 @@ public class BookModel {
 
 
         chapterValues.put(BookSetting.Chapter.ID,id);
+        bookInfo.bookChapter.setId(id);
         bookInfo.bookChapter.onAddToDatabase(chapterValues);
 
         runOnWorkerThread(new Runnable() {
@@ -224,9 +227,14 @@ public class BookModel {
                 }else {
                     String fileName = FileManager.PATH+"/"+bookInfo.bookDetail.getName()+"/"+ BookChapter.FileName;
                     BookChapter bookChapter = ParseXml.createParse(ParseChapter.class).parse(fileName);
-                    bookChapter.setId(id);
-                    bookChapter.setChapterIndex(index);
-                    bookInfo.bookChapter = bookChapter;
+                    if(bookChapter == null){
+                        bookList.remove(bookInfo);
+                        //此处弹出重建书籍缓存的提示
+                    }else {
+                        bookChapter.setId(id);
+                        bookChapter.setChapterIndex(index);
+                        bookInfo.bookChapter = bookChapter;
+                    }
                 }
             }
         }catch (Exception e){
@@ -353,11 +361,13 @@ public class BookModel {
         });
     }
 
-    public ArrayList<BookMarkInfo> loadBookMark(){
+    public ArrayList<BookMarkInfo> loadBookMark(long bookId){
         ArrayList<BookMarkInfo> list = new ArrayList<>();
         final ContentResolver cr = mContext.getContentResolver();
         Uri uri = BookSetting.Mark.CONTENT_URI;
-        Cursor cursor = cr.query(uri,null,null,null,null);
+        String select = BookSetting.Mark.ID + " = ?";
+        String[] selectionArgs = new String[]{String.valueOf(bookId)};
+        Cursor cursor = cr.query(uri,null,select,selectionArgs,null);
 
         final int markId = cursor.getColumnIndexOrThrow(BookSetting.Mark.ID);
         final int markIndex = cursor.getColumnIndexOrThrow(BookSetting.Mark.INDEX);
@@ -408,17 +418,27 @@ public class BookModel {
                return bookInfo;
            }
         }
-        return null;
+
+        return Temp.getInstance().getBookInfo();
+
+        //return null;
     }
 
     public void updateBookChapter(BookChapter bookChapter){
         final ContentResolver cr = mContext.getContentResolver();
-        Uri uri = BookSetting.Chapter.CONTENT_URI;
-        ContentValues values = new ContentValues();
+        final Uri uri = BookSetting.Chapter.CONTENT_URI;
+        final ContentValues values = new ContentValues();
         int index = bookChapter.getChapterIndex();
+        final long id = bookChapter.getId();
         values.put(BookSetting.Chapter.INDEX,index);
-        String where = BookSetting.Chapter.ID +" = ?" +" and "+BookSetting.Chapter.CURRENT +" = 1";
-        cr.update(uri,values,where,new String[]{String.valueOf(bookChapter.getId())});
+        final String where = BookSetting.Chapter.ID +" = ?" +" and "+BookSetting.Chapter.CURRENT +" = 1";
+        runOnWorkerThread(new Runnable() {
+            @Override
+            public void run() {
+                cr.update(uri,values,where,new String[]{String.valueOf(id)});
+            }
+        });
+
     }
 
 }

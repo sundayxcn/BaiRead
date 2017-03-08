@@ -224,7 +224,7 @@ public class BookReadSettingPanelView extends RelativeLayout {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BookMarkInfo bookMarkInfo = (BookMarkInfo) markAdapter.getItem(position);
-                BookReadPresenter.setChapterIndex(bookMarkInfo.chapterIndex);
+                bookReadPresenter.setChapterIndex(bookMarkInfo.chapterIndex);
                 hide();
             }
         });
