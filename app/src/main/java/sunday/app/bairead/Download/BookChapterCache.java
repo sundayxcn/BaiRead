@@ -16,6 +16,7 @@ import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.parse.ParseChapterText;
 import sunday.app.bairead.parse.ParseXml;
 import sunday.app.bairead.tool.FileManager;
+import sunday.app.bairead.tool.NewChapterShow;
 
 /**
  * Created by sunday on 2016/12/8.
@@ -91,6 +92,7 @@ public class BookChapterCache {
      * 每次进入一本书之后，根据info重新缓存章节
      * */
     public void initChapterRead() {
+        NewChapterShow.getInstance().removeNewChapter(bookinfo.bookDetail.getId());
         synchronized(mChapterCacheMap) {
             mChapterCacheMap.clear();
             mChapterCacheMap.notifyAll();

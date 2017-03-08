@@ -3,6 +3,7 @@ package sunday.app.bairead.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 /**
  * Created by Administrator on 2017/3/5.
@@ -23,6 +24,10 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void hideProgressDialog(){
 
+    }
+
+    public void showToast(String text){
+        Toast.makeText(this,text,Toast.LENGTH_SHORT).show();
     }
 
     AlertDialog confirmDialog;

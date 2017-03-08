@@ -31,6 +31,7 @@ public class BookcasePresenter{
         void loadBookFinish(ArrayList<BookInfo> bookList);
         void onCheckNewChapter(BookInfo bookInfo);
         void onCheckFinish();
+        void onCheckStart();
     }
 
     private IBookcasePresenterListener bookcasePresenterListener;
@@ -82,6 +83,7 @@ public class BookcasePresenter{
     public void checkNewChapter(ArrayList<BookInfo> list){
         final ArrayList<BookInfo> listAdapterList = list;
         checkBookInit(list.size());
+        bookcasePresenterListener.onCheckStart();
         BookDownload bookDownload = new BookDownload(new BookDownload.DownloadListener() {
             @Override
             public void onNewChapter(final BookInfo bookInfo) {

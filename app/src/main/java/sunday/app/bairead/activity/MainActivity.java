@@ -24,6 +24,8 @@ import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.R;
 import sunday.app.bairead.tool.NetworkTool;
 import sunday.app.bairead.presenter.BookcasePresenter;
+import sunday.app.bairead.tool.NewChapterShow;
+import sunday.app.bairead.tool.Temp;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, BookcasePresenter.IBookcasePresenterListener {
@@ -203,13 +205,24 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onCheckNewChapter(BookInfo bookInfo) {
+        NewChapterShow.getInstance().addNewChapter(bookInfo.bookDetail.getId(),bookInfo.bookChapter.getChapterCount()-1);
         booklistAdapter.notifyDataSetChanged();
-
     }
 
     @Override
     public void onCheckFinish() {
+        if(NewChapterShow.getInstance().isHaveNewChapter()){
+            showToast("更新完毕");
+        }else{
+            showToast("更新完毕,无最新章节");
+        }
+
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onCheckStart() {
+        NewChapterShow.getInstance().clearNewChapterList();
     }
 
     class ViewHolder {
@@ -238,6 +251,8 @@ public class MainActivity extends BaseActivity
             chapterLatestTView.setText(chapterLatest);
             chapterIndexTView.setText(chapterText);
             updateTimeTView.setText(bookInfo.bookDetail.getUpdateTime());
+            boolean newChapter = NewChapterShow.getInstance().isHaveNewChapter(bookInfo.bookDetail.getId());
+            updateImageTView.setVisibility(newChapter ? View.VISIBLE : View.INVISIBLE);
             bookId = bookInfo.bookDetail.getId();
         }
 

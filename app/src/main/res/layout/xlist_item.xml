@@ -3,9 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="5dp"
+    android:background="@drawable/background_stroke_white"
     >
 
     <ImageView
+        android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true"
+        android:scaleType="center"
         android:id="@+id/xlist_item_cover_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,18 +17,25 @@
         />
 
     <LinearLayout
+        android:gravity="center_vertical"
+        android:layout_marginLeft="20dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:orientation="vertical"
         android:layout_toRightOf="@id/xlist_item_cover_image"
         >
 
         <TextView
+            android:textSize="16dp"
+            android:textColor="@color/colorDark"
             android:id="@+id/xlist_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
+            android:ellipsize="end"
+            android:lines="1"
+            android:textSize="14dp"
             android:id="@+id/xlist_item_chapter_latest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -34,8 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-
         <TextView
+            android:visibility="gone"
             android:id="@+id/xlist_item_chapter_index"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -44,13 +55,13 @@
 
 
     <TextView
+        android:layout_centerVertical="true"
         android:id="@+id/xlist_item_chapter_update"
         android:layout_alignParentRight="true"
-        android:background="@color/colorAccent"
-        android:text="@string/xlistview_item_chapter_update_text"
-        android:visibility="invisible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_marginRight="8dp"
+        android:background="@drawable/background_cycle_read"
+        android:layout_width="7dp"
+        android:layout_height="7dp" />
 
 
 </RelativeLayout>
