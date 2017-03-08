@@ -1,4 +1,4 @@
-package sunday.app.bairead.DataBase;
+package sunday.app.bairead.database;
 
 /**
  * Created by sunday on 2016/12/13.

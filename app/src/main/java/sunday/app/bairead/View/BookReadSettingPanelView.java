@@ -1,4 +1,4 @@
-package sunday.app.bairead.View;
+package sunday.app.bairead.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -17,12 +17,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import sunday.app.bairead.DataBase.BookChapter;
-import sunday.app.bairead.DataBase.BookMarkInfo;
+import sunday.app.bairead.database.BookChapter;
+import sunday.app.bairead.database.BookMarkInfo;
 import sunday.app.bairead.R;
-import sunday.app.bairead.Tool.PreferenceSetting;
-import sunday.app.bairead.UI.BaseActivity;
-import sunday.app.bairead.UI.BookReadActivity;
+import sunday.app.bairead.tool.PreferenceSetting;
+import sunday.app.bairead.activity.BaseActivity;
+import sunday.app.bairead.activity.BookReadActivity;
 import sunday.app.bairead.presenter.BookReadPresenter;
 
 

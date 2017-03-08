@@ -1,4 +1,4 @@
-package sunday.app.bairead.UI;
+package sunday.app.bairead.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,9 +20,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import sunday.app.bairead.DataBase.BookInfo;
+import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.R;
-import sunday.app.bairead.Tool.NetworkTool;
+import sunday.app.bairead.tool.NetworkTool;
 import sunday.app.bairead.presenter.BookcasePresenter;
 
 public class MainActivity extends BaseActivity

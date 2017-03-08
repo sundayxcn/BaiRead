@@ -1,10 +1,7 @@
-package sunday.app.bairead.DataBase;
+package sunday.app.bairead.database;
 
 import android.content.ContentValues;
-import android.content.Context;
-import android.graphics.Bitmap;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BookDetail extends BookBase{

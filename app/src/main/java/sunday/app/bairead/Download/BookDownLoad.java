@@ -1,15 +1,15 @@
-package sunday.app.bairead.Download;
+package sunday.app.bairead.download;
 
 import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import sunday.app.bairead.DataBase.BookChapter;
-import sunday.app.bairead.DataBase.BookInfo;
-import sunday.app.bairead.Parse.ParseChapter;
-import sunday.app.bairead.Parse.ParseDetail;
-import sunday.app.bairead.Parse.ParseXml;
-import sunday.app.bairead.Tool.FileManager;
+import sunday.app.bairead.database.BookChapter;
+import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.parse.ParseChapter;
+import sunday.app.bairead.parse.ParseDetail;
+import sunday.app.bairead.parse.ParseXml;
+import sunday.app.bairead.tool.FileManager;
 
 /**
  * Created by Administrator on 2017/3/5.

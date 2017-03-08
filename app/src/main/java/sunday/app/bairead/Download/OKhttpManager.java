@@ -1,4 +1,4 @@
-package sunday.app.bairead.Download;
+package sunday.app.bairead.download;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import sunday.app.bairead.Tool.FileManager;
+import sunday.app.bairead.tool.FileManager;
 
 /**
  * 下载html到本地

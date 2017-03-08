@@ -1,8 +1,7 @@
-package sunday.app.bairead.View;
+package sunday.app.bairead.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 /**

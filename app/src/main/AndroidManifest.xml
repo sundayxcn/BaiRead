@@ -8,14 +8,14 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
-        android:name=".DataBase.BaiReadApplication"
+        android:name=".database.BaiReadApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".UI.MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -27,17 +27,17 @@
         
         <provider
             android:authorities="sunday.app.bairead.setting"
-            android:name=".DataBase.BookContentProvider"/>
+            android:name=".database.BookContentProvider"/>
 
-        <activity android:name=".UI.BookReadActivity"
+        <activity android:name=".activity.BookReadActivity"
             android:theme="@style/BaseAppTheme"
             />
 
-        <activity android:name=".UI.BookSearchActivity"
+        <activity android:name=".activity.BookSearchActivity"
             android:theme="@style/BaseAppTheme"
             />
 
-        <activity android:name=".UI.BookDetailActivity"
+        <activity android:name=".activity.BookDetailActivity"
             />
 
     </application>

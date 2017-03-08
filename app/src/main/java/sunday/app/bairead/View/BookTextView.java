@@ -1,21 +1,14 @@
-package sunday.app.bairead.View;
+package sunday.app.bairead.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Point;
-import android.text.Spanned;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import sunday.app.bairead.DataBase.BookChapter;
-import sunday.app.bairead.Tool.PreferenceSetting;
-import sunday.app.bairead.UI.BookReadActivity;
-import sunday.app.bairead.presenter.BookReadPresenter;
+import sunday.app.bairead.database.BookChapter;
 
 /**
  * Created by sunday on 2016/12/16.

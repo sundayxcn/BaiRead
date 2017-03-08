@@ -1,4 +1,4 @@
-package sunday.app.bairead.UI;
+package sunday.app.bairead.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,10 +16,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import sunday.app.bairead.DataBase.BookDetail;
-import sunday.app.bairead.DataBase.BookInfo;
+import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.R;
-import sunday.app.bairead.Tool.Temp;
+import sunday.app.bairead.tool.Temp;
 import sunday.app.bairead.presenter.BookSearchPresenter;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;

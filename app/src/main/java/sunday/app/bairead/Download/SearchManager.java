@@ -1,4 +1,4 @@
-package sunday.app.bairead.Download;
+package sunday.app.bairead.download;
 
 import android.util.Log;
 
@@ -9,14 +9,14 @@ import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import sunday.app.bairead.DataBase.BookChapter;
-import sunday.app.bairead.DataBase.BookInfo;
-import sunday.app.bairead.DataBase.WebInfo;
-import sunday.app.bairead.Parse.ParseChapter;
-import sunday.app.bairead.Parse.ParseDetail;
-import sunday.app.bairead.Parse.ParseSearch;
-import sunday.app.bairead.Parse.ParseXml;
-import sunday.app.bairead.Tool.FileManager;
+import sunday.app.bairead.database.BookChapter;
+import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.database.WebInfo;
+import sunday.app.bairead.parse.ParseChapter;
+import sunday.app.bairead.parse.ParseDetail;
+import sunday.app.bairead.parse.ParseSearch;
+import sunday.app.bairead.parse.ParseXml;
+import sunday.app.bairead.tool.FileManager;
 
 /**
  * 访问百度搜索书籍

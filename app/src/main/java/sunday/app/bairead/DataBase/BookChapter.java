@@ -1,15 +1,8 @@
-package sunday.app.bairead.DataBase;
+package sunday.app.bairead.database;
 
 import android.content.ContentValues;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.TreeSet;
-
-import sunday.app.bairead.Tool.FileManager;
 
 /**
  * Created by sunday on 2016/12/12.

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<sunday.app.bairead.View.BookReadSettingPanelView xmlns:android="http://schemas.android.com/apk/res/android"
+<sunday.app.bairead.view.BookReadSettingPanelView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/book_read_setting_panel"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -70,4 +70,4 @@
 
     </LinearLayout>
 
-</sunday.app.bairead.View.BookReadSettingPanelView>
+</sunday.app.bairead.view.BookReadSettingPanelView>

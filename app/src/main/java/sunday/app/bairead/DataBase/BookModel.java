@@ -1,4 +1,4 @@
-package sunday.app.bairead.DataBase;
+package sunday.app.bairead.database;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -9,16 +9,14 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Process;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import sunday.app.bairead.Parse.ParseChapter;
-import sunday.app.bairead.Parse.ParseXml;
-import sunday.app.bairead.Tool.DeferredHandler;
-import sunday.app.bairead.Tool.FileManager;
-import sunday.app.bairead.Tool.DeferredHandler;
-import sunday.app.bairead.Tool.Temp;
+import sunday.app.bairead.parse.ParseChapter;
+import sunday.app.bairead.parse.ParseXml;
+import sunday.app.bairead.tool.DeferredHandler;
+import sunday.app.bairead.tool.FileManager;
+import sunday.app.bairead.tool.Temp;
 
 /**
  * Created by sunday on 2016/12/13.

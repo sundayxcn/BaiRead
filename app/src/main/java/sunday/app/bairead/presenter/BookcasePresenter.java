@@ -7,12 +7,12 @@ import android.os.Handler;
 
 import java.util.ArrayList;
 
-import sunday.app.bairead.DataBase.BaiReadApplication;
-import sunday.app.bairead.DataBase.BookInfo;
-import sunday.app.bairead.DataBase.BookModel;
-import sunday.app.bairead.Download.BookDownload;
-import sunday.app.bairead.Tool.FileManager;
-import sunday.app.bairead.UI.BookReadActivity;
+import sunday.app.bairead.database.BaiReadApplication;
+import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.database.BookModel;
+import sunday.app.bairead.download.BookDownload;
+import sunday.app.bairead.tool.FileManager;
+import sunday.app.bairead.activity.BookReadActivity;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 

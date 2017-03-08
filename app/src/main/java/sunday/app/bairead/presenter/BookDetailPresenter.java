@@ -2,9 +2,9 @@ package sunday.app.bairead.presenter;
 
 import android.content.Context;
 
-import sunday.app.bairead.DataBase.BaiReadApplication;
-import sunday.app.bairead.DataBase.BookInfo;
-import sunday.app.bairead.DataBase.BookModel;
+import sunday.app.bairead.database.BaiReadApplication;
+import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.database.BookModel;
 
 /**
  * Created by sunday on 2017/3/7.

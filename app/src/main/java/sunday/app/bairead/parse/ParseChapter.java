@@ -1,4 +1,4 @@
-package sunday.app.bairead.Parse;
+package sunday.app.bairead.parse;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import sunday.app.bairead.DataBase.BookChapter;
-import sunday.app.bairead.DataBase.BookDetail;
+import sunday.app.bairead.database.BookChapter;
+import sunday.app.bairead.database.BookDetail;
 
 /**
  * Created by sunday on 2017/1/16.

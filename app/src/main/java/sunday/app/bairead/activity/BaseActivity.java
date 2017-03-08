@@ -1,4 +1,4 @@
-package sunday.app.bairead.UI;
+package sunday.app.bairead.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

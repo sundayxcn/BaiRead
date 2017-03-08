@@ -1,4 +1,4 @@
-package sunday.app.bairead.DataBase;
+package sunday.app.bairead.database;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;

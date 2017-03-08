@@ -1,4 +1,4 @@
-package sunday.app.bairead.UI;
+package sunday.app.bairead.activity;
 
 import android.graphics.Point;
 import android.os.Bundle;
@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import sunday.app.bairead.R;
-import sunday.app.bairead.View.BookReadSettingPanelView;
-import sunday.app.bairead.View.BookTextView;
+import sunday.app.bairead.view.BookReadSettingPanelView;
+import sunday.app.bairead.view.BookTextView;
 import sunday.app.bairead.presenter.BookReadPresenter;
 
 /**

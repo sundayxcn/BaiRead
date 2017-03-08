@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<sunday.app.bairead.View.ChapterPanel xmlns:android="http://schemas.android.com/apk/res/android"
+<sunday.app.bairead.view.ChapterPanel xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorChapterListBg"
@@ -34,4 +34,4 @@
         android:fastScrollEnabled="true" />
 
 
-</sunday.app.bairead.View.ChapterPanel>
+</sunday.app.bairead.view.ChapterPanel>

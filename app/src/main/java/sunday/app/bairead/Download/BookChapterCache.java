@@ -1,4 +1,4 @@
-package sunday.app.bairead.Download;
+package sunday.app.bairead.download;
 
 import android.content.Context;
 import android.text.Html;
@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import okhttp3.Response;
-import sunday.app.bairead.DataBase.BookChapter;
-import sunday.app.bairead.DataBase.BookInfo;
-import sunday.app.bairead.Parse.ParseChapterText;
-import sunday.app.bairead.Parse.ParseXml;
-import sunday.app.bairead.Tool.FileManager;
+import sunday.app.bairead.database.BookChapter;
+import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.parse.ParseChapterText;
+import sunday.app.bairead.parse.ParseXml;
+import sunday.app.bairead.tool.FileManager;
 
 /**
  * Created by sunday on 2016/12/8.

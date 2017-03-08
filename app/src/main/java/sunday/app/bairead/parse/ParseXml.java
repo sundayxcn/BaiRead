@@ -1,4 +1,4 @@
-package sunday.app.bairead.Parse;
+package sunday.app.bairead.parse;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

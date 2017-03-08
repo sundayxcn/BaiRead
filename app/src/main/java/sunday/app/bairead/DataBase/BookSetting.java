@@ -1,4 +1,4 @@
-package sunday.app.bairead.DataBase;
+package sunday.app.bairead.database;
 
 import android.net.Uri;
 import android.provider.BaseColumns;

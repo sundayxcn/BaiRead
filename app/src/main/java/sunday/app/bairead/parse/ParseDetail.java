@@ -1,4 +1,4 @@
-package sunday.app.bairead.Parse;
+package sunday.app.bairead.parse;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -6,7 +6,7 @@ import org.jsoup.select.Elements;
 
 import java.util.HashMap;
 
-import sunday.app.bairead.DataBase.BookDetail;
+import sunday.app.bairead.database.BookDetail;
 
 /**
  * Created by sunday on 2017/1/16.

@@ -1,4 +1,4 @@
-package sunday.app.bairead.Tool;
+package sunday.app.bairead.tool;
 
 /**
  * Created by sunday on 2016/12/6.

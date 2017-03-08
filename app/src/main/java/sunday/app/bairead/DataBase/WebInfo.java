@@ -1,6 +1,6 @@
-package sunday.app.bairead.DataBase;
+package sunday.app.bairead.database;
 
-import sunday.app.bairead.Parse.ParseXml;
+import sunday.app.bairead.parse.ParseXml;
 
 /**
  * Created by sunday on 2016/12/8.

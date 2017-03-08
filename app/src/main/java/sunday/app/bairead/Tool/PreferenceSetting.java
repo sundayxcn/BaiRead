@@ -1,4 +1,4 @@
-package sunday.app.bairead.Tool;
+package sunday.app.bairead.tool;
 
 import android.content.Context;
 import android.content.SharedPreferences;

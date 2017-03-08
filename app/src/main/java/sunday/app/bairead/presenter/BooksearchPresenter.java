@@ -6,13 +6,12 @@ import android.os.Handler;
 import android.util.Log;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import sunday.app.bairead.DataBase.BookInfo;
-import sunday.app.bairead.Download.SearchManager;
-import sunday.app.bairead.Tool.FileManager;
+import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.download.SearchManager;
+import sunday.app.bairead.tool.FileManager;
 
 /**
  * Created by sunday on 2017/3/6.

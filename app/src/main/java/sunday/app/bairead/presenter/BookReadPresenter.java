@@ -6,13 +6,13 @@ import android.os.Handler;
 
 import java.util.ArrayList;
 
-import sunday.app.bairead.DataBase.BaiReadApplication;
-import sunday.app.bairead.DataBase.BookChapter;
-import sunday.app.bairead.DataBase.BookInfo;
-import sunday.app.bairead.DataBase.BookMarkInfo;
-import sunday.app.bairead.Download.BookChapterCache;
-import sunday.app.bairead.Tool.PreferenceSetting;
-import sunday.app.bairead.View.BookTextView;
+import sunday.app.bairead.database.BaiReadApplication;
+import sunday.app.bairead.database.BookChapter;
+import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.database.BookMarkInfo;
+import sunday.app.bairead.download.BookChapterCache;
+import sunday.app.bairead.tool.PreferenceSetting;
+import sunday.app.bairead.view.BookTextView;
 
 /**
  * Created by sunday on 2017/3/6.

@@ -1,4 +1,4 @@
-package sunday.app.bairead.Tool;
+package sunday.app.bairead.tool;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
