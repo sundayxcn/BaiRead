@@ -1,10 +1,8 @@
 package sunday.app.bairead.Download;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -19,7 +17,6 @@ import sunday.app.bairead.Parse.ParseDetail;
 import sunday.app.bairead.Parse.ParseSearch;
 import sunday.app.bairead.Parse.ParseXml;
 import sunday.app.bairead.Tool.FileManager;
-import sunday.app.bairead.UI.SearchFragment;
 
 /**
  * 访问百度搜索书籍

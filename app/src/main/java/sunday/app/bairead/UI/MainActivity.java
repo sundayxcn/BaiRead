@@ -23,15 +23,10 @@ import java.util.ArrayList;
 import sunday.app.bairead.DataBase.BookInfo;
 import sunday.app.bairead.R;
 import sunday.app.bairead.Tool.NetworkTool;
-import sunday.app.bairead.View.BookcaseView;
 import sunday.app.bairead.presenter.BookcasePresenter;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, BookcasePresenter.IBookcasePresenterListener {
-
-    SearchFragment searchFragment;
 
     private NetworkTool networkTool = new NetworkTool(this);
     private BookcasePresenter bookcasePresenter;
@@ -122,9 +117,7 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
-            searchFragment.back();
-        } else {
+        }else {
             super.onBackPressed();
         }
     }
@@ -147,14 +140,8 @@ public class MainActivity extends BaseActivity
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_search) {
-            //转到搜索界面fragment
-//            searchFragment = new SearchFragment();
-//            searchFragment.show(this);
             Intent intent = new Intent();
             intent.setClass(this, BookSearchActivity.class);
-            //long bookId = bookInfo.bookDetail.getId();
-            //intent.putExtra(BookReadActivity.EXTRAS_BOOK_ID, bookId);
-            //intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             return true;
         }
@@ -216,30 +203,13 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onCheckNewChapter(BookInfo bookInfo) {
-        ViewHolder viewHolder = indexOf(bookInfo.bookDetail.getId());
-        if (viewHolder != null) {
-            viewHolder.setValue(bookInfo);
-        }
+        booklistAdapter.notifyDataSetChanged();
 
     }
 
     @Override
     public void onCheckFinish() {
         swipeRefreshLayout.setRefreshing(false);
-    }
-
-    public ViewHolder indexOf(long bookId) {
-        int count = mListView.getChildCount();
-        for (int i = 0; i < count; i++) {
-            View view = mListView.getChildAt(i);
-            if (view instanceof BookcaseView) {
-                ViewHolder viewHolder = (ViewHolder) view.getTag();
-                if (viewHolder.getBookId() == bookId) {
-                    return viewHolder;
-                }
-            }
-        }
-        return null;
     }
 
     class ViewHolder {
