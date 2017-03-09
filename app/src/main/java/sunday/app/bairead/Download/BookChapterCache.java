@@ -1,6 +1,7 @@
 package sunday.app.bairead.download;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.text.Html;
 import android.util.Log;
 import android.widget.Toast;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import okhttp3.Response;
 import sunday.app.bairead.database.BookChapter;
 import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.parse.ParseChapter;
 import sunday.app.bairead.parse.ParseChapterText;
 import sunday.app.bairead.parse.ParseXml;
 import sunday.app.bairead.tool.FileManager;
@@ -86,12 +88,43 @@ public class BookChapterCache {
 
         fullDir = FileManager.PATH + "/" + bookinfo.bookDetail.getName() + "/" + DIR;
         FileManager.createDir(fullDir);
+
     }
 
     /**
      * 每次进入一本书之后，根据info重新缓存章节
      * */
     public void initChapterRead() {
+        chapterListener.initStart();
+        if(bookinfo.bookChapter.getChapterList() == null){
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    String fileName = FileManager.PATH+"/"+bookinfo.bookDetail.getName()+"/"+ BookChapter.FileName;
+                    BookChapter bookChapter = ParseXml.createParse(ParseChapter.class).parse(fileName);
+                    bookChapter.setId(bookinfo.bookChapter.getId());
+                    bookChapter.setChapterIndex(bookinfo.bookChapter.getChapterIndex());
+                    bookinfo.bookChapter = bookChapter;
+                    chapterListener.initEnd();
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                    init();
+                }
+            }.execute();
+
+        }else{
+            init();
+            chapterListener.initEnd();
+        }
+
+
+    }
+
+    private void init(){
         NewChapterShow.getInstance().removeNewChapter(bookinfo.bookDetail.getId());
         synchronized(mChapterCacheMap) {
             mChapterCacheMap.clear();
@@ -193,6 +226,8 @@ public class BookChapterCache {
     }
 
     public interface ChapterListener {
+        void initStart();
+        void initEnd();
         void cacheEnd(BookChapter.Chapter chapter);
     }
 

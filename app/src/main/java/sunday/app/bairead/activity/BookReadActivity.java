@@ -27,6 +27,16 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
     private BookReadPresenter bookReadPresenter;
 
     @Override
+    public void onLoadStart() {
+        showProgressDialog();
+    }
+
+    @Override
+    public void onLoadFinish() {
+        hideProgressDialog();
+    }
+
+    @Override
     public void onReadTextChange(BookTextView.ReadText readText) {
         mBookTitleTView.setText(readText.title);
         mBookTextTView.setText(readText.text);

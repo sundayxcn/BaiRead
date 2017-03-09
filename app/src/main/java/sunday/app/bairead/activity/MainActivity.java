@@ -204,7 +204,9 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onCheckNewChapter(BookInfo bookInfo) {
-        NewChapterShow.getInstance().addNewChapter(bookInfo.bookDetail.getId(),bookInfo.bookChapter.getChapterCount()-1);
+        if(bookInfo != null) {
+            NewChapterShow.getInstance().addNewChapter(bookInfo.bookDetail.getId(), bookInfo.bookChapter.getChapterCount() - 1);
+        }
         booklistAdapter.notifyDataSetChanged();
     }
 
@@ -243,8 +245,8 @@ public class MainActivity extends BaseActivity
         public void setValue(BookInfo bookInfo) {
             String name = bookInfo.bookDetail.getName();
             String chapterLatest = bookInfo.bookDetail.getChapterLatest();
-            int chapterIndex = bookInfo.bookChapter.getChapterIndex() + 1;
-            int chapterCount = bookInfo.bookChapter.getChapterCount();
+            int chapterIndex = 0;//bookInfo.bookChapter.getChapterIndex() + 1;
+            int chapterCount = 0;//bookInfo.bookChapter.getChapterCount();
             String chapterText = String.valueOf(chapterIndex) + "/" + String.valueOf(chapterCount);
             nameTView.setText(name);
             chapterLatestTView.setText(chapterLatest);

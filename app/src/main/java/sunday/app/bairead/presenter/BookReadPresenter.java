@@ -21,6 +21,27 @@ import sunday.app.bairead.view.BookTextView;
 public class BookReadPresenter implements BookChapterCache.ChapterListener {
 
     @Override
+    public void initStart() {
+        runMainUiThread(new Runnable() {
+            @Override
+            public void run() {
+                bookReadPresenterListener.onLoadStart();
+            }
+        });
+
+    }
+
+    @Override
+    public void initEnd() {
+        runMainUiThread(new Runnable() {
+            @Override
+            public void run() {
+                bookReadPresenterListener.onLoadFinish();
+            }
+        });
+    }
+
+    @Override
     public void cacheEnd(BookChapter.Chapter chapter) {
         final BookTextView.ReadText readText = new BookTextView.ReadText(chapter);
         runMainUiThread(new Runnable() {
@@ -32,6 +53,8 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
     }
 
     public interface IBookReadPresenterListener{
+        void onLoadStart();
+        void onLoadFinish();
         void onReadTextChange(BookTextView.ReadText readText);
         void onReadSizeChange(BookTextView.ReadSize readSize);
     }

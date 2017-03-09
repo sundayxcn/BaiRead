@@ -98,7 +98,7 @@ public class BookcasePresenter{
                 }
                 for(BookInfo cBookInfo : listAdapterList){
                     if(cBookInfo.bookDetail.getId() == bookInfo.bookDetail.getId()){
-                        if(cBookInfo.bookChapter.getChapterCount() != bookInfo.bookChapter.getChapterCount()){
+                        if(!cBookInfo.bookDetail.getChapterLatest().equals(bookInfo.bookDetail.getChapterLatest())){
                             cBookInfo.bookChapter.setChapterList(bookInfo.bookChapter.getChapterList());
                             cBookInfo.bookDetail.setUpdateTime(bookInfo.bookDetail.getUpdateTime());
                             cBookInfo.bookDetail.setChapterLatest(bookInfo.bookChapter.getLastChapter().getTitle());

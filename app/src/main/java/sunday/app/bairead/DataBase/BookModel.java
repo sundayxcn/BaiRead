@@ -223,16 +223,20 @@ public class BookModel {
                     new Throwable("loadAllBook-error bookChapter");
                     Log.e("sunday","loadAllBook-error bookChapter");
                 }else {
-                    String fileName = FileManager.PATH+"/"+bookInfo.bookDetail.getName()+"/"+ BookChapter.FileName;
-                    BookChapter bookChapter = ParseXml.createParse(ParseChapter.class).parse(fileName);
-                    if(bookChapter == null){
-                        bookList.remove(bookInfo);
-                        //此处弹出重建书籍缓存的提示
-                    }else {
+
+//                    String fileName = FileManager.PATH+"/"+bookInfo.bookDetail.getName()+"/"+ BookChapter.FileName;
+//                    BookChapter bookChapter = ParseXml.createParse(ParseChapter.class).parse(fileName);
+//                    if(bookChapter == null){
+//                        bookList.remove(bookInfo);
+//                        //此处弹出重建书籍缓存的提示
+//                    }else {
+                        BookChapter bookChapter = new BookChapter.Builder().
+                                setChapterIndex(index).
+                                setChapterLink(link).
+                                build();
                         bookChapter.setId(id);
-                        bookChapter.setChapterIndex(index);
                         bookInfo.bookChapter = bookChapter;
-                    }
+//                    }
                 }
             }
         }catch (Exception e){
