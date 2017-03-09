@@ -11,14 +11,9 @@ import java.util.Date;
 public class TimeFormat {
 
 
-    public static final int HOUR_TO_MILL = 1000 * 60 * 60;
+    public static final int HOUR_TO_MILL =  60 * 60 * 1000;
     public static final int DAY_LENGTH = 10;
-    /**
-     * 将解析得到的时间字符串转换为更新时间。例：
-     * 更新时间 2017-3-8
-     * 系统时间 2017-3-9
-     * @return 1天前
-     * */
+
     public static String[] timeFormat = {
             "yyyy-MM-dd",
             "yyyy/MM/dd",
@@ -27,6 +22,10 @@ public class TimeFormat {
     };
 
 
+
+    /**
+     * 获取时间格式
+     * */
     private static String getFormatString(String timeString){
             if(timeString.contains("-")){
                 if(timeString.length() > DAY_LENGTH){
@@ -45,6 +44,13 @@ public class TimeFormat {
             }
     }
 
+
+    /**
+     * 将解析得到的时间字符串转换为更新时间。例：
+     * 更新时间 2017-3-8
+     * 系统时间 2017-3-9
+     * @return 1天前
+     * */
     public static String getTimeString(String timeString){
         String string;
         String format = getFormatString(timeString);
