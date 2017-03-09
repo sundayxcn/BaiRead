@@ -129,14 +129,14 @@ public class BookTextView extends TextView {
 
 
         if (pageIndex > (pageTextList.size() - 1)) {
-            pageIndex = -1;
+            pageIndex = pageTextList.size() - 1;
             if (chapterChangeListener != null) {
                 chapterChangeListener.onChapterNext();
             }
         } else if (pageIndex < 0) {
-            pageIndex = -1;
+            pageIndex = 0;
             if (chapterChangeListener != null) {
-                chapterChangeListener.onChapterNext();
+                chapterChangeListener.onChapterPrev();
             }
         } else {
             postInvalidate();
