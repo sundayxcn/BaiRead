@@ -48,6 +48,7 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
             @Override
             public void run() {
                 bookReadPresenterListener.onReadTextChange(readText);
+                bookReadPresenterListener.onLoadFinish();
             }
         });
     }
@@ -166,6 +167,7 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
      * @param chapterIndex 章节序号
      * */
     public void setChapterIndex(int chapterIndex){
+        bookReadPresenterListener.onLoadStart();
         BookChapterCache.getInstance().setChapter(chapterIndex);
         updateDataBookIndex();
     }

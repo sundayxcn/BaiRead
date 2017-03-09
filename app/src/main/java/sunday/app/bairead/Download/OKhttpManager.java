@@ -19,9 +19,9 @@ public class OKhttpManager{
     private static OKhttpManager mOKhttpManager = new OKhttpManager();
     private OkHttpClient okHttpClient;
 
-    private void OKhttpManager() {
-    }
+    private OKhttpManager(){
 
+    }
 
     public interface ConnectListener extends Callback{
         void start(String url);
@@ -46,15 +46,14 @@ public class OKhttpManager{
 
     /**
      * 下载网址源码
-     * @param url 网站地址
      * @param connectListener 下载过程的回调
      * */
-    public void connectUrl(final String url,final ConnectListener connectListener) {
+    public void connectUrl(OKHttpListener connectListener) {
         if(connectListener != null){
-            connectListener.start(url);
+            connectListener.onStart();
         }
         //CacheControl cacheControl = new CacheControl.Builder().maxStale(365, TimeUnit.DAYS).build();
-        final Request request = new Request.Builder().url(url)
+        final Request request = new Request.Builder().url(connectListener.getLink())
 //                .cacheControl(cacheControl)
 //                .addHeader("If-None-Match","\"8051533a2e6cd21:0\"")
 //                .addHeader("If-Modified-Since","Wed, 11 Jan 2017 17:14:55 GMT")

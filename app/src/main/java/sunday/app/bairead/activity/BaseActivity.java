@@ -19,16 +19,20 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     ProgressDialog progressDialog;
-    protected void showProgressDialog(){
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("数据加载中，请稍后");
+    protected void showProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("数据加载中，请稍后");
+        }
         progressDialog.show();
     }
 
     protected void hideProgressDialog(){
-        progressDialog.hide();
-        progressDialog = null;
+        if(progressDialog != null) {
+            progressDialog.hide();
+            progressDialog = null;
+        }
     }
 
     public void showToast(String text){

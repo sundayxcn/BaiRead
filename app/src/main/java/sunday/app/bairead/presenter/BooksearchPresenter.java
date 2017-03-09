@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import sunday.app.bairead.database.BookInfo;
-import sunday.app.bairead.download.SearchManager;
+import sunday.app.bairead.download.BookSearch;
 import sunday.app.bairead.tool.FileManager;
 
 /**
@@ -31,7 +31,7 @@ public class BookSearchPresenter {
     private Handler handler = new Handler();
     private IBookSearchListener bookSearchListener;
     private ArrayList<String> historyList;
-    private ArrayList<BookInfo> booksearchList;
+    private ArrayList<BookInfo> bookSearchList;
 
 
     public BookSearchPresenter(IBookSearchListener bookSearchListener){
@@ -102,22 +102,22 @@ public class BookSearchPresenter {
 
 
     public void searchBook(String name){
-        booksearchList = new ArrayList<>();
-        bookSearchListener.bookSearchStart(booksearchList);
-            SearchManager searchManager = new SearchManager(new SearchManager.ISearchListener() {
-                @Override
-                public void searchFinish(final BookInfo bookInfo) {
-                    runMainUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.e("sunday","bookName = "+bookInfo.bookDetail.getName());
-                            booksearchList.add(bookInfo);
-                            bookSearchListener.bookSearchFinish();
-                        }
-                    });
-                }
-            });
-            searchManager.searchTopWeb(name);
+        bookSearchList = new ArrayList<>();
+        bookSearchListener.bookSearchStart(bookSearchList);
+        BookSearch bookSearch = new BookSearch(new BookSearch.ISearchListener() {
+            @Override
+            public void searchFinish(final BookInfo bookInfo) {
+                runMainUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("sunday","bookName = "+bookInfo.bookDetail.getName());
+                        bookSearchList.add(bookInfo);
+                        bookSearchListener.bookSearchFinish();
+                    }
+                });
+            }
+        });
+        bookSearch.searchTopWeb(name);
     }
 
     public void runMainUiThread(Runnable runnable){
