@@ -6,7 +6,7 @@ import sunday.app.bairead.database.BookInfo;
  * Created by Administrator on 2017/3/5.
  */
 
-public class BookDownload {
+public class BookDownLoad {
 
     public interface DownloadListener{
         void onNewChapter(BookInfo bookInfo);
@@ -14,7 +14,7 @@ public class BookDownload {
 
     private DownloadListener downloadListener;
 
-    public BookDownload(DownloadListener downloadListener){
+    public BookDownLoad(DownloadListener downloadListener){
         this.downloadListener = downloadListener;
     }
 

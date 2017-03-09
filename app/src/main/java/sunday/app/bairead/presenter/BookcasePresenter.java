@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import sunday.app.bairead.database.BaiReadApplication;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.BookModel;
-import sunday.app.bairead.download.BookDownload;
+import sunday.app.bairead.download.BookDownLoad;
 import sunday.app.bairead.tool.FileManager;
 import sunday.app.bairead.activity.BookReadActivity;
 
@@ -84,7 +84,7 @@ public class BookcasePresenter{
         final ArrayList<BookInfo> listAdapterList = list;
         checkBookInit(list.size());
         bookcasePresenterListener.onCheckStart();
-        BookDownload bookDownload = new BookDownload(new BookDownload.DownloadListener() {
+        BookDownLoad bookDownload = new BookDownLoad(new BookDownLoad.DownloadListener() {
             @Override
             public void onNewChapter(final BookInfo bookInfo) {
                 if(checkFinish() || bookInfo == null){
