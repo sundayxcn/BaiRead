@@ -25,6 +25,7 @@ import sunday.app.bairead.R;
 import sunday.app.bairead.tool.NetworkTool;
 import sunday.app.bairead.presenter.BookcasePresenter;
 import sunday.app.bairead.tool.NewChapterShow;
+import sunday.app.bairead.tool.TimeFormat;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, BookcasePresenter.IBookcasePresenterListener {
@@ -164,9 +165,9 @@ public class MainActivity extends BaseActivity
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_clear_cache) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_restore_config) {
 
         }
 
@@ -251,7 +252,9 @@ public class MainActivity extends BaseActivity
             nameTView.setText(name);
             chapterLatestTView.setText(chapterLatest);
             chapterIndexTView.setText(chapterText);
-            updateTimeTView.setText(bookInfo.bookDetail.getUpdateTime());
+
+            String timeString = TimeFormat.getTimeString(bookInfo.bookDetail.getUpdateTime());
+            updateTimeTView.setText(timeString);
             boolean newChapter = NewChapterShow.getInstance().isHaveNewChapter(bookInfo.bookDetail.getId());
             updateImageTView.setVisibility(newChapter ? View.VISIBLE : View.INVISIBLE);
             bookId = bookInfo.bookDetail.getId();

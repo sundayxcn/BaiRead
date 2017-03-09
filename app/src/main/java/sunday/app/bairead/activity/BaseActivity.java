@@ -3,6 +3,7 @@ package sunday.app.bairead.activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -18,21 +19,35 @@ public class BaseActivity extends AppCompatActivity {
         void onConfirmed();
     }
 
+    protected Handler handler = new Handler();
+
     ProgressDialog progressDialog;
     protected void showProgressDialog() {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setMessage("数据加载中，请稍后");
-        }
-        progressDialog.show();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (progressDialog == null) {
+                    progressDialog = new ProgressDialog(BaseActivity.this);
+                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progressDialog.setMessage("数据加载中，请稍后");
+                }
+                progressDialog.show();
+            }
+        });
+
     }
 
     protected void hideProgressDialog(){
-        if(progressDialog != null) {
-            progressDialog.hide();
-            progressDialog = null;
-        }
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(progressDialog != null) {
+                    progressDialog.hide();
+                    progressDialog = null;
+                }
+            }
+        });
+
     }
 
     public void showToast(String text){
