@@ -5,6 +5,7 @@ import android.content.Context;
 import sunday.app.bairead.database.BaiReadApplication;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.BookModel;
+import sunday.app.bairead.tool.FileManager;
 
 /**
  * Created by sunday on 2017/3/7.

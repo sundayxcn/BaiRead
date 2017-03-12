@@ -3,7 +3,6 @@ package sunday.app.bairead.parse;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,8 +16,7 @@ import sunday.app.bairead.database.BookDetail;
 
 public class ParseChapter extends ParseXml {
     @Override
-    public BookChapter parse(String fileName) {
-        Document document = getDocument(fileName,Charset.GB2312);
+    public BookChapter parse() {
 
         if(document == null) return null;
 

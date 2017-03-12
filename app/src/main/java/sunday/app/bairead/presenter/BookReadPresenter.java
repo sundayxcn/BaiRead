@@ -12,6 +12,7 @@ import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.BookMarkInfo;
 import sunday.app.bairead.download.BookChapterCache;
 import sunday.app.bairead.tool.PreferenceSetting;
+import sunday.app.bairead.tool.Temp;
 import sunday.app.bairead.view.BookTextView;
 
 /**
@@ -74,13 +75,20 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
         context = c;
         this.bookReadPresenterListener = bookReadPresenterListener;
         BaiReadApplication baiReadApplication = (BaiReadApplication)c.getApplicationContext();
-        bookInfo = baiReadApplication.getBookModel().getBookInfo(bookId);
+        //没有设置ID，表示没有加入书架，就是在线阅读，不用缓存
+        if(bookId == 0){
+            bookInfo = Temp.getInstance().getBookInfo();
+            Temp.getInstance().clearBookInfo();
+        }else {
+            bookInfo = baiReadApplication.getBookModel().getBookInfo(bookId);
+        }
     }
 
     public void init(){
         BookChapterCache bookChapterCache = BookChapterCache.getInstance();
         bookChapterCache.setBookInfo(bookInfo,this);
         bookChapterCache.initChapterRead();
+
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected Void doInBackground(Void... params) {

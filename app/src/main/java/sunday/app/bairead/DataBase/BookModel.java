@@ -94,6 +94,7 @@ public class BookModel {
         chapterValues.put(BookSetting.Chapter.ID,id);
         bookInfo.bookChapter.setId(id);
         bookInfo.bookChapter.onAddToDatabase(chapterValues);
+        mBookInfoList.add(bookInfo);
 
         runOnWorkerThread(new Runnable() {
             @Override
@@ -103,10 +104,10 @@ public class BookModel {
 
                 Uri uri2 = cr.insert(BookSetting.Chapter.CONTENT_URI,chapterValues);
 
-                boolean success = (uri != null && uri2 != null);
-                if(success) {
-                    mBookInfoList.add(bookInfo);
-                }
+                //boolean success = (uri != null && uri2 != null);
+                //if(success) {
+                //    mBookInfoList.add(bookInfo);
+                //}
                 //postAddCallBack(bookInfo,success);
 
             }
@@ -421,7 +422,7 @@ public class BookModel {
            }
         }
 
-        return Temp.getInstance().getBookInfo();
+        return null;
 
         //return null;
     }

@@ -23,30 +23,30 @@ public class BaseActivity extends AppCompatActivity {
 
     ProgressDialog progressDialog;
     protected void showProgressDialog() {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (progressDialog == null) {
-                    progressDialog = new ProgressDialog(BaseActivity.this);
-                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    progressDialog.setMessage("数据加载中，请稍后");
-                }
-                progressDialog.show();
-            }
-        });
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (progressDialog == null) {
+//                    progressDialog = new ProgressDialog(BaseActivity.this);
+//                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//                    progressDialog.setMessage("数据加载中，请稍后");
+//                }
+//                progressDialog.show();
+//            }
+//        });
 
     }
 
     protected void hideProgressDialog(){
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if(progressDialog != null) {
-                    progressDialog.hide();
-                    progressDialog = null;
-                }
-            }
-        });
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                if(progressDialog != null) {
+//                    progressDialog.hide();
+//                    progressDialog = null;
+//                }
+//            }
+//        });
 
     }
 

@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public abstract class ParseXml {
 
-    enum Charset{
+    public enum Charset{
         UTF8,
         GB2312,
         GBK;
@@ -29,27 +29,59 @@ public abstract class ParseXml {
         }
     }
 
-    public abstract <T> T parse(String fileName);
+    public  abstract <T> T parse();
 
-    public Document getDocument(String fileName){
+//    public  abstract <T> T parse(File file);
+
+//    public Document getDocument(String fileName){
+//        try {
+//            File input = new File(fileName);
+//            return Jsoup.parse(input, Charset.UTF8.toString());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+
+
+    protected Document document;
+
+    public ParseXml from(File file,Charset charset){
         try {
-            File input = new File(fileName);
-            return Jsoup.parse(input, Charset.UTF8.toString());
+            document =  Jsoup.parse(file, charset.toString());
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+        }finally {
+            return this;
         }
     }
 
-    public Document getDocument(String fileName,Charset charset){
+    public ParseXml from(File file){
         try {
-            File input = new File(fileName);
-            return Jsoup.parse(input, charset.toString());
+            document =  Jsoup.parse(file, Charset.GB2312.toString());
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+        }finally {
+            return this;
         }
     }
+
+
+    public ParseXml from(String html){
+        document =  Jsoup.parse(html);
+        return this;
+    }
+
+
+//    public Document getDocument(String fileName,Charset charset){
+//        try {
+//            File input = new File(fileName);
+//            return Jsoup.parse(input, charset.toString());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
 
     public static <T extends ParseXml> T createParse(Class<T> clz){

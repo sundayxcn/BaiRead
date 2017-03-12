@@ -1,9 +1,9 @@
 package sunday.app.bairead.download;
 
+import java.io.File;
 import java.io.IOException;
 
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.Response;
 import sunday.app.bairead.database.BookChapter;
 import sunday.app.bairead.database.BookInfo;
@@ -11,6 +11,8 @@ import sunday.app.bairead.parse.ParseChapter;
 import sunday.app.bairead.parse.ParseDetail;
 import sunday.app.bairead.parse.ParseXml;
 import sunday.app.bairead.tool.FileManager;
+
+import static sunday.app.bairead.download.BookDownLoadListener.Type.ParseDownLoad;
 
 /**
  * Created by sunday on 2017/3/9.
@@ -21,9 +23,20 @@ public abstract class BookDownLoadListener extends OKHttpListener {
 
     protected String chapterFile;
 
+    private Type type;
 
-    public BookDownLoadListener(String bookName){
-        chapterFile = FileManager.PATH + "/" + bookName + "/" + BookChapter.FileName;
+    public enum Type{
+        ParseSearch,
+        ParseDownLoad,
+    }
+
+    public BookDownLoadListener(String bookName,Type type){
+        this.type = type;
+        if(type == ParseDownLoad){
+            createFileDir(bookName);
+            chapterFile = getFullChapterFileName(bookName);
+
+        }
     }
 
     @Override
@@ -35,17 +48,34 @@ public abstract class BookDownLoadListener extends OKHttpListener {
     public void onResponse(Call call, Response response) {
         try{
             if (response != null && response.body() != null) {
-                FileManager.writeByte(chapterFile, response.body().bytes());
-                response.body().close();
                 BookInfo newBookInfo = new BookInfo();
-                newBookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).parse(chapterFile);
-                newBookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).parse(chapterFile);
+                if(type == ParseDownLoad){
+                    FileManager.writeByte(chapterFile, response.body().bytes());
+                    File file = new File(chapterFile);
+                    newBookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(file).parse();
+                    newBookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).from(file).parse();
+                }else{
+                    String string = new String(response.body().bytes(),"gb2312");
+                    newBookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(string).parse();
+                    newBookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).from(string).parse();
+                }
+                response.body().close();
+
+
                 onFinish(newBookInfo);
             }
         }catch (Exception e) {
             onFinish(null);
             e.printStackTrace();
         }
+    }
+
+    private String createFileDir(String bookName){
+        return FileManager.createDir(FileManager.PATH +"/"+bookName);
+    }
+
+    public static String getFullChapterFileName(String bookName){
+        return FileManager.PATH + "/" + bookName + "/" + BookChapter.FileName;
     }
 
 

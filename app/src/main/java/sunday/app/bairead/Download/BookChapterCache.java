@@ -38,36 +38,50 @@ public class BookChapterCache {
     private ChapterListener chapterListener;
     private Product product = new Product();
     private boolean isProductRun;
+    private boolean online;
 
     private BookChapterCache() {
 
-    }
-
-    private static class BookChapterCacheHolder{
-        private static final BookChapterCache sInstance = new BookChapterCache();
     }
 
     public static BookChapterCache getInstance() {
         return BookChapterCacheHolder.sInstance;
     }
 
-    public BookInfo getBookInfo(){
+    private static boolean isChapterExists(String fileName) {
+        File file = new File(fileName);
+        return file.exists();
+    }
+
+    public BookInfo getBookInfo() {
         return bookinfo;
     }
 
+    public boolean isOnline() {
+        return online;
+    }
+
+    /**
+     * 默认缓存到本地
+     *
+     * @param isOnline true 不缓存到本地
+     */
+    public void setOnline(boolean isOnline) {
+        online = isOnline;
+    }
 
     /**
      * 下载所有章节到本地
      */
     public void downloadAllChpater(final BookInfo bookInfo) {
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 //super.run();
                 ArrayList<BookChapter.Chapter> list = bookInfo.bookChapter.getChapterList();
-                for(BookChapter.Chapter chapter : list){
+                for (BookChapter.Chapter chapter : list) {
                     final String fileName = fullDir + "/" + chapter.getNum() + ".html";
-                    if(!isChapterExists(fileName)){
+                    if (!isChapterExists(fileName)) {
                         final String url = chapter.getLink();
                         Response response = OKhttpManager.getInstance().connectUrl(url);
                         try {
@@ -77,7 +91,7 @@ public class BookChapterCache {
                         }
                     }
                 }
-                Log.e("sunday","缓存完成");
+                Log.e("sunday", "缓存完成");
             }
         }.start();
     }
@@ -86,25 +100,26 @@ public class BookChapterCache {
         this.bookinfo = bookinfo;
         this.chapterListener = chapterListener;
 
-        fullDir = FileManager.PATH + "/" + bookinfo.bookDetail.getName() + "/" + DIR;
-        FileManager.createDir(fullDir);
+        if (bookinfo.bookDetail.getId() == 0) {
+            setOnline(true);
+        } else {
+            fullDir = FileManager.PATH + "/" + bookinfo.bookDetail.getName() + "/" + DIR;
+            FileManager.createDir(fullDir);
+        }
 
     }
 
+
     /**
      * 每次进入一本书之后，根据info重新缓存章节
-     * */
+     */
     public void initChapterRead() {
         chapterListener.initStart();
-        if(bookinfo.bookChapter.getChapterList() == null){
+        if (bookinfo.bookChapter.getChapterList() == null) {
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-                    String fileName = FileManager.PATH+"/"+bookinfo.bookDetail.getName()+"/"+ BookChapter.FileName;
-                    BookChapter bookChapter = ParseXml.createParse(ParseChapter.class).parse(fileName);
-                    bookChapter.setId(bookinfo.bookChapter.getId());
-                    bookChapter.setChapterIndex(bookinfo.bookChapter.getChapterIndex());
-                    bookinfo.bookChapter = bookChapter;
+                    bookinfo.bookChapter = getChapter(bookinfo);
                     chapterListener.initEnd();
                     return null;
                 }
@@ -116,7 +131,7 @@ public class BookChapterCache {
                 }
             }.execute();
 
-        }else{
+        } else {
             init();
             chapterListener.initEnd();
         }
@@ -124,21 +139,21 @@ public class BookChapterCache {
 
     }
 
-    private void init(){
+    private void init() {
         NewChapterShow.getInstance().removeNewChapter(bookinfo.bookDetail.getId());
-        synchronized(mChapterCacheMap) {
+        synchronized (mChapterCacheMap) {
             mChapterCacheMap.clear();
             mChapterCacheMap.notifyAll();
         }
-        if(!product.isAlive()){
+        if (!product.isAlive()) {
             startCache();
-        }else{
+        } else {
             int index = bookinfo.bookChapter.getChapterIndex();
             //缓存当前章节的前后5章
-            if(index - MAX_CACHE /2 < 0){
+            if (index - MAX_CACHE / 2 < 0) {
                 index = 0;
-            }else{
-                index = index - MAX_CACHE/2;
+            } else {
+                index = index - MAX_CACHE / 2;
             }
             product.setIndex(index);
         }
@@ -146,10 +161,10 @@ public class BookChapterCache {
 
     public boolean nextChapter(Context context) {
         int index = bookinfo.bookChapter.getChapterIndex() + 1;
-        if(index ==  bookinfo.bookChapter.getChapterCount()){
-            Toast.makeText(context,"已到最后一章",Toast.LENGTH_SHORT).show();
+        if (index == bookinfo.bookChapter.getChapterCount()) {
+            Toast.makeText(context, "已到最后一章", Toast.LENGTH_SHORT).show();
             return true;
-        }else {
+        } else {
             bookinfo.bookChapter.setChapterIndex(index);
             updateChapterCache(index);
             return false;
@@ -159,31 +174,23 @@ public class BookChapterCache {
 
     public boolean prevChapter(Context context) {
         int index = bookinfo.bookChapter.getChapterIndex() - 1;
-        if(index < 0 ){
-            Toast.makeText(context,"已到第一章",Toast.LENGTH_SHORT).show();
+        if (index < 0) {
+            Toast.makeText(context, "已到第一章", Toast.LENGTH_SHORT).show();
             return true;
         }
         bookinfo.bookChapter.setChapterIndex(index);
         BookChapter.Chapter chapter = bookinfo.bookChapter.getChapter(index);
         if (chapter.getText() == null) {
-            if(isChapterExists(index)){
-                final String fileName = fullDir + "/" + chapter.getNum() + ".html";
-                //ParseXml.createParse(ParseChapterText.class).parse(fileName);
-                String text = ParseXml.createParse(ParseChapterText.class).parse(fileName);
-                text = String.valueOf(Html.fromHtml(text));
-                chapter.setText(text);
-                chapterListener.cacheEnd(chapter);
-            }else{
-
-            }
-        }else{
+            String text = getChapterText(index);
+            chapter.setText(text);
+            chapterListener.cacheEnd(chapter);
+        } else {
             updateChapterCache(index);
         }
-        //chapterListener.end(chapter);
         return false;
     }
 
-    public void setChapter(int index){
+    public void setChapter(int index) {
         bookinfo.bookChapter.setChapterIndex(index);
         initChapterRead();
     }
@@ -206,17 +213,19 @@ public class BookChapterCache {
         }
     }
 
-    public boolean isChapterExists(int chapterIndex) {
-        String fileName = fullDir + "/" + bookinfo.bookChapter.getChapter(chapterIndex).getNum() + ".html";
-        File file = new File(fileName);
-        return file.exists();
+//    public boolean isChapterExists(int chapterIndex) {
+//        String fileName = fullDir + "/" + bookinfo.bookChapter.getChapter(chapterIndex).getNum() + ".html";
+//        File file = new File(fileName);
+//        return file.exists();
+//    }
+
+    public File getChapterTextFile(int index) {
+        return new File(getChapterTextFileName(index));
     }
 
-    private static boolean isChapterExists(String fileName) {
-        File file = new File(fileName);
-        return file.exists();
+    public String getChapterTextFileName(int index) {
+        return fullDir + "/" + bookinfo.bookChapter.getChapter(index).getNum() + ".html";
     }
-
 
     //private  Thread customer  = new Customer();
     private void startCache() {
@@ -225,49 +234,85 @@ public class BookChapterCache {
         //customer.start();
     }
 
-    public interface ChapterListener {
-        void initStart();
-        void initEnd();
-        void cacheEnd(BookChapter.Chapter chapter);
+    public int getCurrentIndex() {
+        return bookinfo.bookChapter.getChapterIndex();
+    }
+
+    public String getMarkTitle(int chapterIndex) {
+        return bookinfo.bookChapter.getChapter(chapterIndex).getTitle();
     }
 
 //    public void stopCache(){
 //        isProductRun = false;
 //    }
 
-    public int getCurrentIndex(){
-        return bookinfo.bookChapter.getChapterIndex();
+    public String getMarkText(int chapterIndex) {
+        String textT = getChapterText(chapterIndex);
+        int length = textT.length() > 100 ? 100 : textT.length();
+        return textT.substring(0, length);
     }
 
-
-    public String getMarkTitle(int chapterIndex){
-        return bookinfo.bookChapter.getChapter(chapterIndex).getTitle();
+    private String getChapterText(int chapterIndex) {
+        if (isOnline()) {
+            return getChapterTextByOnline(chapterIndex, null);
+        } else {
+            return getChapterTextByCurrent(chapterIndex);
+        }
     }
 
-    public String getMarkText(int chapterIndex){
-        final BookChapter.Chapter chapter = bookinfo.bookChapter.getChapter(chapterIndex);
-        final String fileName = fullDir + "/" + chapter.getNum() + ".html";
-        boolean currentFile = isChapterExists(chapterIndex);
-        try {
-            if (!currentFile) {
-                String url = chapter.getLink();
-                Response response = OKhttpManager.getInstance().connectUrl(url);
-                FileManager.writeByte(fileName, response.body().bytes());
-            }else{
-                //存在一个bug，本地文件没有内容，可能是网络中断产生的问题
-                //解决方式：检查文件有效性，如果无效，删除掉，重新下载
-            }
-        }catch (IOException e){
-            e.printStackTrace();
-            return null;
+    private String getChapterTextByOnline(int chapterIndex, String fileName) {
+        String url = bookinfo.bookChapter.getChapter(chapterIndex).getLink();
+        return new BookDownLoad(null).updateBookChapterText(url, fileName);
+    }
+
+    private String getChapterTextByCurrent(int chapterIndex) {
+        File file = getChapterTextFile(chapterIndex);
+        if (file.exists()) {
+            String text = ParseXml.createParse(ParseChapterText.class).from(file).parse();
+            return text;
+        } else {
+            String fileName = getChapterTextFileName(chapterIndex);
+            return getChapterTextByOnline(chapterIndex, fileName);
+        }
+    }
+
+    private BookChapter getChapter(BookInfo bookInfo) {
+        if (isOnline()) {
+            return getChapterByOnline(bookInfo, null);
+        } else {
+            return getChapterByCurrent(bookInfo);
+        }
+    }
+
+    private BookChapter getChapterByOnline(BookInfo bookInfo, String fileName) {
+        BookDownLoad bookDownLoad = new BookDownLoad(null);
+        BookInfo newBookInfo = bookDownLoad.updateBookInfo(bookInfo, fileName);
+        return newBookInfo.bookChapter;
+    }
+
+    private BookChapter getChapterByCurrent(BookInfo bookInfo) {
+        String fileName = BookDownLoadListener.getFullChapterFileName(bookInfo.bookDetail.getName());
+        File file = new File(fileName);
+        if (file.exists()) {
+            return ParseXml.createParse(ParseChapter.class).from(file).parse();
+        } else {
+            return getChapterByOnline(bookInfo, fileName);
         }
 
-        String text =  ParseXml.createParse(ParseChapterText.class).parse(fileName);
-        String textT = String.valueOf(Html.fromHtml(text)).trim();
-        int length = textT.length() > 100 ? 100 : textT.length();
-        return textT.substring(0,length);
     }
 
+
+    public interface ChapterListener {
+        void initStart();
+
+        void initEnd();
+
+        void cacheEnd(BookChapter.Chapter chapter);
+    }
+
+    private static class BookChapterCacheHolder {
+        private static final BookChapterCache sInstance = new BookChapterCache();
+    }
 
     /**
      * 生产者-内存缓存
@@ -287,21 +332,14 @@ public class BookChapterCache {
                             mChapterCacheMap.wait();
                         }
 
-                        final BookChapter.Chapter chapter = bookinfo.bookChapter.getChapter(index);
-                        final String fileName = fullDir + "/" + chapter.getNum() + ".html";
-                        boolean currentFile = isChapterExists(index);
-                        if (!currentFile) {
-                            String url = chapter.getLink();
-                            Response response = OKhttpManager.getInstance().connectUrl(url);
-                            FileManager.writeByte(fileName, response.body().bytes());
-                        }else{
-                            //存在一个bug，本地文件没有内容，可能是网络中断产生的问题
-                            //解决方式：检查文件有效性，如果无效，删除掉，重新下载
-                        }
+                        BookChapter.Chapter chapter = bookinfo.bookChapter.getChapter(index);
 
-                        String text =  ParseXml.createParse(ParseChapterText.class).parse(fileName);
-                        text = String.valueOf(Html.fromHtml(text));
+                        //存在一个bug，本地文件没有内容，可能是网络中断产生的问题
+                        //解决方式：检查文件有效性，如果无效，删除掉，重新下载
+
+                        String text = getChapterText(index);
                         chapter.setText(text);
+
                         Integer integer = Integer.valueOf(index);
                         mChapterCacheMap.put(integer, chapter);
                         mChapterCacheMap.notify();
@@ -311,8 +349,6 @@ public class BookChapterCache {
                         index++;
 
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -324,4 +360,6 @@ public class BookChapterCache {
             isProductRun = true;
         }
     }
+
+
 }

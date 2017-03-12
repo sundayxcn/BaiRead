@@ -26,10 +26,10 @@ public class FileManager {
     public static final String TAG = "snuday";
     public static final String UTF8 = "UTF-8";
     public static final String GB2312 = "gb2312";
-
+    public static final String SEARCH_FILE = FileManager.PATH + "/" + "searchResult.html";
 
 //    private static FileManager mFileManager;
-//
+
 //    private FileManager() {
 //        createDir();
 //    }
@@ -43,8 +43,8 @@ public class FileManager {
 //
 //        return mFileManager;
 //    }
-
-
+//
+//
        public static String createDir(String dirPath) {
 
         File file = new File(dirPath);
@@ -192,5 +192,26 @@ public class FileManager {
         File file = new File(fileName);
         file.delete();
     }
+
+
+    public static void writeSearchFile(byte[] bytes) {
+        File file = new File(FileManager.PATH);
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(SEARCH_FILE);
+            fileOutputStream.write(bytes);
+            fileOutputStream.close();
+            Log.e(TAG,"writeByte"+SEARCH_FILE+"  bytes.length=="+bytes.length);
+        } catch(IOException e){
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
+        }
+    }
+
 
 }

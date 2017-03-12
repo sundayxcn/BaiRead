@@ -1,5 +1,7 @@
 package sunday.app.bairead.parse;
 
+import android.util.Log;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -12,9 +14,8 @@ import java.util.HashMap;
 
 public class ParseSearch extends ParseXml {
     @Override
-    public HashMap<String,String> parse(String fileName) {
+    public HashMap<String,String> parse() {
 
-        Document document = getDocument(fileName,Charset.UTF8);
         if(document == null) return null;
 
         String s = "result-game-item-detail";
@@ -23,6 +24,7 @@ public class ParseSearch extends ParseXml {
         for (Element element : elements) {
             String linkHref = element.select("a[href]").attr("href");
             String title = element.select("a[title]").attr("title");
+            Log.e("sunday","title="+title);
             hashMap.put(title,linkHref);
         }
         return hashMap;

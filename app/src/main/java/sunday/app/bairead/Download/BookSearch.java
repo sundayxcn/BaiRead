@@ -12,9 +12,8 @@ import sunday.app.bairead.database.WebInfo;
  */
 
 public class BookSearch {
-    public static final String FILE_NAME = "search.html";
-    private ISearchListener searchListener;
 
+    private ISearchListener searchListener;
     public interface ISearchListener{
         void searchFinish(BookInfo bookInfo);
     }
@@ -31,7 +30,7 @@ public class BookSearch {
         String webLink = WebInfo.TOP_WEB[0][1];
         String webSearchLink = WebInfo.TOP_WEB[0][2];
         final WebInfo webInfo = new WebInfo(webName,webLink,webSearchLink);
-        OKhttpManager.getInstance().connectUrl(new BookSearchListener(name) {
+        OKhttpManager.getInstance().connectUrl(new BookSearchListener() {
             @Override
             public void onFinish(HashMap<String, String> map) {
                 if(map != null) {
@@ -49,7 +48,8 @@ public class BookSearch {
 
             @Override
             public String getLink() {
-                return webInfo.getLink() + name;
+                String link = webInfo.getLink()  + name;
+                return link;
             }
 
             @Override
@@ -61,7 +61,7 @@ public class BookSearch {
     }
 
     private void downloadChapterLink(String bookName,final String link){
-        OKhttpManager.getInstance().connectUrl(new BookDownLoadListener(bookName) {
+        OKhttpManager.getInstance().connectUrl(new BookDownLoadListener(bookName, BookDownLoadListener.Type.ParseSearch) {
             @Override
             public void onFinish(BookInfo bookInfo) {
                 searchListener.searchFinish(bookInfo);
@@ -76,6 +76,7 @@ public class BookSearch {
             public void onStart() {
 
             }
+
         });
     }
 }

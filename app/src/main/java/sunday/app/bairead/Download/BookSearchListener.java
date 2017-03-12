@@ -1,5 +1,7 @@
 package sunday.app.bairead.download;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,29 +21,18 @@ import sunday.app.bairead.tool.FileManager;
 public abstract class BookSearchListener extends OKHttpListener {
     @Override
     public void onFailure(Call call, IOException e) {
-
+        e.printStackTrace();
     }
 
-    private String fullName;
-
-    public String getFullName(String bookName,String fileName){
-        return createFileDir(bookName) + "/" + fileName;
-    }
-
-    public String createFileDir(String bookName){
-        return FileManager.createDir(FileManager.PATH +"/"+bookName);
-    }
-
-    BookSearchListener(String bookName){
-        fullName = getFullName(bookName,BookSearch.FILE_NAME);
-    }
 
     @Override
     public void onResponse(Call call, Response response){
         try {
-            FileManager.writeByte(fullName, response.body().bytes());
+            //FileManager.writeSearchFile(response.body().bytes());
+            //response.body().close();
+            String string = response.body().string();
             response.body().close();
-            HashMap<String, String> resultMap = ParseXml.createParse(ParseSearch.class).parse(fullName);
+            HashMap<String, String> resultMap = ParseXml.createParse(ParseSearch.class).from(string).parse();
             onFinish(resultMap);
         }catch (Exception e){
             e.printStackTrace();

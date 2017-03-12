@@ -1,5 +1,7 @@
 package sunday.app.bairead.parse;
 
+import android.text.Html;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -11,9 +13,8 @@ import org.jsoup.select.Elements;
 public class ParseChapterText extends ParseXml {
 
     @Override
-    public String parse(String fileName) {
+    public String parse() {
 
-        Document document = getDocument(fileName,Charset.GB2312);
         if(document == null) return null;
         String s = "content_read";
         Elements elements = document.getElementsByClass(s);
@@ -21,7 +22,7 @@ public class ParseChapterText extends ParseXml {
             String idString = element.select("div[id]").attr("id");
             if (idString.equals("content")) {
                 String text = element.select("div[id]").get(0).toString();
-                return text;
+                return String.valueOf(Html.fromHtml(text)).trim();
             }
         }
         return null;
