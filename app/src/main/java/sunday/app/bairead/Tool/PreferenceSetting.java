@@ -62,7 +62,7 @@ public class PreferenceSetting {
     }
 
     public  void setFirstRunFalse(){
-        sharedPreferences.edit().putBoolean(KEY_FIRST_RUN,false);
+        sharedPreferences.edit().putBoolean(KEY_FIRST_RUN,false).commit();
     }
 
 }
