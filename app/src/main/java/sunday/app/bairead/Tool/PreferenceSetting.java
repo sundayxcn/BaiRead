@@ -10,6 +10,9 @@ import android.preference.PreferenceManager;
 
 public class PreferenceSetting {
 
+
+    public static final String KEY_FIRST_RUN = "firstRun";
+
     /*
     * 阅读文字大小
     * */
@@ -51,6 +54,15 @@ public class PreferenceSetting {
 
     public int getIntValue(String key){
         return sharedPreferences.getInt(key,0);
+    }
+
+
+    public  boolean isFirstRun(){
+        return sharedPreferences.getBoolean(KEY_FIRST_RUN,true);
+    }
+
+    public  void setFirstRunFalse(){
+        sharedPreferences.edit().putBoolean(KEY_FIRST_RUN,false);
     }
 
 }

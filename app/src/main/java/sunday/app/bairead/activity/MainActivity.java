@@ -1,6 +1,7 @@
 package sunday.app.bairead.activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,13 +19,22 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 
+import sunday.app.bairead.database.BookChapter;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.R;
+import sunday.app.bairead.parse.ParseChapter;
+import sunday.app.bairead.parse.ParseDetail;
+import sunday.app.bairead.parse.ParseXml;
+import sunday.app.bairead.presenter.BookDetailPresenter;
+import sunday.app.bairead.tool.FileManager;
 import sunday.app.bairead.tool.NetworkTool;
 import sunday.app.bairead.presenter.BookcasePresenter;
 import sunday.app.bairead.tool.NewChapterShow;
+import sunday.app.bairead.tool.PreferenceSetting;
 import sunday.app.bairead.tool.TimeFormat;
 
 public class MainActivity extends BaseActivity
@@ -55,10 +65,38 @@ public class MainActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        if(PreferenceSetting.getInstance(this).isFirstRun()){
+            PreferenceSetting.getInstance(this).setFirstRunFalse();
+            firstRunWork();
+        }
+
+
         setupView();
         bookcasePresenter = new BookcasePresenter(this, this);
         bookcasePresenter.init();
         registerReceiver();
+
+    }
+
+
+    private void firstRunWork(){
+        final File baseDir = new File(FileManager.PATH);
+        if(baseDir.exists()){
+            final int bookCount = baseDir.listFiles().length;
+            if(bookCount > 0) {
+                showConfirmDialog("检测到本地有缓存书籍，是否加载", "加载", "不加载", new DialogListener() {
+                    @Override
+                    public void onCancel() {
+
+                    }
+
+                    @Override
+                    public void onConfirmed() {
+                        new FirstRunAsyncTask(baseDir).execute();
+                    }
+                });
+            }
+        }
 
     }
 
@@ -302,6 +340,76 @@ public class MainActivity extends BaseActivity
             ViewHolder viewHolder = (ViewHolder) convertView.getTag();
             viewHolder.setValue(bookInfos.get(position));
             return convertView;
+        }
+    }
+
+
+    private class FirstRunAsyncTask extends AsyncTask<Void,String,Void>{
+
+        private File baseDir;
+
+        FirstRunAsyncTask(File fileDir){
+            baseDir = fileDir;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            BookDetailPresenter bookDetailPresenter = new BookDetailPresenter(getBaseContext(), null);
+
+            FileFilter fileFilter = new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    if(pathname.isDirectory() && !pathname.getName().contains("cache")) {
+                        return true;
+                    }else{
+                        return false;
+                    }
+
+                }
+            };
+            File[] files = baseDir.listFiles(fileFilter);
+            int bookCount = files.length;
+            int i = 1;
+            for (File fileDir :  baseDir.listFiles(fileFilter)) {
+                String fileName = fileDir.getAbsolutePath() + "/" + BookChapter.FileName;
+                File file = new File(fileName);
+                if (file.exists()) {
+                    BookInfo bookInfo = new BookInfo();
+                    bookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(file).parse();
+                    bookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).from(file).parse();
+                    bookDetailPresenter.addToBookCase(bookInfo);
+                    StringBuffer stringBuffer = new StringBuffer("加载第");
+                    stringBuffer
+                            .append(i)
+                            .append('/')
+                            .append(bookCount)
+                            .append("本书");
+                    publishProgress(stringBuffer.toString());
+                    i++;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+            showProgressDialog(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (booklistAdapter != null) {
+                booklistAdapter.notifyDataSetChanged();
+            }
+            hideProgressDialog();
+
         }
     }
 
