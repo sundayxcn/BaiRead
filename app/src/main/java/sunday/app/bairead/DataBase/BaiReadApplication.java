@@ -16,6 +16,7 @@ public class BaiReadApplication extends Application {
 
     public static final String TECENT_BUGLY_APP_ID = "babf2b978b";
     public static final String ALIBAICHUAN_APP_ID = "23691798";
+    public static final String UMENG_APP_ID = "58c554c2aed17906550017a0";
     @Override
     public void onCreate() {
         super.onCreate();

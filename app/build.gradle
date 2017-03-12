@@ -50,4 +50,6 @@ dependencies {
     compile(name: 'securityguardaar3-5.1.96', ext: 'aar')
     compile files('libs/app-monitor-sdk-2.5.1.1_for_bc_proguard.jar')
     compile files('libs/utdid4all-1.1.5.3_proguard.jar')
+    //友盟 统计
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }
