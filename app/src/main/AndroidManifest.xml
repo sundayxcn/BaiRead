@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="sunday.app.bairead">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -12,14 +13,19 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
 
+    <!-- alibaichuan fankui need -->
+    <uses-permission android:name="android.permission.CAMERA"/>
 
+
+    <!--<uses-sdk android:minSdkVersion="19"/>-->
 
     <application
+
         android:name=".database.BaiReadApplication"
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:allowBackup="false"
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainActivity"

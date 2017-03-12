@@ -19,6 +19,8 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
@@ -75,7 +77,7 @@ public class MainActivity extends BaseActivity
         bookcasePresenter = new BookcasePresenter(this, this);
         bookcasePresenter.init();
         registerReceiver();
-
+        
     }
 
 
@@ -206,7 +208,7 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_clear_cache) {
 
         } else if (id == R.id.nav_restore_config) {
-
+            FeedbackAPI.openFeedbackActivity();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

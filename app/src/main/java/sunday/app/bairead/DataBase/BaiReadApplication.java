@@ -2,6 +2,7 @@ package sunday.app.bairead.database;
 
 import android.app.Application;
 
+import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
 import com.tencent.bugly.crashreport.CrashReport;
 
 /**
@@ -14,7 +15,7 @@ public class BaiReadApplication extends Application {
     private BookContentProvider bookContentProvider;
 
     public static final String TECENT_BUGLY_APP_ID = "babf2b978b";
-
+    public static final String ALIBAICHUAN_APP_ID = "23691798";
     @Override
     public void onCreate() {
         super.onCreate();
@@ -26,6 +27,9 @@ public class BaiReadApplication extends Application {
             建议在测试阶段建议设置成true，发布时设置为false。
          **/
         CrashReport.initCrashReport(getApplicationContext(), TECENT_BUGLY_APP_ID, true);
+
+
+        FeedbackAPI.init(this, ALIBAICHUAN_APP_ID);
 
         bookModel = new BookModel(this);
         //registerReceiver()
