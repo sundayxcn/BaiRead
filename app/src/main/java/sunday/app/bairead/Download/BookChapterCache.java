@@ -277,11 +277,14 @@ public class BookChapterCache {
     }
 
     private BookChapter getChapter(BookInfo bookInfo) {
+        BookChapter chapter;
         if (isOnline()) {
-            return getChapterByOnline(bookInfo, null);
+            chapter = getChapterByOnline(bookInfo, null);
         } else {
-            return getChapterByCurrent(bookInfo);
+            chapter = getChapterByCurrent(bookInfo);
         }
+        chapter.setId(bookInfo.bookDetail.getId());
+        return chapter;
     }
 
     private BookChapter getChapterByOnline(BookInfo bookInfo, String fileName) {
