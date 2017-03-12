@@ -372,10 +372,10 @@ public class MainActivity extends BaseActivity
 
                 }
             };
-            File[] files = baseDir.listFiles(fileFilter);
-            int bookCount = files.length;
+            File[] fileDirs = baseDir.listFiles(fileFilter);
+            int bookCount = fileDirs.length;
             int i = 1;
-            for (File fileDir :  baseDir.listFiles(fileFilter)) {
+            for (File fileDir : fileDirs) {
                 String fileName = fileDir.getAbsolutePath() + "/" + BookChapter.FileName;
                 File file = new File(fileName);
                 if (file.exists()) {
