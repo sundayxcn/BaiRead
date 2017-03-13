@@ -42,7 +42,7 @@ import sunday.app.bairead.tool.TimeFormat;
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, BookcasePresenter.IBookcasePresenterListener {
 
-    private NetworkTool networkTool = new NetworkTool(this);
+
     private BookcasePresenter bookcasePresenter;
     private ListView mListView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -76,8 +76,7 @@ public class MainActivity extends BaseActivity
         setupView();
         bookcasePresenter = new BookcasePresenter(this, this);
         bookcasePresenter.init();
-        registerReceiver();
-        
+
     }
 
 
@@ -219,16 +218,8 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unRegisterReceiver();
     }
 
-    public void registerReceiver() {
-        networkTool.addReceiver();
-    }
-
-    public void unRegisterReceiver() {
-        networkTool.removeReceiver();
-    }
 
     @Override
     public void loadBookStart() {

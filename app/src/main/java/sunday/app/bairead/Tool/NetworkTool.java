@@ -19,27 +19,28 @@ import java.util.ArrayList;
 
 public class NetworkTool {
 
-    interface NetworkListener{
+    public interface INetworkListener{
         void networkChange(boolean connect,int type);
     }
 
     private Context context;
-    private ArrayList<NetworkListener> mListenerList = new ArrayList<>();
+    private ArrayList<INetworkListener> mListenerList = new ArrayList<>();
 
-    private void addListener(NetworkListener listener){
+    public void addListener(INetworkListener listener){
         mListenerList.add(listener);
     }
 
-    private void removeListener(NetworkListener listener){
+    public void removeListener(INetworkListener listener){
         mListenerList.remove(listener);
     }
 
-    private void clearListener(){
+    public void clearListener(){
         mListenerList.clear();
     }
 
     public NetworkTool(Context c ){
         context = c;
+        addReceiver();
     }
 
 
@@ -59,13 +60,17 @@ public class NetworkTool {
         if (context != null) {
             ConnectivityManager mConnectivityManager = (ConnectivityManager) context
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
-            Network network = mConnectivityManager.getActiveNetwork();
-            NetworkInfo networkInfo = mConnectivityManager.getNetworkInfo(network);
-            if(networkInfo == null){
-                return false;
-            }else {
-                return networkInfo.isConnected() && networkInfo.getType() == type;
+
+            Network[] networks = mConnectivityManager.getAllNetworks();
+            for(Network network : networks){
+                NetworkInfo networkInfo = mConnectivityManager.getNetworkInfo(network);
+                if(networkInfo == null){
+                    return false;
+                }else if(networkInfo.getType() == type){
+                    return networkInfo.isConnected();
+                }
             }
+
         }
         return false;
     }
@@ -85,30 +90,34 @@ public class NetworkTool {
         @Override
         public void onReceive(Context context, Intent intent) {
             ConnectivityManager connectMgr = (ConnectivityManager) context.getSystemService(Activity.CONNECTIVITY_SERVICE);
-            Network network = connectMgr.getActiveNetwork();
-            NetworkInfo networkInfo = connectMgr.getNetworkInfo(network);
-            boolean isConnected = false;
-            int type = -1;//ConnectivityManager.TYPE_NONE;
-            if(networkInfo == null){
-                isConnected =false;
-                Toast.makeText(context,"network is unConnect",Toast.LENGTH_SHORT).show();
-            }else if(networkInfo.isConnected()){
-                type = networkInfo.getType();
-                if(type == ConnectivityManager.TYPE_MOBILE){
-                    Toast.makeText(context,"Mobile Network is Connect",Toast.LENGTH_SHORT).show();
-                }else if(type == ConnectivityManager.TYPE_WIFI){
-                    Toast.makeText(context,"WIFI is Connect",Toast.LENGTH_SHORT).show();
+            Network[] networks = connectMgr.getAllNetworks();
+            for(Network network : networks){
+                //NetworkInfo networkInfo = connectMgr.getNetworkInfo(network);
+                NetworkInfo networkInfo = connectMgr.getNetworkInfo(network);
+                boolean isConnected = false;
+                int type = -1;//ConnectivityManager.TYPE_NONE;
+                if(networkInfo == null){
+                    isConnected =false;
+                    Toast.makeText(context,"network is unConnect",Toast.LENGTH_SHORT).show();
+                }else if(networkInfo.isConnected()){
+                    type = networkInfo.getType();
+                    if(type == ConnectivityManager.TYPE_MOBILE){
+                        //Toast.makeText(context,"Mobile Network is Connect",Toast.LENGTH_SHORT).show();
+                    }else if(type == ConnectivityManager.TYPE_WIFI){
+                        //Toast.makeText(context,"WIFI is Connect",Toast.LENGTH_SHORT).show();
+                    }
                 }
+
+                doListener(isConnected,type);
             }
 
-            doListener(isConnected,type);
 
         }
     };
 
 
     private void doListener(boolean connect,int type){
-        for(NetworkListener listener:mListenerList){
+        for(INetworkListener listener:mListenerList){
             listener.networkChange(connect,type);
         }
     }
