@@ -114,7 +114,7 @@ public class BaseActivity extends AppCompatActivity implements BaiReadApplicatio
             @Override
             public void run() {
                 if(progressDialog != null) {
-                    progressDialog.hide();
+                    progressDialog.dismiss();
                     //progressDialog = null;
                 }
             }
