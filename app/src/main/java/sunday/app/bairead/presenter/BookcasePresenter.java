@@ -50,8 +50,14 @@ public class BookcasePresenter{
         ThreadManager.getInstance().work(new Runnable() {
             @Override
             public void run() {
-                ArrayList<BookInfo> bookInfo = bookModel.loadAllBook();
-                bookcasePresenterListener.loadBookFinish(bookInfo);
+                final ArrayList<BookInfo> bookInfo = bookModel.loadAllBook();
+                runOnMainThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        bookcasePresenterListener.loadBookFinish(bookInfo);
+                    }
+                });
+
             }
         });
     }

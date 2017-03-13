@@ -282,6 +282,7 @@ public class BookChapterCache {
         }
         if(chapter != null) {
             chapter.setId(bookInfo.bookDetail.getId());
+            chapter.setChapterIndex(bookInfo.bookChapter.getChapterIndex());
         }
         return chapter;
     }

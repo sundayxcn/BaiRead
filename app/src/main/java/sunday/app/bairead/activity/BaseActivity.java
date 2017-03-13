@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import sunday.app.bairead.database.BaiReadApplication;
 import sunday.app.bairead.tool.NetworkTool;
 import sunday.app.bairead.tool.ThreadManager;
 
@@ -18,16 +19,21 @@ import sunday.app.bairead.tool.ThreadManager;
  * Created by Administrator on 2017/3/5.
  */
 
-public class BaseActivity extends AppCompatActivity implements NetworkTool.INetworkListener {
-
+public class BaseActivity extends AppCompatActivity implements BaiReadApplication.INetworkListener {
 
     @Override
     public void networkChange(boolean connect, int type) {
-            if(type == ConnectivityManager.TYPE_MOBILE && connect || type == ConnectivityManager.TYPE_WIFI && connect){
-            }else{
-                //hideProgressDialog();
-                showToastNetworkUnconnect();
-            }
+//            if(type == ConnectivityManager.TYPE_MOBILE && connect || type == ConnectivityManager.TYPE_WIFI && connect){
+//            }else{
+//                //hideProgressDialog();
+//                showToastNetworkUnconnect();
+//            }
+    }
+
+    @Override
+    public void unConnect() {
+        //如果有正在下载的线程这弹出网络中断提示
+//        showToastNetworkUnconnect();
     }
 
     private interface DialogListener{
@@ -57,21 +63,19 @@ public class BaseActivity extends AppCompatActivity implements NetworkTool.INetw
     protected Handler handler = new Handler();
 
     ProgressDialog progressDialog;
-    private NetworkTool networkTool;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        networkTool = new NetworkTool(this);
-        networkTool.addListener(this);
+        BaiReadApplication application  = (BaiReadApplication) getApplicationContext();
+        application.addListener(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        networkTool.removeReceiver();
-        networkTool.clearListener();
+        BaiReadApplication application  = (BaiReadApplication) getApplicationContext();
+        application.removeListener(this);
     }
 
     protected void showProgressDialog() {

@@ -51,7 +51,13 @@ public class BookSearchPresenter {
                 ArrayList<String> list = FileManager.readFileByLine(fullName);
                 Collections.reverse(list);
                 historyList = list;
-                bookSearchListener.historyLoadFinish(historyList);
+                runMainUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        bookSearchListener.historyLoadFinish(historyList);
+                    }
+                });
+
             }
         });
     }
@@ -68,7 +74,13 @@ public class BookSearchPresenter {
                 @Override
                 public void run() {
                     FileManager.writeFileByLine(fullName, name);
-                    bookSearchListener.historyAddFinish(name);
+                    runMainUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            bookSearchListener.historyAddFinish(name);
+                        }
+                    });
+
                 }
             });
         }
