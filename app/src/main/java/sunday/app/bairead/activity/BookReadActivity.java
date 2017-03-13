@@ -38,6 +38,7 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
 
     @Override
     public void onReadTextChange(BookTextView.ReadText readText) {
+        hideProgressDialog();
         mBookTitleTView.setText(readText.title);
         mBookTextTView.setText(readText.text);
     }
@@ -59,8 +60,6 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
         mBookTextTView.setReadSize(BookReadPresenter.getReadSize(this));
         mBookTextTView.setOnChangeListener(this);
         bookReadPresenter = new BookReadPresenter(this,this,bookId);
-        bookReadPresenter.init();
-
 
         getWindowManager().getDefaultDisplay().getSize(READ_POINT);
 
@@ -70,6 +69,11 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
     }
 
 
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        bookReadPresenter.init();
+    }
 
     @Override
     protected void onDestroy() {

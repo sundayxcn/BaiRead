@@ -41,24 +41,30 @@ public abstract class BookDownLoadListener extends OKHttpListener {
 
     @Override
     public void onFailure(Call call, IOException e) {
-            e.printStackTrace();
+        e.printStackTrace();
     }
+
+    public static final String TEMP_FILE_NAME = FileManager.PATH + "/" + "tempChapter.html";
 
     @Override
     public void onResponse(Call call, Response response) {
         try{
             if (response != null && response.body() != null) {
                 BookInfo newBookInfo = new BookInfo();
-                if(type == ParseDownLoad){
-                    FileManager.writeByte(chapterFile, response.body().bytes());
-                    File file = new File(chapterFile);
-                    newBookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(file).parse();
-                    newBookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).from(file).parse();
-                }else{
-                    String string = new String(response.body().bytes(),"gb2312");
-                    newBookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(string).parse();
-                    newBookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).from(string).parse();
-                }
+//                if(type == ParseDownLoad){
+//                    FileManager.writeByte(chapterFile, response.body().bytes());
+//                    newBookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(chapterFile).parse();
+//                    newBookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).from(chapterFile).parse();
+//                }else{
+//                    FileManager.writeByte(TEMP_FILE_NAME, response.body().bytes());
+//                    newBookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(string).parse();
+//                    newBookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).from(string).parse();
+//                }
+                String fileName = type == ParseDownLoad ? chapterFile : TEMP_FILE_NAME;
+                FileManager.writeByte(fileName, response.body().bytes());
+                newBookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(fileName).parse();
+                newBookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).from(fileName).parse();
+
                 response.body().close();
 
 
@@ -80,7 +86,7 @@ public abstract class BookDownLoadListener extends OKHttpListener {
 
 
     public abstract void onFinish(BookInfo bookInfo);
-
+    public abstract void onError();
 }
 
 

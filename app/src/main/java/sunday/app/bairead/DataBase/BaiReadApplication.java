@@ -27,10 +27,10 @@ public class BaiReadApplication extends Application {
             自定义日志将会在Logcat中输出。
             建议在测试阶段建议设置成true，发布时设置为false。
          **/
-        CrashReport.initCrashReport(getApplicationContext(), TECENT_BUGLY_APP_ID, true);
-
-
-        FeedbackAPI.init(this, ALIBAICHUAN_APP_ID);
+//        CrashReport.initCrashReport(getApplicationContext(), TECENT_BUGLY_APP_ID, true);
+//
+//
+//        FeedbackAPI.init(this, ALIBAICHUAN_APP_ID);
 
         bookModel = new BookModel(this);
         //registerReceiver()

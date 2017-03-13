@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -13,6 +14,7 @@ import sunday.app.bairead.database.BookModel;
 import sunday.app.bairead.download.BookDownLoad;
 import sunday.app.bairead.tool.FileManager;
 import sunday.app.bairead.activity.BookReadActivity;
+import sunday.app.bairead.tool.ThreadManager;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -32,6 +34,7 @@ public class BookcasePresenter{
         void onCheckNewChapter(BookInfo bookInfo);
         void onCheckFinish();
         void onCheckStart();
+        void loadError();
     }
 
     private IBookcasePresenterListener bookcasePresenterListener;
@@ -43,25 +46,14 @@ public class BookcasePresenter{
     }
 
     public void init(){
-        new AsyncTask<Void,Void,ArrayList<BookInfo>>(){
-
+        bookcasePresenterListener.loadBookStart();
+        ThreadManager.getInstance().work(new Runnable() {
             @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                bookcasePresenterListener.loadBookStart();
-            }
-
-            @Override
-            protected ArrayList<BookInfo> doInBackground(Void... params) {
-                return bookModel.loadAllBook();
-            }
-
-            @Override
-            protected void onPostExecute(ArrayList<BookInfo> bookInfo) {
-                super.onPostExecute(bookInfo);
+            public void run() {
+                ArrayList<BookInfo> bookInfo = bookModel.loadAllBook();
                 bookcasePresenterListener.loadBookFinish(bookInfo);
             }
-        }.execute();
+        });
     }
 
     private int bookCount = 0;
@@ -85,6 +77,11 @@ public class BookcasePresenter{
         checkBookInit(list.size());
         bookcasePresenterListener.onCheckStart();
         BookDownLoad bookDownload = new BookDownLoad(new BookDownLoad.DownloadListener() {
+            @Override
+            public void onError() {
+                bookcasePresenterListener.loadError();
+            }
+
             @Override
             public void onNewChapter(final BookInfo bookInfo) {
                 if(checkFinish() || bookInfo == null){
@@ -125,8 +122,15 @@ public class BookcasePresenter{
     public void deleteBook(BookInfo bookInfo){
 
         bookModel.deleteBook(bookInfo);
-        //删除本地缓存
-        FileManager.deleteFolder(FileManager.PATH + "/" + bookInfo.bookDetail.getName());
+        final String fileName = bookInfo.bookDetail.getName();
+        ThreadManager.getInstance().work(new Runnable() {
+            @Override
+            public void run() {
+                //删除本地缓存
+                FileManager.deleteFolder(FileManager.PATH + "/" + fileName);
+            }
+        });
+
     }
 
     public static void readBook(Context context,BookInfo bookInfo){

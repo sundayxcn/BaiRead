@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class BookTextView extends TextView {
     @Override
     protected void onDraw(Canvas canvas) {
         //super.onDraw(canvas);
-        if (pageIndex != -1) {
+        if (pageTextList.size() > 0) {
             pageTextList.get(pageIndex).onDraw(canvas);
         }
     }
@@ -76,6 +77,7 @@ public class BookTextView extends TextView {
      **/
     private void createPageTextList() {
         if (text == null) {
+            Log.e("sunday","createPageTextList-text == null");
             return;
         }
         pageTextList.clear();

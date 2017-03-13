@@ -22,6 +22,7 @@ public abstract class BookSearchListener extends OKHttpListener {
     @Override
     public void onFailure(Call call, IOException e) {
         e.printStackTrace();
+        Log.d("sunday","BookSearchListener--onFailure");
     }
 
 
@@ -39,5 +40,8 @@ public abstract class BookSearchListener extends OKHttpListener {
             onFinish(null);
         }
     }
+
+    public abstract void onError();
+
     public abstract void onFinish(HashMap<String,String> resultMap);
 }

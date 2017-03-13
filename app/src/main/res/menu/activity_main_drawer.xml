@@ -3,30 +3,24 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
-
-        <item
             android:id="@+id/nav_clear_cache"
             android:icon="@drawable/ic_menu_share"
-            android:title="Share" />
+            android:title="@string/nav_clear_cache_text" />
         <item
             android:id="@+id/nav_restore_config"
             android:icon="@drawable/ic_menu_send"
-            android:title="Send" />
+            android:title="@string/nav_restore_config_text" />
+
+        <item
+            android:id="@+id/nav_suggest_report"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/nav_suggest_report_text" />
+
+        <item
+            android:id="@+id/nav_add_source_web"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/nav_add_source_web_text" />
+
     </group>
 
     <!--<item android:title="Communicate">-->

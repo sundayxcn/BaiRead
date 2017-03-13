@@ -9,12 +9,12 @@ android {
             storePassword '123456'
         }
     }
-    compileSdkVersion 24
+    compileSdkVersion 23
     buildToolsVersion "24.0.0"
     defaultConfig {
         applicationId "sunday.app.bairead"
-        minSdkVersion 23
-        targetSdkVersion 24
+        minSdkVersion 21
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -35,9 +35,9 @@ repositories {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.0.0'
-    compile 'com.android.support:support-v4:24.0.0'
-    compile 'com.android.support:design:24.0.0'
+    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.android.support:support-v4:23.0.0'
+    compile 'com.android.support:design:23.0.0'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.squareup.okio:okio:1.5.0'
     compile 'org.jsoup:jsoup:1.9.2'

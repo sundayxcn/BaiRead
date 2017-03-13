@@ -12,6 +12,7 @@ import java.util.Collections;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.download.BookSearch;
 import sunday.app.bairead.tool.FileManager;
+import sunday.app.bairead.tool.ThreadManager;
 
 /**
  * Created by sunday on 2017/3/6.
@@ -44,20 +45,15 @@ public class BookSearchPresenter {
             file.mkdirs();
         }
         final String fullName = file.getAbsolutePath() + "/" + fileName;
-        new AsyncTask<Void, Void, ArrayList<String>>() {
+        ThreadManager.getInstance().work(new Runnable() {
             @Override
-            protected ArrayList<String> doInBackground(Void... params) {
-                return FileManager.readFileByLine(fullName);
-            }
-
-            @Override
-            protected void onPostExecute(ArrayList<String> strings) {
-                super.onPostExecute(strings);
-                Collections.reverse(strings);
-                historyList = strings;
+            public void run() {
+                ArrayList<String> list = FileManager.readFileByLine(fullName);
+                Collections.reverse(list);
+                historyList = list;
                 bookSearchListener.historyLoadFinish(historyList);
             }
-        }.execute();
+        });
     }
 
     public void addSearchHistory(Context context,final String name){
@@ -68,36 +64,27 @@ public class BookSearchPresenter {
                 file.mkdirs();
             }
             final String fullName = file.getAbsolutePath() + "/" + fileName;
-            new AsyncTask<Void, Void, String>() {
+            ThreadManager.getInstance().work(new Runnable() {
                 @Override
-                protected String doInBackground(Void... params) {
+                public void run() {
                     FileManager.writeFileByLine(fullName, name);
-                    return name;
+                    bookSearchListener.historyAddFinish(name);
                 }
-
-                @Override
-                protected void onPostExecute(String string) {
-                    super.onPostExecute(string);
-                    bookSearchListener.historyAddFinish(string);
-                }
-            }.execute();
+            });
         }
     }
 
     public void clearHistory(Context context){
         File file = context.getCacheDir();
-        if (file.exists()) {
-            final String fullName = file.getAbsolutePath() + "/" + fileName;
-            new AsyncTask<Void, Void, Void>() {
-
+        final String fullName = file.getAbsolutePath() + "/" + fileName;
+        if(file.exists()) {
+            ThreadManager.getInstance().work(new Runnable() {
                 @Override
-                protected Void doInBackground(Void... params) {
+                public void run() {
                     FileManager.deleteFile(fullName);
-                    return null;
                 }
-            }.execute();
+            });
         }
-
     }
 
 

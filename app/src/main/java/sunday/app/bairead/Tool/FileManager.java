@@ -1,5 +1,6 @@
 package sunday.app.bairead.tool;
 
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
@@ -213,5 +214,9 @@ public class FileManager {
         }
     }
 
+    public static void deleteAllCahce(){
+        File file = new File(PATH);
+        file.delete();
+    }
 
 }

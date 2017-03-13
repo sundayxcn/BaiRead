@@ -3,6 +3,8 @@ package sunday.app.bairead.activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -10,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import sunday.app.bairead.tool.NetworkTool;
+import sunday.app.bairead.tool.ThreadManager;
 
 /**
  * Created by Administrator on 2017/3/5.
@@ -20,12 +23,35 @@ public class BaseActivity extends AppCompatActivity implements NetworkTool.INetw
 
     @Override
     public void networkChange(boolean connect, int type) {
-
+            if(type == ConnectivityManager.TYPE_MOBILE && connect || type == ConnectivityManager.TYPE_WIFI && connect){
+            }else{
+                //hideProgressDialog();
+                showToastNetworkUnconnect();
+            }
     }
 
-    public interface DialogListener{
+    private interface DialogListener{
         void onCancel();
-        void onConfirmed();
+        void onConfirm();
+        void onConfirmAsync();
+    }
+
+    public static class DialogListenerIm implements DialogListener{
+
+        @Override
+        public void onCancel() {
+
+        }
+
+        @Override
+        public void onConfirm() {
+
+        }
+
+        @Override
+        public void onConfirmAsync() {
+
+        }
     }
 
     protected Handler handler = new Handler();
@@ -92,12 +118,27 @@ public class BaseActivity extends AppCompatActivity implements NetworkTool.INetw
 
     }
 
-    public void showToast(String text){
-        Toast.makeText(this,text,Toast.LENGTH_SHORT).show();
+
+    public boolean isConnect(){
+        return NetworkTool.isNetworkConnect(this);
+    }
+
+    public void showToastNetworkUnconnect(){
+        showToast("网络连接不上，请检查网络");
+    }
+
+    public void showToast(final String text){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getBaseContext(),text,Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     AlertDialog confirmDialog;
-    public void showConfirmDialog(String string,String confirmText,String cancelText,final DialogListener dialogListener) {
+    public void showConfirmDialog(String string,String confirmText,String cancelText,final DialogListenerIm dialogListenerIm) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(string)
@@ -106,18 +147,32 @@ public class BaseActivity extends AppCompatActivity implements NetworkTool.INetw
                     public void onClick(DialogInterface dialog, int which) {
                         //the position has problem
                         confirmDialog.dismiss();
-                        dialogListener.onConfirmed();
+                        dialogListenerIm.onConfirm();
+                        new AsyncTask<Void,Void,Void>(){
+
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                if(dialogListenerIm != null){
+                                    dialogListenerIm.onConfirmAsync();
+                                }
+                                return null;
+                            }
+                        }.execute();
                     }
                 })
                 .setPositiveButton(cancelText, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         confirmDialog.dismiss();
-                        dialogListener.onCancel();
+                        dialogListenerIm.onCancel();
                     }
                 });
         confirmDialog = builder.create();
         confirmDialog.show();
+    }
+
+    public void showConfirmDialog(String string,final DialogListenerIm dialogListenerIm) {
+        showConfirmDialog(string,"确定","取消",dialogListenerIm);
     }
 
 }

@@ -56,8 +56,9 @@ public abstract class ParseXml {
         }
     }
 
-    public ParseXml from(File file){
+    public ParseXml from(String fileName){
         try {
+            File file = new File(fileName);
             document =  Jsoup.parse(file, Charset.GB2312.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -67,10 +68,10 @@ public abstract class ParseXml {
     }
 
 
-    public ParseXml from(String html){
-        document =  Jsoup.parse(html);
-        return this;
-    }
+//    public ParseXml from(String html){
+//        document =  Jsoup.parse(html);
+//        return this;
+//    }
 
 
 //    public Document getDocument(String fileName,Charset charset){

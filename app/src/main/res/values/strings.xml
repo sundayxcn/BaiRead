@@ -35,4 +35,8 @@
     <string name="book_read_setting_top_panel_mark_add_text">添加书签</string>
     <string name="book_read_setting_top_panel_source_text">换源</string>
     <string name="book_read_setting_top_button_delete_mark_text">清空书签</string>
+    <string name="nav_clear_cache_text">清除本地缓存</string>
+    <string name="nav_restore_config_text">恢复默认设置</string>
+    <string name="nav_suggest_report_text">发送建议</string>
+    <string name="nav_add_source_web_text">添加修改源网站</string>
 </resources>

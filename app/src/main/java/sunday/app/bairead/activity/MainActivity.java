@@ -85,14 +85,9 @@ public class MainActivity extends BaseActivity
         if(baseDir.exists()){
             final int bookCount = baseDir.listFiles().length;
             if(bookCount > 0) {
-                showConfirmDialog("检测到本地有缓存书籍，是否加载", "加载", "不加载", new DialogListener() {
+                showConfirmDialog("检测到本地有缓存书籍，是否加载", "加载", "不加载", new DialogListenerIm() {
                     @Override
-                    public void onCancel() {
-
-                    }
-
-                    @Override
-                    public void onConfirmed() {
+                    public void onConfirm() {
                         new FirstRunAsyncTask(baseDir).execute();
                     }
                 });
@@ -107,7 +102,12 @@ public class MainActivity extends BaseActivity
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                bookcasePresenter.checkNewChapter(booklistAdapter.getBookInfoList());
+                if(isConnect()) {
+                    bookcasePresenter.checkNewChapter(booklistAdapter.getBookInfoList());
+                }else{
+                    swipeRefreshLayout.setRefreshing(false);
+                    showToastNetworkUnconnect();
+                }
             }
         });
         mListView = (ListView) findViewById(R.id.xlist_view);
@@ -122,14 +122,9 @@ public class MainActivity extends BaseActivity
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final int fPosition = position;
-                showConfirmDialog("是否从书架中删除","确定","取消",new DialogListener() {
+                showConfirmDialog("是否从书架中删除",new DialogListenerIm() {
                     @Override
-                    public void onCancel() {
-
-                    }
-
-                    @Override
-                    public void onConfirmed() {
+                    public void onConfirm() {
                         BookInfo bookInfo = (BookInfo) booklistAdapter.getItem(fPosition);
                         booklistAdapter.getBookInfoList().remove(bookInfo);
                         booklistAdapter.notifyDataSetChanged();
@@ -196,18 +191,32 @@ public class MainActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_clear_cache) {
-
+        if (id == R.id.nav_clear_cache) {
+            showConfirmDialog("是否删除所有的数据缓存",new DialogListenerIm(){
+                @Override
+                public void onConfirmAsync() {
+                    super.onConfirmAsync();
+                    FileManager.deleteAllCahce();
+                }
+            });
         } else if (id == R.id.nav_restore_config) {
+            showConfirmDialog("恢复默认设置",new DialogListenerIm(){
+                @Override
+                public void onConfirmAsync() {
+                    super.onConfirmAsync();
+                    StringBuffer fileName = new StringBuffer("/data/data/");
+                    fileName.append(getPackageName().toString())
+                            .append("/shared_prefs/")
+                            .append(getPackageName().toString())
+                            .append("_preferences.xml");
+                    FileManager.deleteFile(fileName.toString());
+                    PreferenceSetting.getInstance(MainActivity.this).setFirstRunFalse();
+                }
+            });
+        } else if (id == R.id.nav_suggest_report) {
             FeedbackAPI.openFeedbackActivity();
+        } else if (id == R.id.nav_add_source_web) {
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -256,6 +265,11 @@ public class MainActivity extends BaseActivity
     @Override
     public void onCheckStart() {
         NewChapterShow.getInstance().clearNewChapterList();
+    }
+
+    @Override
+    public void loadError() {
+        hideProgressDialog();
     }
 
     class ViewHolder {
@@ -373,8 +387,8 @@ public class MainActivity extends BaseActivity
                 File file = new File(fileName);
                 if (file.exists()) {
                     BookInfo bookInfo = new BookInfo();
-                    bookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(file).parse();
-                    bookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).from(file).parse();
+                    bookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(fileName).parse();
+                    bookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).from(fileName).parse();
                     bookDetailPresenter.addToBookCase(bookInfo);
                     StringBuffer stringBuffer = new StringBuffer("加载第");
                     stringBuffer

@@ -201,14 +201,9 @@ public class BookReadSettingPanelView extends RelativeLayout {
             @Override
             public void onClick(View v) {
                 BookReadActivity bookReadActivity = (BookReadActivity) getContext();
-                bookReadActivity.showConfirmDialog("清空标签", "确定", "取消", new BaseActivity.DialogListener() {
+                bookReadActivity.showConfirmDialog("清空标签", new BaseActivity.DialogListenerIm() {
                     @Override
-                    public void onCancel() {
-
-                    }
-
-                    @Override
-                    public void onConfirmed() {
+                    public void onConfirm() {
                         bookReadPresenter.deleteBookMark();
                     }
                 });
@@ -233,14 +228,9 @@ public class BookReadSettingPanelView extends RelativeLayout {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final BookMarkInfo bookMarkInfo = (BookMarkInfo) markAdapter.getItem(position);
                 BookReadActivity bookReadActivity = (BookReadActivity) getContext();
-                bookReadActivity.showConfirmDialog("删除标签\n"+bookMarkInfo.title, "确定", "取消", new BaseActivity.DialogListener() {
+                bookReadActivity.showConfirmDialog("删除标签\n"+bookMarkInfo.title, new BaseActivity.DialogListenerIm() {
                     @Override
-                    public void onCancel() {
-
-                    }
-
-                    @Override
-                    public void onConfirmed() {
+                    public void onConfirm() {
                         markAdapter.removeItem(bookMarkInfo);
                         bookReadPresenter.deleteBookMark(bookMarkInfo);
                     }

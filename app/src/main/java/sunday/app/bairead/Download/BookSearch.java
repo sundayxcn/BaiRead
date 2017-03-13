@@ -32,6 +32,11 @@ public class BookSearch {
         final WebInfo webInfo = new WebInfo(webName,webLink,webSearchLink);
         OKhttpManager.getInstance().connectUrl(new BookSearchListener() {
             @Override
+            public void onError() {
+
+            }
+
+            @Override
             public void onFinish(HashMap<String, String> map) {
                 if(map != null) {
                     Iterator iter = map.entrySet().iterator();
@@ -65,6 +70,11 @@ public class BookSearch {
             @Override
             public void onFinish(BookInfo bookInfo) {
                 searchListener.searchFinish(bookInfo);
+            }
+
+            @Override
+            public void onError() {
+                searchListener.searchFinish(null);
             }
 
             @Override

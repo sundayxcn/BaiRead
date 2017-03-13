@@ -3,6 +3,7 @@ package sunday.app.bairead.presenter;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -13,6 +14,7 @@ import sunday.app.bairead.database.BookMarkInfo;
 import sunday.app.bairead.download.BookChapterCache;
 import sunday.app.bairead.tool.PreferenceSetting;
 import sunday.app.bairead.tool.Temp;
+import sunday.app.bairead.tool.ThreadManager;
 import sunday.app.bairead.view.BookTextView;
 
 /**
@@ -38,6 +40,16 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
             @Override
             public void run() {
                 bookReadPresenterListener.onLoadFinish();
+            }
+        });
+    }
+
+    @Override
+    public void cacheStart() {
+        runMainUiThread(new Runnable() {
+            @Override
+            public void run() {
+                bookReadPresenterListener.onLoadStart();
             }
         });
     }
@@ -88,19 +100,17 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
         BookChapterCache bookChapterCache = BookChapterCache.getInstance();
         bookChapterCache.setBookInfo(bookInfo,this);
         bookChapterCache.initChapterRead();
-
-        new AsyncTask<Void,Void,Void>(){
+        ThreadManager.getInstance().work(new Runnable() {
             @Override
-            protected Void doInBackground(Void... params) {
+            public void run() {
                 BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
                 bookMarkList = baiReadApplication.getBookModel().loadBookMark(bookInfo.bookDetail.getId());
                 for(BookMarkInfo info : bookMarkList){
                     info.text = BookChapterCache.getInstance().getMarkText(info.chapterIndex);
                     info.title = BookChapterCache.getInstance().getMarkTitle(info.chapterIndex);
                 }
-                return null;
             }
-        }.execute();
+        });
     }
 
 
@@ -138,8 +148,11 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
 
 
     public void ChapterNext(){
+        Log.e("sunday","ChapterNext--begin");
         BookChapterCache.getInstance().nextChapter(context);
+        Log.e("sunday","ChapterNext--middeb");
         updateDataBookIndex();
+        Log.e("sunday","ChapterNext--End");
     }
 
     public void ChapterPrev(){

@@ -24,7 +24,7 @@
         <item name="background">@color/colorTransparent</item>/>
     </style>
 
-    <style name="TextButton" parent="Base.Widget.AppCompat.Button">
+    <style name="TextButton" parent="Base.TextAppearance.AppCompat.Button">
         <item name="android:textSize">@dimen/button_text_style_text_size</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:gravity">center</item>
