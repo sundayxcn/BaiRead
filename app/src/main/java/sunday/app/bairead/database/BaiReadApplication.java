@@ -82,6 +82,7 @@ public class BaiReadApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
+        unregisterReceiver(connectionReceiver);
     }
 
     public void setBookContentProvider(BookContentProvider bookContentProvider) {
