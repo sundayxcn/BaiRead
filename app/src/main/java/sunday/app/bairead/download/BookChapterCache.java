@@ -253,6 +253,13 @@ public class BookChapterCache {
         return file.exists();
     }
 
+    public boolean isChapterExists(BookChapter.Chapter chapter) {
+        String fileName = fullDir + "/" +chapter.getNum() + ".html";
+        File file = new File(fileName);
+        return file.exists();
+    }
+
+
 //    public File getChapterTextFile(int index) {
 //        return new File(getChapterTextFileName(index));
 //    }

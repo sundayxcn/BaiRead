@@ -10,11 +10,16 @@
         android:gravity="center_vertical" />
 
     <TextView
+        android:gravity="center"
+        android:layout_marginRight="25dp"
+        android:textColor="@color/colorWhite"
         android:id="@+id/chapter_list_item_cache_text"
-        android:layout_width="wrap_content"
+        android:layout_width="20dp"
+        android:textSize="14dp"
         android:layout_height="wrap_content"
         android:layout_gravity="right|center_vertical"
         android:text="@string/chapter_list_item_cache_text"
+        android:background="@drawable/background_shape_blue"
         android:visibility="gone" />
 
 </FrameLayout>

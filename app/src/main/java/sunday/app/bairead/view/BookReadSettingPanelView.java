@@ -20,6 +20,7 @@ import java.util.Collections;
 import sunday.app.bairead.database.BookChapter;
 import sunday.app.bairead.database.BookMarkInfo;
 import sunday.app.bairead.R;
+import sunday.app.bairead.download.BookChapterCache;
 import sunday.app.bairead.tool.PreferenceSetting;
 import sunday.app.bairead.activity.BaseActivity;
 import sunday.app.bairead.activity.BookReadActivity;
@@ -348,7 +349,7 @@ public class BookReadSettingPanelView extends RelativeLayout {
 
             viewHolder.textView.setText(chapter.getTitle());
 
-            boolean isCache = bookReadPresenter.isChapterCache(position);
+            boolean isCache = BookChapterCache.getInstance().isChapterExists(chapter);
             viewHolder.cacheShowView.setVisibility(isCache ? VISIBLE : INVISIBLE);
 
             return convertView;

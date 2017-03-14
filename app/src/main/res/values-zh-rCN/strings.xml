@@ -27,7 +27,7 @@
     <string name="xlistview_footer_hint_normal">查看更多</string>
     <string name="xlistview_footer_hint_ready">松开载入更多</string>
     <string name="xlistview_item_chapter_update_text">新</string>
-    <string name="chapter_list_item_cache_text">已缓存</string>
+    <string name="chapter_list_item_cache_text">缓</string>
     <string name="book_read_setting_bottom_button_text_chapter">目录</string>
     <string name="book_read_setting_bottom_button_text_mark">书签</string>
     <string name="book_read_setting_bottom_button_text_size">字体</string>
