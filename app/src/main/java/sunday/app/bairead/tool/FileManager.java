@@ -141,7 +141,7 @@ public class FileManager {
             FileOutputStream fileOutputStream = new FileOutputStream(fileName);
             fileOutputStream.write(bytes);
             fileOutputStream.close();
-            Log.e(TAG,"writeByte"+fileName+"  bytes.length=="+bytes.length);
+            //Log.e(TAG,"writeByte"+fileName+"  bytes.length=="+bytes.length);
         } catch(IOException e){
             e.printStackTrace();
         } catch (Exception e) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class BookcasePresenter{
     private int bookCount = 0;
 
     private  synchronized boolean checkFinish(){
+        Log.e("sunday","bookCount="+bookCount);
         bookCount--;
         return bookCount <=0;
     }
@@ -90,7 +92,7 @@ public class BookcasePresenter{
 
             @Override
             public void onNewChapter(final BookInfo bookInfo) {
-                if(checkFinish() || bookInfo == null){
+                if(checkFinish() /*|| bookInfo == null*/){
                     runOnMainThread(new Runnable() {
                         @Override
                         public void run() {

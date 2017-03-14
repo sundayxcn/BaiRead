@@ -38,7 +38,7 @@ public class OKhttpManager{
 
             File cacheDirectory = new File(FileManager.PATH+"/"+"cache");
             Cache cache = new Cache(cacheDirectory, cacheSize);
-            okHttpClient = new OkHttpClient.Builder().cache(cache).build();
+            okHttpClient = new OkHttpClient.Builder().cache(cache).retryOnConnectionFailure(true).build();
         }
 
         return okHttpClient;

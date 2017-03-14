@@ -51,15 +51,6 @@ public abstract class BookDownLoadListener extends OKHttpListener {
         try{
             if (response != null && response.body() != null) {
                 BookInfo newBookInfo = new BookInfo();
-//                if(type == ParseDownLoad){
-//                    FileManager.writeByte(chapterFile, response.body().bytes());
-//                    newBookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(chapterFile).parse();
-//                    newBookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).from(chapterFile).parse();
-//                }else{
-//                    FileManager.writeByte(TEMP_FILE_NAME, response.body().bytes());
-//                    newBookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(string).parse();
-//                    newBookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).from(string).parse();
-//                }
                 String fileName = type == ParseDownLoad ? chapterFile : TEMP_FILE_NAME;
                 FileManager.writeByte(fileName, response.body().bytes());
                 newBookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(fileName).parse();
@@ -68,7 +59,7 @@ public abstract class BookDownLoadListener extends OKHttpListener {
                 onFinish(newBookInfo);
             }
         }catch (Exception e) {
-            onError();
+            onFinish(null);
             e.printStackTrace();
         }finally {
             response.body().close();
