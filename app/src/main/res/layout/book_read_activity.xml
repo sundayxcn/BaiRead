@@ -20,6 +20,13 @@
         android:layout_height="match_parent"
         android:textSize="18dp" />
 
+    <TextView
+        android:layout_marginRight="10dp"
+        android:id="@+id/book_read_activity_book_page"
+        android:layout_gravity="bottom|right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <include
         android:layout_width="match_parent"
         android:layout_height="match_parent"

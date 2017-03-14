@@ -184,6 +184,7 @@ public class BookContentProvider extends ContentProvider {
                     "chapterLink text,"+
                     "chapterCount integer," +
                     "chapterIndex integer,"+
+                    "chapterPage integer,"+
                     "current integer"+
                     ");";
 

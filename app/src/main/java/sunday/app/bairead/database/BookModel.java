@@ -131,8 +131,10 @@ public class BookModel {
         values = new ContentValues();
         int chapterCount = bookInfo.bookChapter.getChapterCount();
         int chapterIndex = bookInfo.bookChapter.getChapterIndex();
+        int chaperPage = bookInfo.bookChapter.getChapterPage();
         values.put(BookSetting.Chapter.COUNT,chapterCount);
         values.put(BookSetting.Chapter.INDEX,chapterIndex);
+        values.put(BookSetting.Chapter.PAGE,chaperPage);
         where = BookSetting.Chapter.ID +" = ?" ;
         cr.update(uri,values,where,new String[]{String.valueOf(bookInfo.bookDetail.getId())});
 
@@ -210,7 +212,7 @@ public class BookModel {
         final int chapterLink = cursor.getColumnIndexOrThrow(BookSetting.Chapter.LINK);
         //final int chapterCount = cursor.getColumnIndexOrThrow(BookSetting.Chapter.COUNT);
         final int chapterIndex = cursor.getColumnIndexOrThrow(BookSetting.Chapter.INDEX);
-
+        final int chapterPage = cursor.getColumnIndexOrThrow(BookSetting.Chapter.PAGE);
         try {
             while (cursor.moveToNext()){
 
@@ -218,7 +220,7 @@ public class BookModel {
                 String link = cursor.getString(chapterLink);
                 //int count = cursor.getInt(chapterCount);
                 int index = cursor.getInt(chapterIndex);
-
+                int page = cursor.getInt(chapterPage);
                 BookInfo bookInfo = getBookInfo(bookList,id);
                 if(bookInfo == null){
                     new Throwable("loadAllBook-error bookChapter");
@@ -234,6 +236,7 @@ public class BookModel {
                         BookChapter bookChapter = new BookChapter.Builder().
                                 setChapterIndex(index).
                                 setChapterLink(link).
+                                setChapterPage(page).
                                 build();
                         bookChapter.setId(id);
                         bookInfo.bookChapter = bookChapter;
@@ -432,8 +435,10 @@ public class BookModel {
         final Uri uri = BookSetting.Chapter.CONTENT_URI;
         final ContentValues values = new ContentValues();
         int index = bookChapter.getChapterIndex();
+        int page = bookChapter.getChapterPage();
         final long id = bookChapter.getId();
         values.put(BookSetting.Chapter.INDEX,index);
+        values.put(BookSetting.Chapter.PAGE,page);
         final String where = BookSetting.Chapter.ID +" = ?" +" and "+BookSetting.Chapter.CURRENT +" = 1";
         runOnWorkerThread(new Runnable() {
             @Override

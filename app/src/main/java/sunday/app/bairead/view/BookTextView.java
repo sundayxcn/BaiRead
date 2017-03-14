@@ -20,7 +20,8 @@ public class BookTextView extends TextView {
 
     private IChapterChangeListener chapterChangeListener;
     private TextPaint textPaint;
-    private int pageIndex = -1;
+    private int pageIndex;
+    private int initPage;
     private int mHeight;
     private int mWidth;
     private int paddingLeft;
@@ -35,14 +36,17 @@ public class BookTextView extends TextView {
     }
 
     public void setChapterText(String chapterText) {
+        pageIndex = text == null ? initPage : 0;
         text = chapterText;
-        pageIndex = 0;
         if (mHeight != 0) {
             createPageTextList();
         }
         postInvalidate();
 
-        //setOnClickListener(this);
+    }
+
+    public void initPage(int page){
+        initPage = page;
     }
 
     @Override
@@ -82,7 +86,6 @@ public class BookTextView extends TextView {
         }
         pageTextList.clear();
         String[] textArray = text.trim().split("\n\n");
-        pageIndex = 0;
         textPaint = new TextPaint();
         textPaint.setAntiAlias(true);
         textPaint.setTextSize(readSize.textSize);
@@ -116,6 +119,14 @@ public class BookTextView extends TextView {
             pageText.lineTextList.add(lineTextList.get(i));
         }
 
+        if(chapterChangeListener != null) {
+            int pageCount = pageTextList.size();
+            if(pageIndex > pageCount - 1 ){
+                pageIndex = pageCount - 1 ;
+            }
+            chapterChangeListener.onPageChange(pageIndex, pageCount);
+        }
+
     }
 
     public void setOnChangeListener(IChapterChangeListener listener) {
@@ -129,9 +140,10 @@ public class BookTextView extends TextView {
             pageIndex--;
         }
 
+        int pageCount = pageTextList.size();
 
-        if (pageIndex > (pageTextList.size() - 1)) {
-            pageIndex = pageTextList.size() - 1;
+        if (pageIndex > (pageCount - 1)) {
+            pageIndex = pageCount - 1;
             if (chapterChangeListener != null) {
                 chapterChangeListener.onChapterNext();
             }
@@ -141,6 +153,9 @@ public class BookTextView extends TextView {
                 chapterChangeListener.onChapterPrev();
             }
         } else {
+            if(chapterChangeListener != null){
+                chapterChangeListener.onPageChange(pageIndex,pageCount);
+            }
             postInvalidate();
         }
 
@@ -152,22 +167,12 @@ public class BookTextView extends TextView {
         postInvalidate();
     }
 
-    public void setLast(boolean isLast) {
-        if (isLast) {
-            pageIndex = pageTextList.size() - 1;
-        }
-    }
-
-    public void setBegin(boolean isBegin) {
-        if (isBegin) {
-            pageIndex = 0;
-        }
-    }
-
     public interface IChapterChangeListener {
         void onChapterNext();
 
         void onChapterPrev();
+
+        void onPageChange(int page,int pageCount);
     }
 
     public static class ReadSize {

@@ -30,6 +30,10 @@ public class BookChapter extends BookBase {
      * 阅读章节
      */
     private int chapterIndex;
+    /**
+     * 阅读章节页
+     * */
+    private int chapterPage;
 
     /**
      * 当前阅读源
@@ -42,7 +46,7 @@ public class BookChapter extends BookBase {
 
     private BookChapter(Builder builder) {
         this.chapterLink = builder.chapterLink;
-        //this.chapterCount = builder.chapterCount;
+        this.chapterPage = builder.chapterPage;
         this.chapterIndex = builder.chapterIndex;
         this.current = builder.current;
     }
@@ -53,6 +57,14 @@ public class BookChapter extends BookBase {
 
     public void setChapterIndex(int index) {
         chapterIndex = index;
+    }
+
+    public int getChapterPage(){
+        return chapterPage;
+    }
+
+    public void setChapterPage(int page){
+        chapterPage = page;
     }
 
     public int getChapterCount() {
@@ -86,6 +98,7 @@ public class BookChapter extends BookBase {
     public void onAddToDatabase(ContentValues values) {
         values.put(BookSetting.Chapter.LINK, chapterLink);
         values.put(BookSetting.Chapter.INDEX, chapterIndex);
+        values.put(BookSetting.Chapter.PAGE, chapterPage);
         values.put(BookSetting.Chapter.COUNT, mChapterList.size());
 
         /*
@@ -99,6 +112,7 @@ public class BookChapter extends BookBase {
         private String chapterLink;
         private int chapterCount;
         private int chapterIndex;
+        private int chapterPage;
         private boolean current;
 
         public Builder() {
@@ -117,6 +131,11 @@ public class BookChapter extends BookBase {
 
         public Builder setChapterIndex(int chapterIndex) {
             this.chapterIndex = chapterIndex;
+            return this;
+        }
+
+        public Builder setChapterPage(int chapterPage) {
+            this.chapterPage = chapterPage;
             return this;
         }
 

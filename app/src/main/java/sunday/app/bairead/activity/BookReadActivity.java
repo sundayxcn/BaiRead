@@ -22,6 +22,7 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
     public static final Point READ_POINT = new Point();
 
     private TextView mBookTitleTView;
+    private TextView mBookTextPageTView;
     private BookTextView mBookTextTView;
     private BookReadSettingPanelView settingPanel;
 
@@ -69,6 +70,11 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
         mBookTextTView.setOnChangeListener(this);
         bookReadPresenter = new BookReadPresenter(this,this,bookId);
 
+        int page = bookReadPresenter.getChapterPage();
+        mBookTextTView.initPage(page);
+
+        mBookTextPageTView = (TextView) findViewById(R.id.book_read_activity_book_page);
+
         getWindowManager().getDefaultDisplay().getSize(READ_POINT);
 
         settingPanel = (BookReadSettingPanelView) findViewById(R.id.book_read_setting_panel);
@@ -86,6 +92,7 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        bookReadPresenter.updateDataBookPage();
     }
 
     @Override
@@ -131,5 +138,14 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
     @Override
     public void onChapterPrev() {
         bookReadPresenter.ChapterPrev();
+    }
+
+    @Override
+    public void onPageChange(int page, int pageCount) {
+        bookReadPresenter.setChapterPage(page);
+        //page从0开始，所以+1来显示
+        page++;
+        String text = page + "/" + pageCount ;
+        mBookTextPageTView.setText(text);
     }
 }

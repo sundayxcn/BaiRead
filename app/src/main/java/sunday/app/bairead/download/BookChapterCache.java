@@ -162,10 +162,10 @@ public class BookChapterCache {
         final int index = bookinfo.bookChapter.getChapterIndex() + 1;
         if (index == bookinfo.bookChapter.getChapterCount()) {
             Toast.makeText(context, "已到最后一章", Toast.LENGTH_SHORT).show();
-            return true;
+            return false;
         }
         updateChapter(index);
-        return false;
+        return true;
     }
 
 
@@ -212,10 +212,10 @@ public class BookChapterCache {
         final int index = bookinfo.bookChapter.getChapterIndex() - 1;
         if (index < 0) {
             Toast.makeText(context, "已到第一章", Toast.LENGTH_SHORT).show();
-            return true;
+            return false;
         }
         updateChapter(index);
-        return false;
+        return true;
     }
 
     public void setChapter(int index) {
@@ -316,6 +316,7 @@ public class BookChapterCache {
         if(chapter != null) {
             chapter.setId(bookInfo.bookDetail.getId());
             chapter.setChapterIndex(bookInfo.bookChapter.getChapterIndex());
+            chapter.setChapterPage(bookInfo.bookChapter.getChapterPage());
         }
         return chapter;
     }

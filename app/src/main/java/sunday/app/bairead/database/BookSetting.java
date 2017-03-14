@@ -72,6 +72,7 @@ public class BookSetting {
         static final String  LINK = "chapterLink";
         static final String  COUNT = "chapterCount";
         static final String  INDEX = "chapterIndex";
+        static final String  PAGE = "chapterPage";
         static final String  CURRENT = "current";
 
     }

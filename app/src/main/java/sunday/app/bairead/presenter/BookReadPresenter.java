@@ -142,6 +142,11 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
         bookReadPresenterListener.onReadSizeChange(readSize);
     }
 
+    public int getChapterPage(){
+        return bookInfo.bookChapter.getChapterPage();
+    }
+
+
      /**
      * 正序返回true
      * @return
@@ -158,11 +163,8 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
 
 
     public void ChapterNext(){
-        Log.e("sunday","ChapterNext--begin");
         BookChapterCache.getInstance().nextChapter(context);
-        Log.e("sunday","ChapterNext--middeb");
         updateDataBookIndex();
-        Log.e("sunday","ChapterNext--End");
     }
 
     public void ChapterPrev(){
@@ -175,6 +177,11 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
         baiReadApplication.getBookModel().updateBookChapter(bookInfo.bookChapter);
     }
 
+
+    public void updateDataBookPage(){
+        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
+        baiReadApplication.getBookModel().updateBookChapter(bookInfo.bookChapter);
+    }
     public String getBookName(){
         //String name = bookInfo.bookDetail.getName();
         return bookInfo.bookDetail.getName();
@@ -202,6 +209,17 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
         BookChapterCache.getInstance().setChapter(chapterIndex);
         updateDataBookIndex();
     }
+
+    /**
+     * 记录章节阅读页面
+     * @param chapterPage 章节页面
+     * */
+    public void setChapterPage(int chapterPage){
+        bookInfo.bookChapter.setChapterPage(chapterPage);
+        //每次写page太频繁，只有退出阅读的时候才记录
+        //updateDataBookPage();
+    }
+
 
     public ArrayList<BookMarkInfo> getBookMarkList(){
         return bookMarkList;
