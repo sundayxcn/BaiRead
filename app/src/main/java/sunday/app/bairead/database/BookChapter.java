@@ -24,7 +24,7 @@ public class BookChapter extends BookBase {
     /**
      * 章节总数
      */
-    //private int chapterCount;
+    private int chapterCount;
 
     /**
      * 阅读章节
@@ -48,6 +48,7 @@ public class BookChapter extends BookBase {
         this.chapterLink = builder.chapterLink;
         this.chapterPage = builder.chapterPage;
         this.chapterIndex = builder.chapterIndex;
+        this.chapterCount = builder.chapterCount;
         this.current = builder.current;
     }
 
@@ -67,8 +68,12 @@ public class BookChapter extends BookBase {
         chapterPage = page;
     }
 
+    /**
+    * 书架要显示总章节，但是为了加快速度，章节列表没有在启动时加载，
+    * 所以count读写在数据库中，不是直接返回list的长度
+    * */
     public int getChapterCount() {
-        return mChapterList.size();
+        return chapterCount;
     }
 
     public String getChapterLink() {
@@ -89,6 +94,7 @@ public class BookChapter extends BookBase {
 
     public void setChapterList(ArrayList<Chapter> list) {
         mChapterList = list;
+        chapterCount = list.size();
     }
 
     public ArrayList<Chapter> getChapterList() {
@@ -99,7 +105,7 @@ public class BookChapter extends BookBase {
         values.put(BookSetting.Chapter.LINK, chapterLink);
         values.put(BookSetting.Chapter.INDEX, chapterIndex);
         values.put(BookSetting.Chapter.PAGE, chapterPage);
-        values.put(BookSetting.Chapter.COUNT, mChapterList.size());
+        values.put(BookSetting.Chapter.COUNT, chapterCount);
 
         /*
          *current 为真表示使用的是当前来源

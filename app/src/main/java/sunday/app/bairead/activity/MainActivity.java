@@ -291,8 +291,8 @@ public class MainActivity extends BaseActivity
         public void setValue(BookInfo bookInfo) {
             String name = bookInfo.bookDetail.getName();
             String chapterLatest = bookInfo.bookDetail.getChapterLatest();
-            int chapterIndex = 0;//bookInfo.bookChapter.getChapterIndex() + 1;
-            int chapterCount = 0;//bookInfo.bookChapter.getChapterCount();
+            int chapterIndex = bookInfo.bookChapter.getChapterIndex() + 1;
+            int chapterCount = bookInfo.bookChapter.getChapterCount();
             String chapterText = String.valueOf(chapterIndex) + "/" + String.valueOf(chapterCount);
             nameTView.setText(name);
             chapterLatestTView.setText(chapterLatest);

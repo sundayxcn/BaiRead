@@ -210,7 +210,7 @@ public class BookModel {
         cursor = cr.query(uri,null,"current = 1",null,null);
         final int chapterId = cursor.getColumnIndexOrThrow(BookSetting.Chapter.ID);
         final int chapterLink = cursor.getColumnIndexOrThrow(BookSetting.Chapter.LINK);
-        //final int chapterCount = cursor.getColumnIndexOrThrow(BookSetting.Chapter.COUNT);
+        final int chapterCount = cursor.getColumnIndexOrThrow(BookSetting.Chapter.COUNT);
         final int chapterIndex = cursor.getColumnIndexOrThrow(BookSetting.Chapter.INDEX);
         final int chapterPage = cursor.getColumnIndexOrThrow(BookSetting.Chapter.PAGE);
         try {
@@ -218,7 +218,7 @@ public class BookModel {
 
                 long id = cursor.getLong(chapterId);
                 String link = cursor.getString(chapterLink);
-                //int count = cursor.getInt(chapterCount);
+                int count = cursor.getInt(chapterCount);
                 int index = cursor.getInt(chapterIndex);
                 int page = cursor.getInt(chapterPage);
                 BookInfo bookInfo = getBookInfo(bookList,id);
@@ -237,6 +237,7 @@ public class BookModel {
                                 setChapterIndex(index).
                                 setChapterLink(link).
                                 setChapterPage(page).
+                                setChapterCount(count).
                                 build();
                         bookChapter.setId(id);
                         bookInfo.bookChapter = bookChapter;

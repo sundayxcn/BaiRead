@@ -2,66 +2,75 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="5dp"
     android:background="@drawable/background_stroke_white"
-    >
+    android:paddingLeft="5dp">
 
     <ImageView
-        android:layout_marginLeft="10dp"
-        android:layout_centerVertical="true"
-        android:scaleType="center"
         android:id="@+id/xlist_item_cover_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/default_book_detail_cover_image"
-        />
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:scaleType="center"
+        android:src="@drawable/default_book_detail_cover_image" />
 
-    <LinearLayout
-        android:gravity="center_vertical"
-        android:layout_marginLeft="20dp"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="80dp"
-        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
         android:layout_toRightOf="@id/xlist_item_cover_image"
-        >
+        android:gravity="center_vertical"
+        android:orientation="vertical">
 
         <TextView
-            android:textSize="16dp"
-            android:textColor="@color/colorDark"
             android:id="@+id/xlist_item_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorDark"
+            android:textSize="16dp" />
 
         <TextView
-            android:ellipsize="end"
-            android:lines="1"
-            android:textSize="14dp"
             android:id="@+id/xlist_item_chapter_latest"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/xlist_item_name"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textSize="14dp" />
+
+        <include android:id="@+id/xlist_item_serialise_end"
+            layout="@layout/text_view_serialise_shape_blue"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_below="@id/xlist_item_chapter_latest"
+            />
 
         <TextView
             android:id="@+id/xlist_item_update_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/xlist_item_chapter_latest"
+            android:layout_toRightOf="@id/xlist_item_serialise_end" />
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/xlist_item_chapter_index"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/xlist_item_chapter_latest"
+            android:layout_toRightOf="@id/xlist_item_update_time"
+             />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
     <TextView
-        android:layout_centerVertical="true"
         android:id="@+id/xlist_item_chapter_update"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/background_cycle_read"
         android:layout_width="7dp"
-        android:layout_height="7dp" />
+        android:layout_height="7dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/background_cycle_read" />
 
 
 </RelativeLayout>
