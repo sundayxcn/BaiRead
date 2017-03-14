@@ -20,8 +20,7 @@ import sunday.app.bairead.tool.ThreadManager;
 
 public class BookSearchPresenter {
     public static final String fileName = "searchHistory.txt";
-
-
+     
     public interface IBookSearchListener{
         void historyAddFinish(String name);
         void historyLoadFinish(ArrayList<String> list);
