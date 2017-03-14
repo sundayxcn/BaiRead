@@ -2,6 +2,7 @@ package sunday.app.bairead.download;
 
 import android.util.Log;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +23,7 @@ public abstract class BookSearchListener extends OKHttpListener {
     @Override
     public void onFailure(Call call, IOException e) {
         e.printStackTrace();
+        onError();
         Log.d("sunday","BookSearchListener--onFailure");
     }
 
@@ -29,15 +31,14 @@ public abstract class BookSearchListener extends OKHttpListener {
     @Override
     public void onResponse(Call call, Response response){
         try {
-            //FileManager.writeSearchFile(response.body().bytes());
-            //response.body().close();
-            String string = response.body().string();
-            response.body().close();
-            HashMap<String, String> resultMap = ParseXml.createParse(ParseSearch.class).from(string).parse();
+            FileManager.writeSearchFile(response.body().bytes());
+            HashMap<String, String> resultMap = ParseXml.createParse(ParseSearch.class).from(FileManager.SEARCH_FILE).parse();
             onFinish(resultMap);
         }catch (Exception e){
             e.printStackTrace();
             onFinish(null);
+        }finally {
+            response.body().close();
         }
     }
 

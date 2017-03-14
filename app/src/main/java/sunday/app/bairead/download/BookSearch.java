@@ -16,6 +16,8 @@ public class BookSearch {
     private ISearchListener searchListener;
     public interface ISearchListener{
         void searchFinish(BookInfo bookInfo);
+        void searchStart();
+        void searchError();
     }
 
     public BookSearch(ISearchListener searchListener){
@@ -33,7 +35,9 @@ public class BookSearch {
         OKhttpManager.getInstance().connectUrl(new BookSearchListener() {
             @Override
             public void onError() {
-
+                if(searchListener != null){
+                    searchListener.searchError();
+                }
             }
 
             @Override
@@ -59,7 +63,9 @@ public class BookSearch {
 
             @Override
             public void onStart() {
-
+                if(searchListener != null){
+                    searchListener.searchStart();
+                }
             }
 
         });
@@ -84,7 +90,9 @@ public class BookSearch {
 
             @Override
             public void onStart() {
-
+                    if(searchListener != null){
+                        searchListener.searchStart();
+                    }
             }
 
         });

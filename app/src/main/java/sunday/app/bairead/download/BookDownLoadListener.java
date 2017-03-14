@@ -65,14 +65,13 @@ public abstract class BookDownLoadListener extends OKHttpListener {
                 newBookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(fileName).parse();
                 newBookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).from(fileName).parse();
 
-                response.body().close();
-
-
                 onFinish(newBookInfo);
             }
         }catch (Exception e) {
-            onFinish(null);
+            onError();
             e.printStackTrace();
+        }finally {
+            response.body().close();
         }
     }
 

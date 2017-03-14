@@ -26,6 +26,7 @@ public class BookSearchPresenter {
         void historyLoadFinish(ArrayList<String> list);
         void bookSearchStart(ArrayList<BookInfo> bookInfoArrayList);
         void bookSearchFinish();
+        void bookSearchError();
     }
 
     private Handler handler = new Handler();
@@ -113,6 +114,16 @@ public class BookSearchPresenter {
                         bookSearchListener.bookSearchFinish();
                     }
                 });
+            }
+
+            @Override
+            public void searchStart() {
+
+            }
+
+            @Override
+            public void searchError() {
+                bookSearchListener.bookSearchError();
             }
         });
         bookSearch.searchTopWeb(name);

@@ -183,6 +183,8 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String name = (String) historyAdapter.getItem(position);
+                mBookTextEditText.setText(name);
+                mBookTextEditText.clearFocus();
                 bookSearchPresenter.searchBook(name);
             }
         });
@@ -221,6 +223,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
 
     @Override
     public void bookSearchStart(ArrayList<BookInfo> bookInfoArrayList) {
+        showProgressDialog();
         showHistoryPanel(false);
         showBookListPanel(true);
         bookAdapter = new BookAdapter(bookInfoArrayList);
@@ -229,7 +232,14 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
 
     @Override
     public void bookSearchFinish() {
+        hideProgressDialog();
         bookAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void bookSearchError() {
+        hideProgressDialog();
+        showToastNetworkUnconnect();
     }
 
     public void showHistoryPanel(boolean show){
