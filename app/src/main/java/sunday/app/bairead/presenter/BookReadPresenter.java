@@ -55,8 +55,7 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
     }
 
     @Override
-    public void cacheEnd(BookChapter.Chapter chapter) {
-        final BookTextView.ReadText readText = new BookTextView.ReadText(chapter);
+    public void cacheEnd(final BookChapterCache.ReadText readText) {
         runMainUiThread(new Runnable() {
             @Override
             public void run() {
@@ -66,10 +65,21 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
         });
     }
 
+    @Override
+    public void cacheError() {
+        runMainUiThread(new Runnable() {
+            @Override
+            public void run() {
+                bookReadPresenterListener.onLoadError();
+            }
+        });
+    }
+
     public interface IBookReadPresenterListener{
         void onLoadStart();
         void onLoadFinish();
-        void onReadTextChange(BookTextView.ReadText readText);
+        void onLoadError();
+        void onReadTextChange(BookChapterCache.ReadText readText);
         void onReadSizeChange(BookTextView.ReadSize readSize);
     }
 

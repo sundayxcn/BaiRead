@@ -186,16 +186,6 @@ public class BookTextView extends TextView {
         }
     }
 
-    public static class ReadText {
-        public String text;
-        public String title;
-
-        public ReadText(BookChapter.Chapter chapter) {
-            text = chapter.getText();
-            title = chapter.getTitle();
-        }
-    }
-
     class PageText {
         public int mHeight = 80;
         public ArrayList<String> lineTextList = new ArrayList<>();

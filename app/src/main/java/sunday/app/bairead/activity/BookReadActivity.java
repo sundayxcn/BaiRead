@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import sunday.app.bairead.R;
+import sunday.app.bairead.download.BookChapterCache;
 import sunday.app.bairead.view.BookReadSettingPanelView;
 import sunday.app.bairead.view.BookTextView;
 import sunday.app.bairead.presenter.BookReadPresenter;
@@ -37,7 +38,14 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
     }
 
     @Override
-    public void onReadTextChange(BookTextView.ReadText readText) {
+    public void onLoadError() {
+        hideProgressDialog();
+        showToast("网络未连接，没有下载章节，请检查网络后重试");
+
+    }
+
+    @Override
+    public void onReadTextChange(BookChapterCache.ReadText readText) {
         hideProgressDialog();
         mBookTitleTView.setText(readText.title);
         mBookTextTView.setText(readText.text);

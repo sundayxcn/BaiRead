@@ -1,8 +1,6 @@
 package sunday.app.bairead.download;
 
 import android.content.Context;
-import android.os.AsyncTask;
-import android.text.Html;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,6 +18,7 @@ import sunday.app.bairead.parse.ParseXml;
 import sunday.app.bairead.tool.FileManager;
 import sunday.app.bairead.tool.NewChapterShow;
 import sunday.app.bairead.tool.ThreadManager;
+import sunday.app.bairead.view.BookTextView;
 
 /**
  * Created by sunday on 2016/12/8.
@@ -123,7 +122,17 @@ public class BookChapterCache {
                 if (bookinfo.bookChapter.getChapterList() == null){
                     bookinfo.bookChapter = getChapter(bookinfo);
                 }
-                init();
+
+                /*
+                 * 网络中断导致获取失败后，清除本地章节link缓存
+                 * */
+                if(bookinfo.bookChapter == null){
+                    String fileName = BookDownLoadListener.getFullChapterFileName(bookinfo.bookDetail.getName());
+                    FileManager.deleteFile(fileName);
+                    chapterListener.cacheError();
+                }else{
+                    init();
+                }
                 chapterListener.initEnd();
             }
         });
@@ -159,6 +168,17 @@ public class BookChapterCache {
         return false;
     }
 
+
+    public static class ReadText {
+        public String text;
+        public String title;
+
+        public ReadText(BookChapter.Chapter chapter) {
+            text = chapter.getText();
+            title = chapter.getTitle();
+        }
+    }
+
     private void updateChapter(final int index){
         bookinfo.bookChapter.setChapterIndex(index);
         final BookChapter.Chapter chapter = bookinfo.bookChapter.getChapter(index);
@@ -168,13 +188,24 @@ public class BookChapterCache {
                 @Override
                 public void run() {
                     String text = getChapterText(index);
-                    chapter.setText(text);
-                    chapterListener.cacheEnd(chapter);
+                    /*
+                    网络中断导致获取不到，如果有缓存则清除缓存，重新下载
+                    * */
+                    if(text == null){
+                        String fileName = getChapterTextFileName(index);
+                        FileManager.deleteFile(fileName);
+                        chapterListener.cacheError();
+                    }else {
+                        chapter.setText(text);
+                        ReadText readText = new ReadText(chapter);
+                        chapterListener.cacheEnd(readText);
+                    }
                 }
             });
-        } else {
-            updateChapterCache(index);
         }
+
+        updateChapterCache(index);
+
     }
 
     public boolean prevChapter(Context context) {
@@ -210,7 +241,8 @@ public class BookChapterCache {
             });
             BookChapter.Chapter chapter = bookinfo.bookChapter.getCurrentChapter();
             if (chapterListener != null) {
-                chapterListener.cacheEnd(chapter);
+                ReadText readText = new ReadText(chapter);
+                chapterListener.cacheEnd(readText);
             }
         }
     }
@@ -265,12 +297,13 @@ public class BookChapterCache {
 
     private String getChapterTextByCurrent(int chapterIndex) {
         String fileName = getChapterTextFileName(chapterIndex);
+        String text;
         if (new File(fileName).exists()) {
-            String text = ParseXml.createParse(ParseChapterText.class).from(fileName).parse();
-            return text;
+            text = ParseXml.createParse(ParseChapterText.class).from(fileName).parse();
         } else {
-            return getChapterTextByOnline(chapterIndex, fileName);
+            text = getChapterTextByOnline(chapterIndex, fileName);
         }
+        return text;
     }
 
     private BookChapter getChapter(BookInfo bookInfo) {
@@ -280,7 +313,6 @@ public class BookChapterCache {
         } else {
             chapter = getChapterByCurrent(bookInfo);
         }
-        
         if(chapter != null) {
             chapter.setId(bookInfo.bookDetail.getId());
             chapter.setChapterIndex(bookInfo.bookChapter.getChapterIndex());
@@ -317,7 +349,9 @@ public class BookChapterCache {
 
         void cacheStart();
 
-        void cacheEnd(BookChapter.Chapter chapter);
+        void cacheEnd(ReadText readText);
+
+        void cacheError();
     }
 
     private static class BookChapterCacheHolder {
