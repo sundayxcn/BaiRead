@@ -32,10 +32,9 @@ public class BookcasePresenter{
     public interface IBookcasePresenterListener{
         void loadBookStart();
         void loadBookFinish(ArrayList<BookInfo> bookList);
+        void onCheckStart();
         void onCheckNewChapter(BookInfo bookInfo);
         void onCheckFinish();
-        void onCheckStart();
-        void loadError();
     }
 
     private IBookcasePresenterListener bookcasePresenterListener;
@@ -68,7 +67,17 @@ public class BookcasePresenter{
     private  synchronized boolean checkFinish(){
         Log.e("sunday","bookCount="+bookCount);
         bookCount--;
-        return bookCount <=0;
+        if(bookCount <=0){
+            runOnMainThread(new Runnable() {
+                @Override
+                public void run() {
+                    bookcasePresenterListener.onCheckFinish();
+                }
+            });
+            return true;
+        }else {
+            return false;
+        }
     }
 
     private synchronized void checkBookInit(int size){
@@ -80,50 +89,55 @@ public class BookcasePresenter{
         handler.post(runnable);
     }
 
-    public void checkNewChapter(ArrayList<BookInfo> list){
+    public void checkNewChapter(ArrayList<BookInfo> list) {
         final ArrayList<BookInfo> listAdapterList = list;
-        checkBookInit(list.size());
-        bookcasePresenterListener.onCheckStart();
-        BookDownLoad bookDownload = new BookDownLoad(new BookDownLoad.DownloadListener() {
-            @Override
-            public void onError() {
-                bookcasePresenterListener.loadError();
-            }
-
-            @Override
-            public void onNewChapter(final BookInfo bookInfo) {
-                if(checkFinish() /*|| bookInfo == null*/){
-                    runOnMainThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            bookcasePresenterListener.onCheckFinish();
-                        }
-                    });
-
+        BookDownLoad bookDownload = new BookDownLoad();
+        for (final BookInfo bookInfo : list) {
+            bookDownload.updateBookInfoAsync(bookInfo, new BookDownLoad.DownloadListener<BookInfo>(){
+                @Override
+                public String getFileName() {
+                    return BookDownLoad.getFullChapterFileName(bookInfo.bookDetail.getName());
                 }
-                for(BookInfo cBookInfo : listAdapterList){
-                    if(cBookInfo.bookDetail.getId() == bookInfo.bookDetail.getId()){
-                        if(!cBookInfo.bookDetail.getChapterLatest().equals(bookInfo.bookDetail.getChapterLatest())){
-                            cBookInfo.bookChapter.setChapterList(bookInfo.bookChapter.getChapterList());
-                            cBookInfo.bookDetail.setUpdateTime(bookInfo.bookDetail.getUpdateTime());
-                            cBookInfo.bookDetail.setChapterLatest(bookInfo.bookChapter.getLastChapter().getTitle());
-                            bookModel.updateBook(bookInfo);
-                            runOnMainThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    bookcasePresenterListener.onCheckNewChapter(bookInfo);
-                                }
-                            });
-                        }
 
-                        return;
+                @Override
+                public String getLink() {
+                    return bookInfo.bookChapter.getChapterLink();
+                }
+
+                @Override
+                public void onStart() {
+                    bookcasePresenterListener.onCheckStart();
+                    checkBookInit(listAdapterList.size());
+                }
+
+                @Override
+                public long getId() {
+                    return bookInfo.bookDetail.getId();
+                }
+
+                @Override
+                public void onResult(BookInfo newBookInfo) {
+                    if (!bookInfo.bookDetail.getChapterLatest().equals(newBookInfo.bookDetail.getChapterLatest())) {
+                        bookInfo.bookChapter.setChapterList(newBookInfo.bookChapter.getChapterList());
+                        bookInfo.bookDetail.setUpdateTime(newBookInfo.bookDetail.getUpdateTime());
+                        bookInfo.bookDetail.setChapterLatest(newBookInfo.bookChapter.getLastChapter().getTitle());
+                        bookModel.updateBook(bookInfo);
+                        runOnMainThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                bookcasePresenterListener.onCheckNewChapter(bookInfo);
+                            }
+                        });
                     }
+                    checkFinish();
                 }
-            }
-        });
 
-        for(BookInfo bookInfo : list) {
-            bookDownload.updateNewChapter(bookInfo);
+
+                @Override
+                public void onError(int errorCode) {
+                    checkFinish();
+                }
+            });
         }
     }
 

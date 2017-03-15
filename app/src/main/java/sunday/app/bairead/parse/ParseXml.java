@@ -46,8 +46,19 @@ public abstract class ParseXml {
 
     protected Document document;
 
-    public ParseXml from(File file,Charset charset){
+//    public ParseXml from(File file,Charset charset){
+//        try {
+//            document =  Jsoup.parse(file, charset.toString());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }finally {
+//            return this;
+//        }
+//    }
+
+    public ParseXml from(String fileName,Charset charset){
         try {
+            File file = new File(fileName);
             document =  Jsoup.parse(file, charset.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -55,6 +66,7 @@ public abstract class ParseXml {
             return this;
         }
     }
+
 
     public ParseXml from(String fileName){
         try {

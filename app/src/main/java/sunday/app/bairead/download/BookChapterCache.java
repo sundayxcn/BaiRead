@@ -127,8 +127,8 @@ public class BookChapterCache {
                  * 网络中断导致获取失败后，清除本地章节link缓存
                  * */
                 if(bookinfo.bookChapter == null){
-                    String fileName = BookDownLoadListener.getFullChapterFileName(bookinfo.bookDetail.getName());
-                    FileManager.deleteFile(fileName);
+//                    String fileName = BookDownLoadListener.getFullChapterFileName(bookinfo.bookDetail.getName());
+//                    FileManager.deleteFile(fileName);
                     chapterListener.cacheError();
                 }else{
                     init();
@@ -299,7 +299,7 @@ public class BookChapterCache {
 
     private String getChapterTextByOnline(int chapterIndex, String fileName) {
         String url = bookinfo.bookChapter.getChapter(chapterIndex).getLink();
-        return new BookDownLoad(null).updateBookChapterText(url, fileName);
+        return new BookDownLoad().updateBookChapterText(url, fileName);
     }
 
     private String getChapterTextByCurrent(int chapterIndex) {
@@ -329,7 +329,7 @@ public class BookChapterCache {
     }
 
     private BookChapter getChapterByOnline(BookInfo bookInfo, String fileName) {
-        BookDownLoad bookDownLoad = new BookDownLoad(null);
+        BookDownLoad bookDownLoad = new BookDownLoad();
         BookInfo newBookInfo = bookDownLoad.updateBookInfo(bookInfo, fileName);
         if(newBookInfo != null){
             return newBookInfo.bookChapter;
@@ -339,7 +339,7 @@ public class BookChapterCache {
     }
 
     private BookChapter getChapterByCurrent(BookInfo bookInfo) {
-        String fileName = BookDownLoadListener.getFullChapterFileName(bookInfo.bookDetail.getName());
+        String fileName = BookDownLoad.getFullChapterFileName(bookInfo.bookDetail.getName());
         File file = new File(fileName);
         if (file.exists()) {
             return ParseXml.createParse(ParseChapter.class).from(fileName).parse();

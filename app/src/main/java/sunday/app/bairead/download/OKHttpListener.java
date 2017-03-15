@@ -16,8 +16,9 @@ public abstract class OKHttpListener implements Callback {
 
     @Override
     public abstract void onResponse(Call call, Response response);
-
+    /**
+     * 需要访问的网站
+     * */
     public abstract String getLink();
 
-    public abstract void onStart();
 }

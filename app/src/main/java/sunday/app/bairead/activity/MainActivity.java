@@ -267,11 +267,6 @@ public class MainActivity extends BaseActivity
         NewChapterShow.getInstance().clearNewChapterList();
     }
 
-    @Override
-    public void loadError() {
-        hideProgressDialog();
-    }
-
     class ViewHolder {
         TextView nameTView;
         TextView chapterLatestTView;

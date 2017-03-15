@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.R;
+import sunday.app.bairead.download.BookDownLoad;
 import sunday.app.bairead.tool.Temp;
 import sunday.app.bairead.presenter.BookSearchPresenter;
 
@@ -28,7 +29,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  * Created by sunday on 2017/3/6.
  */
 
-public class BookSearchActivity extends BaseActivity implements BookSearchPresenter.IBookSearchListener{
+public class BookSearchActivity extends BaseActivity implements BookSearchPresenter.IBookSearchListener,BookSearchPresenter.IBookInfoListener{
 
 
     private BookSearchPresenter bookSearchPresenter;
@@ -48,6 +49,26 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
     private HistoryAdapter historyAdapter;
     private BookAdapter bookAdapter;
     private TextView mToastView;
+
+    @Override
+    public void bookInfoStart() {
+        showProgressDialog();
+    }
+
+    @Override
+    public void bookInfoFinish(BookInfo bookInfo) {
+        hideProgressDialog();
+        Temp.getInstance().setBookInfo(bookInfo);
+        Intent intent = new Intent();
+        intent.setClass(getBaseContext(), BookDetailActivity.class);
+        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    @Override
+    public void bookInfoError() {
+        hideProgressDialog();
+    }
 
 
     private class HistoryAdapter extends BaseAdapter{
@@ -112,20 +133,20 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
             chapterTimeTView = (TextView) parent.findViewById(R.id.search_fragment_list_item_chapter_time);
         }
 
-        void setValue(BookInfo bookInfo){
-            nameTView.setText(bookInfo.bookDetail.getName());
-            authorTView.setText(bookInfo.bookDetail.getAuthor());
+        void setValue(BookDownLoad.SearchResult searchResult){
+            nameTView.setText(searchResult.title);
+            authorTView.setText(searchResult.author);
             //sourceTView.setText(sourceTView.getText()+info.get);
-            chapterLatestTView.setText(bookInfo.bookDetail.getChapterLatest());
-            chapterTimeTView.setText(bookInfo.bookDetail.getUpdateTime());
+            //chapterLatestTView.setText(searchResult.updateTime);
+            chapterTimeTView.setText(searchResult.updateTime);
         }
 
     }
 
     private class BookAdapter extends BaseAdapter{
-        private ArrayList<BookInfo> list;
-        public BookAdapter(ArrayList<BookInfo> bookInfoArrayList){
-            list = bookInfoArrayList;
+        private ArrayList<BookDownLoad.SearchResult> list;
+        public BookAdapter(ArrayList<BookDownLoad.SearchResult> searchResults){
+            list = searchResults;
         }
 
         @Override
@@ -134,7 +155,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
         }
 
         @Override
-        public Object getItem(int position) {
+        public BookDownLoad.SearchResult getItem(int position) {
             return list.get(position);
         }
 
@@ -192,12 +213,8 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
         bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BookInfo bookInfo = (BookInfo) bookAdapter.getItem(position);
-                Temp.getInstance().setBookInfo(bookInfo);
-                Intent intent = new Intent();
-                intent.setClass(getBaseContext(), BookDetailActivity.class);
-                intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                BookDownLoad.SearchResult searchResult = bookAdapter.getItem(position);
+                bookSearchPresenter.updateBookDetail(searchResult,BookSearchActivity.this);
             }
         });
         mToastView = (TextView) findViewById(R.id.book_search_book_dont_find);
@@ -222,19 +239,19 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
     }
 
     @Override
-    public void bookSearchStart(ArrayList<BookInfo> bookInfoArrayList) {
+    public void bookSearchStart() {
         showProgressDialog();
         showHistoryPanel(false);
         showBookListPanel(true);
-        bookAdapter = new BookAdapter(bookInfoArrayList);
-        bookListView.setAdapter(bookAdapter);
     }
 
     @Override
-    public void bookSearchFinish() {
+    public void bookSearchFinish(ArrayList<BookDownLoad.SearchResult> searchResultArrayList) {
         hideProgressDialog();
-        bookAdapter.notifyDataSetChanged();
+        bookAdapter = new BookAdapter(searchResultArrayList);
+        bookListView.setAdapter(bookAdapter);
     }
+
 
     @Override
     public void bookSearchError() {
