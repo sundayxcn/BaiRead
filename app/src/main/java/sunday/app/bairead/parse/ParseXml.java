@@ -31,30 +31,8 @@ public abstract class ParseXml {
 
     public  abstract <T> T parse();
 
-//    public  abstract <T> T parse(File file);
-
-//    public Document getDocument(String fileName){
-//        try {
-//            File input = new File(fileName);
-//            return Jsoup.parse(input, Charset.UTF8.toString());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
-
     protected Document document;
 
-//    public ParseXml from(File file,Charset charset){
-//        try {
-//            document =  Jsoup.parse(file, charset.toString());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }finally {
-//            return this;
-//        }
-//    }
 
     public ParseXml from(String fileName,Charset charset){
         try {
@@ -79,33 +57,15 @@ public abstract class ParseXml {
         }
     }
 
-
-//    public ParseXml from(String html){
-//        document =  Jsoup.parse(html);
-//        return this;
-//    }
-
-
-//    public Document getDocument(String fileName,Charset charset){
-//        try {
-//            File input = new File(fileName);
-//            return Jsoup.parse(input, charset.toString());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
-
     public static <T extends ParseXml> T createParse(Class<T> clz){
-        ParseXml parseXml = null;
+        T parseXml = null;
         try{
-            parseXml = (ParseXml) Class.forName(clz.getName()).newInstance();
+            parseXml = (T) Class.forName(clz.getName()).newInstance();
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        return  (T) parseXml;
+        return  parseXml;
     }
 
 

@@ -9,6 +9,7 @@ import org.apache.http.util.EncodingUtils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -135,20 +136,10 @@ public class FileManager {
     }
 
 
-    public static void writeByte(String fileName, byte[] bytes) {
-
-        try {
+    public static void writeByte(String fileName, byte[] bytes) throws IOException {
             FileOutputStream fileOutputStream = new FileOutputStream(fileName);
             fileOutputStream.write(bytes);
             fileOutputStream.close();
-            //Log.e(TAG,"writeByte"+fileName+"  bytes.length=="+bytes.length);
-        } catch(IOException e){
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-
-        }
     }
 
     /**

@@ -110,7 +110,7 @@ public class BookSearchPresenter {
     public void searchBook(final String name){
 
         BookDownLoad bookDownLoad = new BookDownLoad();
-        bookDownLoad.updateSearchAsync(new BookDownLoad.DownloadListener<ArrayList>() {
+        bookDownLoad.updateSearchAsync(new BookDownLoad.DownloadListener<ArrayList<BookDownLoad.SearchResult>>() {
 
             @Override
             public String getFileName() {
@@ -156,8 +156,8 @@ public class BookSearchPresenter {
             }
 
             @Override
-            public void onResult(ArrayList arrayList) {
-                final ArrayList<BookDownLoad.SearchResult> list = (ArrayList< BookDownLoad.SearchResult>)arrayList;
+            public void onResult(ArrayList< BookDownLoad.SearchResult> arrayList) {
+                final ArrayList<BookDownLoad.SearchResult> list = arrayList;
                 runMainUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -171,7 +171,7 @@ public class BookSearchPresenter {
 
     public void updateBookDetail(final BookDownLoad.SearchResult searchResult,final IBookInfoListener bookInfoListener){
         BookDownLoad bookDownLoad = new BookDownLoad();
-        bookDownLoad.updateBookInfoAsync(null, new BookDownLoad.DownloadListener<BookInfo>() {
+        bookDownLoad.updateBookInfoAsync(new BookDownLoad.DownloadListener<BookInfo>() {
             @Override
             public long getId() {
                 return 0;

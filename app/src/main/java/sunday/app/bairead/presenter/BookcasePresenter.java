@@ -91,12 +91,16 @@ public class BookcasePresenter{
 
     public void checkNewChapter(ArrayList<BookInfo> list) {
         final ArrayList<BookInfo> listAdapterList = list;
+        bookcasePresenterListener.onCheckStart();
+        checkBookInit(listAdapterList.size());
         BookDownLoad bookDownload = new BookDownLoad();
         for (final BookInfo bookInfo : list) {
-            bookDownload.updateBookInfoAsync(bookInfo, new BookDownLoad.DownloadListener<BookInfo>(){
+            bookDownload.updateBookInfoAsync(new BookDownLoad.DownloadListener<BookInfo>(){
                 @Override
                 public String getFileName() {
-                    return BookDownLoad.getFullChapterFileName(bookInfo.bookDetail.getName());
+                    String bookName = bookInfo.bookDetail.getName();
+                    BookDownLoad.createFileDir(bookName);
+                    return BookDownLoad.getFullChapterFileName(bookName);
                 }
 
                 @Override
@@ -106,8 +110,7 @@ public class BookcasePresenter{
 
                 @Override
                 public void onStart() {
-                    bookcasePresenterListener.onCheckStart();
-                    checkBookInit(listAdapterList.size());
+
                 }
 
                 @Override

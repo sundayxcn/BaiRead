@@ -71,10 +71,10 @@ public class BookDownLoad {
 
         void onError(int errorCode);
 
-        void onResult(T t);
+        void onResult(T result);
     }
 
-    private String createFileDir(String bookName){
+    public  static String createFileDir(String bookName){
         return FileManager.createDir(FileManager.PATH +"/"+bookName);
     }
 
@@ -82,7 +82,7 @@ public class BookDownLoad {
         return FileManager.PATH + "/" + bookName + "/" + BookChapter.FileName;
     }
 
-    public void  updateBookInfoAsync(final BookInfo bookInfo, final DownloadListener<BookInfo> downloadListener){
+    public void  updateBookInfoAsync(final DownloadListener<BookInfo> downloadListener){
         if(downloadListener == null) throw new NullPointerException("BookDownLoad 缺少不为空的回调方法");
         downloadListener.onStart();
         OKhttpManager.getInstance().connectUrl(new OKHttpListener() {
@@ -101,7 +101,7 @@ public class BookDownLoad {
                         BookInfo newBookInfo = parseBookInfo(fileName);
                         if(newBookInfo != null){
                             newBookInfo.bookDetail.setId(getId());
-                            downloadListener.onResult(bookInfo);
+                            downloadListener.onResult(newBookInfo);
                             return;
                         }else{
                             errorCode = ERROR_ParseHtmlFailed;
@@ -179,7 +179,7 @@ public class BookDownLoad {
         return null;
     }
 
-    public void updateSearchAsync(final DownloadListener<ArrayList> downloadSearchListener){
+    public void updateSearchAsync(final DownloadListener<ArrayList<SearchResult>> downloadSearchListener){
         downloadSearchListener.onStart();
         OKhttpManager.getInstance().connectUrl(new OKHttpListener() {
             @Override
