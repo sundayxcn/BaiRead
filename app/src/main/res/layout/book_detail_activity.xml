@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="20dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:layout_marginBottom="20dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -13,20 +13,20 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_gravity="center"
             android:id="@+id/book_detail_activity_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:scaleType="center"
             android:src="@drawable/default_book_detail_cover_image" />
 
         <LinearLayout
-            android:layout_gravity="center"
-            android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
             <TextView
@@ -35,32 +35,50 @@
                 android:layout_height="wrap_content"
                 android:textSize="18dp" />
 
+            <RelativeLayout
+                android:paddingTop="10dp"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <include
+                    android:id="@+id/book_detail_activity_type"
+                    layout="@layout/book_type_view" />
+
+                <include
+                    android:id="@+id/book_detail_activity_status"
+                    layout="@layout/book_status_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/book_detail_activity_type" />
+
+            </RelativeLayout>
+
 
             <TextView
-                android:layout_marginTop="10dp"
                 android:id="@+id/book_detail_activity_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="@string/search_item_author_text"
                 android:textSize="16dp" />
 
             <TextView
-                android:layout_marginTop="10dp"
                 android:id="@+id/book_detail_activity_chapter_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="@string/search_item_author_update_time"
                 android:textSize="14dp" />
 
             <TextView
-                android:layout_marginTop="10dp"
                 android:id="@+id/book_detail_activity_chapter_latest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="@string/search_item_author_chapter_latest"
                 android:textSize="14dp" />
-
-
 
             <TextView
                 android:id="@+id/book_detail_activity_source"
@@ -77,49 +95,47 @@
 
 
     <TextView
+        android:id="@+id/book_detail_activity_description"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:background="@drawable/background_shape_white"
         android:ellipsize="end"
-        android:textSize="14dp"
-        android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:background="@drawable/background_shape_white"
-        android:id="@+id/book_detail_activity_description"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp" />
-
+        android:paddingTop="10dp"
+        android:textSize="14dp" />
 
 
     <TextView
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <Button
-            android:layout_alignParentLeft="true"
-            android:text="@string/search_book_detail_button_read_text"
             android:id="@+id/book_detail_activity_button_read"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="@string/search_book_detail_button_read_text" />
 
         <Button
-            android:layout_centerInParent="true"
-            android:text="@string/search_book_detail_button_bookcase_text"
             android:id="@+id/book_detail_activity_button_case"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/search_book_detail_button_bookcase_text" />
 
         <Button
-            android:layout_alignParentRight="true"
-            android:text="@string/search_book_detail_button_cache_text"
             android:id="@+id/book_detail_activity_button_cache"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/search_book_detail_button_cache_text" />
 
     </RelativeLayout>
 

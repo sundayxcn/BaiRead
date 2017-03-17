@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
 import com.tencent.bugly.crashreport.CrashReport;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import sunday.app.bairead.tool.NetworkTool;
@@ -53,6 +54,12 @@ public class BaiReadApplication extends Application {
 //        FeedbackAPI.init(this, ALIBAICHUAN_APP_ID);
 
         bookModel = new BookModel(this);
+
+        File file = getCacheDir();
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        
         registerReceiver();
     }
 

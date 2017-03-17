@@ -1,5 +1,7 @@
 package sunday.app.bairead.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +26,9 @@ import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
 import sunday.app.bairead.database.BookChapter;
 import sunday.app.bairead.database.BookInfo;
@@ -43,10 +48,76 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, BookcasePresenter.IBookcasePresenterListener {
 
 
+    public static final int OPERATOR_TOP = 0;
+    public static final int OPERATOR_DETAIL = 1;
+    public static final int OPERATOR_CACHE = 2;
+    public static final int OPERATOR_DELETE = 3;
+    public static final int OPERATOR_ALL = 4;
+
+    //    private void init(){
+//        HashMap<Integer,Comparator<BookInfo>> hashMap = new HashMap<>();
+//        hashMap.put(PreferenceSetting.KEY_CASE_LIST_ORDER_DEFAULT,comparatorDefault);
+//    }
+    public final String[] operatorStringArray = {"置顶", "书籍详情", "缓存全本", "删除本书", "批量操作"};
     private BookcasePresenter bookcasePresenter;
     private ListView mListView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private BookListAdapter booklistAdapter = new BookListAdapter();
+    private AlertDialog caseOperatorDialog;
+    private OperatorListener operatorListener = new OperatorListener();
+    private Comparator<BookInfo> comparatorDefault = new Comparator<BookInfo>() {
+        @Override
+        public int compare(BookInfo a, BookInfo b) {
+            if (a.bookDetail.topCase == b.bookDetail.topCase) {
+                return a.bookDetail.getId() < b.bookDetail.getId() ? -1 : 1;
+            } else if (a.bookDetail.topCase) {
+                return -1;
+            } else {
+                return 1;
+            }
+
+        }
+    };
+    private Comparator<BookInfo> comparatorUpdateTime = new Comparator<BookInfo>() {
+        @Override
+        public int compare(BookInfo a, BookInfo b) {
+
+            if (a.bookDetail.topCase == b.bookDetail.topCase) {
+                long aTime = TimeFormat.getStampTime(a.bookDetail.getUpdateTime());
+                long bTime = TimeFormat.getStampTime(b.bookDetail.getUpdateTime());
+                return aTime > bTime ? -1 : 1;
+            } else if (a.bookDetail.topCase) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+    };
+    private Comparator<BookInfo> comparatorChapterCount = new Comparator<BookInfo>() {
+        @Override
+        public int compare(BookInfo a, BookInfo b) {
+
+            if (a.bookDetail.topCase == b.bookDetail.topCase) {
+                return a.bookChapter.getChapterCount() > b.bookChapter.getChapterCount() ? -1 : 1;
+            } else if (a.bookDetail.topCase) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+    };
+    private Comparator<BookInfo> comparatorAuthor = new Comparator<BookInfo>() {
+        @Override
+        public int compare(BookInfo a, BookInfo b) {
+            if (a.bookDetail.topCase == b.bookDetail.topCase) {
+                return a.bookDetail.getAuthor().compareTo(b.bookDetail.getAuthor());
+            } else if (a.bookDetail.topCase) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +138,7 @@ public class MainActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        if(PreferenceSetting.getInstance(this).isFirstRun()){
+        if (PreferenceSetting.getInstance(this).isFirstRun()) {
             PreferenceSetting.getInstance(this).setFirstRunFalse();
             firstRunWork();
         }
@@ -76,15 +147,14 @@ public class MainActivity extends BaseActivity
         setupView();
         bookcasePresenter = new BookcasePresenter(this, this);
         bookcasePresenter.init();
-
+//        init();
     }
 
-
-    private void firstRunWork(){
+    private void firstRunWork() {
         final File baseDir = new File(FileManager.PATH);
-        if(baseDir.exists()){
+        if (baseDir.exists()) {
             final int bookCount = baseDir.listFiles().length;
-            if(bookCount > 0) {
+            if (bookCount > 0) {
                 showConfirmDialog("检测到本地有缓存书籍，是否加载", "加载", "不加载", new DialogListenerIm() {
                     @Override
                     public void onConfirm() {
@@ -102,9 +172,9 @@ public class MainActivity extends BaseActivity
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(isConnect()) {
+                if (isConnect()) {
                     bookcasePresenter.checkNewChapter(booklistAdapter.getBookInfoList());
-                }else{
+                } else {
                     swipeRefreshLayout.setRefreshing(false);
                     showToastNetworkUnconnect();
                 }
@@ -121,29 +191,33 @@ public class MainActivity extends BaseActivity
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                final int fPosition = position;
-                showConfirmDialog("是否从书架中删除",new DialogListenerIm() {
-                    @Override
-                    public void onConfirm() {
-                        BookInfo bookInfo = (BookInfo) booklistAdapter.getItem(fPosition);
-                        booklistAdapter.getBookInfoList().remove(bookInfo);
-                        booklistAdapter.notifyDataSetChanged();
-
-                        bookcasePresenter.deleteBook(bookInfo);
-                    }
-
-                });
+                BookInfo bookInfo = (BookInfo) booklistAdapter.getItem(position);
+                showCaseOperatorDialog(bookInfo);
                 return true;
             }
         });
 
     }
 
+    public void showCaseOperatorDialog(BookInfo bookInfo) {
+        String bookName = bookInfo.bookDetail.getName();
+        operatorListener.setBookInfo(bookInfo);
+        if(bookInfo.bookDetail.topCase){
+            operatorStringArray[0] = "取消置顶";
+        }
+        if (caseOperatorDialog == null) {
+            caseOperatorDialog = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                    .setTitle(bookName)
+                    .setItems(operatorStringArray, operatorListener).create();
+        }
+        caseOperatorDialog.show();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         //解决阅读完后回到书架界面 当前章节显示未更新
-        if(booklistAdapter != null){
+        if (booklistAdapter != null) {
             booklistAdapter.notifyDataSetChanged();
         }
     }
@@ -153,7 +227,7 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -172,17 +246,54 @@ public class MainActivity extends BaseActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.action_search) {
+        if (id == R.id.action_search) {
             Intent intent = new Intent();
             intent.setClass(this, BookSearchActivity.class);
             startActivity(intent);
             return true;
+        } else {
+            int order = PreferenceSetting.KEY_CASE_LIST_ORDER_DEFAULT;
+            if (id == R.id.action_order_add_book) {
+                order = PreferenceSetting.KEY_CASE_LIST_ORDER_DEFAULT;
+            } else if (id == R.id.action_order_author) {
+                order = PreferenceSetting.KEY_CASE_LIST_ORDER_AUTHOR;
+            } else if (id == R.id.action_order_chapter_count) {
+                order = PreferenceSetting.KEY_CASE_LIST_ORDER_CHAPTER_COUNT;
+            } else if (id == R.id.action_order_update_time) {
+                order = PreferenceSetting.KEY_CASE_LIST_ORDER_UPDATE_TIME;
+            }
+            PreferenceSetting.getInstance(this).putIntValue(PreferenceSetting.KEY_CASE_LIST_ORDER, order);
+            reOrderList(order);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void reOrderList() {
+        int order = PreferenceSetting.getInstance(this).getIntValue(PreferenceSetting.KEY_CASE_LIST_ORDER);
+        reOrderList(order);
+    }
+
+    public void reOrderList(int order) {
+        ArrayList<BookInfo> bookInfoArrayList = booklistAdapter.getBookInfoList();
+        Collections.sort(bookInfoArrayList, getComparator(order));
+        booklistAdapter.notifyDataSetChanged();
+    }
+
+    private Comparator<BookInfo> getComparator(int order) {
+        Comparator<BookInfo> comparator;
+        if (order == PreferenceSetting.KEY_CASE_LIST_ORDER_DEFAULT) {
+            comparator = comparatorDefault;
+        } else if (order == PreferenceSetting.KEY_CASE_LIST_ORDER_UPDATE_TIME) {
+            comparator = comparatorUpdateTime;
+        } else if (order == PreferenceSetting.KEY_CASE_LIST_ORDER_CHAPTER_COUNT) {
+            comparator = comparatorChapterCount;
+        } else if (order == PreferenceSetting.KEY_CASE_LIST_ORDER_AUTHOR) {
+            comparator = comparatorAuthor;
+        } else {
+            comparator = comparatorDefault;
+        }
+        return comparator;
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -192,7 +303,7 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_clear_cache) {
-            showConfirmDialog("是否删除所有的数据缓存",new DialogListenerIm(){
+            showConfirmDialog("是否删除所有的数据缓存", new DialogListenerIm() {
                 @Override
                 public void onConfirmAsync() {
                     super.onConfirmAsync();
@@ -200,7 +311,7 @@ public class MainActivity extends BaseActivity
                 }
             });
         } else if (id == R.id.nav_restore_config) {
-            showConfirmDialog("恢复默认设置",new DialogListenerIm(){
+            showConfirmDialog("恢复默认设置", new DialogListenerIm() {
                 @Override
                 public void onConfirmAsync() {
                     super.onConfirmAsync();
@@ -229,7 +340,6 @@ public class MainActivity extends BaseActivity
         super.onDestroy();
     }
 
-
     @Override
     public void loadBookStart() {
         showProgressDialog();
@@ -239,13 +349,14 @@ public class MainActivity extends BaseActivity
     public void loadBookFinish(ArrayList<BookInfo> bookList) {
         booklistAdapter = new BookListAdapter();
         booklistAdapter.setBookInfoList(bookList);
+        reOrderList();
         mListView.setAdapter(booklistAdapter);
         hideProgressDialog();
     }
 
     @Override
     public void onCheckNewChapter(BookInfo bookInfo) {
-        if(bookInfo != null) {
+        if (bookInfo != null) {
             NewChapterShow.getInstance().addNewChapter(bookInfo.bookDetail.getId(), bookInfo.bookChapter.getChapterCount() - 1);
         }
         booklistAdapter.notifyDataSetChanged();
@@ -253,9 +364,9 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onCheckFinish() {
-        if(NewChapterShow.getInstance().isHaveNewChapter()){
+        if (NewChapterShow.getInstance().isHaveNewChapter()) {
             showToast("更新完毕");
-        }else{
+        } else {
             showToast("更新完毕,无新章节");
         }
 
@@ -265,6 +376,39 @@ public class MainActivity extends BaseActivity
     @Override
     public void onCheckStart() {
         NewChapterShow.getInstance().clearNewChapterList();
+    }
+
+    class OperatorListener implements DialogInterface.OnClickListener {
+        private BookInfo bookInfo;
+
+        private void setBookInfo(BookInfo bookInfo) {
+            this.bookInfo = bookInfo;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case OPERATOR_TOP:
+                    boolean topCase = bookInfo.bookDetail.isTopCase();
+                    bookInfo.bookDetail.setTopCase(!topCase);
+                    reOrderList();
+                    bookcasePresenter.updateBook(bookInfo);
+                    break;
+                case OPERATOR_DETAIL:
+                    BookSearchActivity.goBookDetail(getBaseContext(), bookInfo);
+                    break;
+                case OPERATOR_CACHE:
+                    break;
+                case OPERATOR_DELETE:
+                    booklistAdapter.getBookInfoList().remove(bookInfo);
+                    booklistAdapter.notifyDataSetChanged();
+                    bookcasePresenter.deleteBook(bookInfo);
+                    break;
+                case OPERATOR_ALL:
+                    break;
+                default:
+            }
+        }
     }
 
     class ViewHolder {
@@ -346,11 +490,11 @@ public class MainActivity extends BaseActivity
     }
 
 
-    private class FirstRunAsyncTask extends AsyncTask<Void,String,Void>{
+    private class FirstRunAsyncTask extends AsyncTask<Void, String, Void> {
 
         private File baseDir;
 
-        FirstRunAsyncTask(File fileDir){
+        FirstRunAsyncTask(File fileDir) {
             baseDir = fileDir;
         }
 
@@ -366,9 +510,9 @@ public class MainActivity extends BaseActivity
             FileFilter fileFilter = new FileFilter() {
                 @Override
                 public boolean accept(File pathname) {
-                    if(pathname.isDirectory() && !pathname.getName().contains("cache")) {
+                    if (pathname.isDirectory() && !pathname.getName().contains("cache")) {
                         return true;
-                    }else{
+                    } else {
                         return false;
                     }
 

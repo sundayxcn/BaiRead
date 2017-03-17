@@ -44,6 +44,13 @@ public class BookSetting {
         static final String UPDATE_TIME = "updateTime";
 
         static final String TYPE = "type";
+
+        static final String STATUS = "status";
+
+        static final String TOP_CASE = "topCase";
+
+        static final String OTHER = "other";
+
     }
 
 

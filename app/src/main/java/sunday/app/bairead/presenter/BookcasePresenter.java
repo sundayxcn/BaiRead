@@ -50,11 +50,11 @@ public class BookcasePresenter{
         ThreadManager.getInstance().work(new Runnable() {
             @Override
             public void run() {
-                final ArrayList<BookInfo> bookInfo = bookModel.loadAllBook();
+                final ArrayList<BookInfo> bookInfoArrayList = bookModel.loadAllBook();
                 runOnMainThread(new Runnable() {
                     @Override
                     public void run() {
-                        bookcasePresenterListener.loadBookFinish(bookInfo);
+                        bookcasePresenterListener.loadBookFinish(bookInfoArrayList);
                     }
                 });
 
@@ -142,6 +142,17 @@ public class BookcasePresenter{
                 }
             });
         }
+    }
+
+
+    public void updateBook(final BookInfo bookInfo){
+        ThreadManager.getInstance().work(new Runnable() {
+            @Override
+            public void run() {
+                bookModel.updateBook(bookInfo);
+            }
+        });
+
     }
 
     public void deleteBook(BookInfo bookInfo){

@@ -34,6 +34,13 @@ public class BookDetailPresenter {
         bookModel.addBook(bookInfo);
     }
 
+    public boolean isBookCase(BookInfo bookInfo){
+        BaiReadApplication application  = (BaiReadApplication) context.getApplicationContext();
+        BookModel bookModel = application.getBookModel();
+        return bookModel.isBookCase(bookInfo.bookDetail.getId());
+    }
+
+
     public void cacheBook(BookInfo bookInfo){
 
     }

@@ -176,7 +176,10 @@ public class BookContentProvider extends ContentProvider {
                     "description text,"+
                     "chapterLatest text,"+
                     "updateTime text,"+
-                    "type text"+
+                    "type integer,"+
+                    "status integer,"+
+                    "topCase integer,"+
+                    "other integer"+
                     ");";
 
             String bookChapterSql = "create table bookChapter (" +

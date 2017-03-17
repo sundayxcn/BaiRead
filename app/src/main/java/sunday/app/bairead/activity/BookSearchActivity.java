@@ -1,5 +1,7 @@
 package sunday.app.bairead.activity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -58,11 +60,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
     @Override
     public void bookInfoFinish(BookInfo bookInfo) {
         hideProgressDialog();
-        Temp.getInstance().setBookInfo(bookInfo);
-        Intent intent = new Intent();
-        intent.setClass(getBaseContext(), BookDetailActivity.class);
-        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        goBookDetail(this,bookInfo);
     }
 
     @Override
@@ -70,6 +68,13 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
         hideProgressDialog();
     }
 
+    public static void goBookDetail(Context context,BookInfo bookInfo){
+        Temp.getInstance().setBookInfo(bookInfo);
+        Intent intent = new Intent();
+        intent.setClass(context, BookDetailActivity.class);
+        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
 
     private class HistoryAdapter extends BaseAdapter{
 
@@ -187,7 +192,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
                 mBookTextEditText.setText("");
                 mBookTextEditText.clearFocus();
                 bookSearchPresenter.addSearchHistory(getBaseContext(),name);
-                bookSearchPresenter.searchBook(name);
+                bookSearchPresenter.searchBook(BookSearchActivity.this,name);
             }
         });
         historyTextView = (TextView) findViewById(R.id.book_search_history);
@@ -206,7 +211,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
                 String name = (String) historyAdapter.getItem(position);
                 mBookTextEditText.setText(name);
                 mBookTextEditText.clearFocus();
-                bookSearchPresenter.searchBook(name);
+                bookSearchPresenter.searchBook(BookSearchActivity.this,name);
             }
         });
         bookListView = (ListView) findViewById(R.id.book_search_book_list_view);

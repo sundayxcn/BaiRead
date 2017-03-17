@@ -7,11 +7,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import sunday.app.bairead.activity.BookDetailActivity;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.WebInfo;
 import sunday.app.bairead.download.BookDownLoad;
 import sunday.app.bairead.tool.FileManager;
+import sunday.app.bairead.tool.Temp;
 import sunday.app.bairead.tool.ThreadManager;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by sunday on 2017/3/6.
@@ -72,11 +76,7 @@ public class BookSearchPresenter {
     public void addSearchHistory(Context context,final String name){
         if(historyList.contains(name)){
         }else {
-            File file = context.getCacheDir();
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-            final String fullName = file.getAbsolutePath() + "/" + fileName;
+            final String fullName = context.getCacheDir().getAbsolutePath() + "/" + fileName;
             ThreadManager.getInstance().work(new Runnable() {
                 @Override
                 public void run() {
@@ -107,8 +107,7 @@ public class BookSearchPresenter {
     }
 
 
-    public void searchBook(final String name){
-
+    public void searchBook(Context context,final String name){
         BookDownLoad bookDownLoad = new BookDownLoad();
         bookDownLoad.updateSearchAsync(new BookDownLoad.DownloadListener<ArrayList<BookDownLoad.SearchResult>>() {
 
@@ -178,8 +177,14 @@ public class BookSearchPresenter {
             }
 
             @Override
-            public void onResult(BookInfo newBookInfo) {
-                bookInfoListener.bookInfoFinish(newBookInfo);
+            public void onResult(final BookInfo newBookInfo) {
+                runMainUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        bookInfoListener.bookInfoFinish(newBookInfo);
+                    }
+                });
+
             }
 
             @Override

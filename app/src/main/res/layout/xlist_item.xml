@@ -38,19 +38,12 @@
             android:lines="1"
             android:textSize="14dp" />
 
-        <include android:id="@+id/xlist_item_serialise_end"
-            layout="@layout/text_view_serialise_shape_blue"
-            android:layout_width="17dp"
-            android:layout_height="17dp"
-            android:layout_below="@id/xlist_item_chapter_latest"
-            />
-
         <TextView
             android:id="@+id/xlist_item_update_time"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/xlist_item_chapter_latest"
-            android:layout_toRightOf="@id/xlist_item_serialise_end" />
+             />
 
         <TextView
             android:id="@+id/xlist_item_chapter_index"

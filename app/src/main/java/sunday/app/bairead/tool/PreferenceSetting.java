@@ -32,6 +32,16 @@ public class PreferenceSetting {
      * */
     public static final String KEY_CHAPTER_ORDER = "chapterOrder";
 
+    public static final String KEY_CASE_LIST_ORDER = "bookCaseOrder";
+
+    public static final int KEY_CASE_LIST_ORDER_DEFAULT = 0;
+
+    public static final int KEY_CASE_LIST_ORDER_UPDATE_TIME = KEY_CASE_LIST_ORDER_DEFAULT + 1;
+
+    public static final int KEY_CASE_LIST_ORDER_CHAPTER_COUNT = KEY_CASE_LIST_ORDER_UPDATE_TIME + 1;
+
+    public static final int KEY_CASE_LIST_ORDER_AUTHOR = KEY_CASE_LIST_ORDER_CHAPTER_COUNT + 1;
+
 
     public static SharedPreferences sharedPreferences;
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <item
         android:id="@+id/action_search"
@@ -9,8 +10,27 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_order_add_book"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:title="@string/action_order_add_book_text"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/action_order_update_time"
+        android:orderInCategory="100"
+        android:title="@string/action_order_update_time_text"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/action_order_chapter_count"
+        android:orderInCategory="100"
+        android:title="@string/action_order_chapter_count_text"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/action_order_author"
+        android:orderInCategory="100"
+        android:title="@string/action_order_author_text"
+        app:showAsAction="collapseActionView" />
+
 </menu>

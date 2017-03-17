@@ -46,6 +46,21 @@ public class TimeFormat {
 
 
     /**
+     * 返回时间戳
+     * */
+    public static long getStampTime(String timeString){
+        String format = getFormatString(timeString);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        try {
+            Date date = simpleDateFormat.parse(timeString);
+            return date.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
      * 将解析得到的时间字符串转换为更新时间。例：
      * 更新时间 2017-3-8
      * 系统时间 2017-3-9
@@ -62,11 +77,11 @@ public class TimeFormat {
             long time = currentTime - timestamp;
             int hour = (int) (time / HOUR_TO_MILL);
             int day = hour / 24;
-            if(day >  365){
+            if(day >=  365){
                 string = "1年前";
-            }else if(day > 30){
+            }else if(day >= 30){
                 string = day / 30 + "月前";
-            }else if(day > 1){
+            }else if(day >= 1){
                 string = day +"天前";
             }else{
                 string  = hour +"小时";

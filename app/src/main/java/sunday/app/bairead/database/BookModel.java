@@ -121,8 +121,10 @@ public class BookModel {
         ContentValues values = new ContentValues();
         String latest = bookInfo.bookDetail.getChapterLatest();
         String updateTime = bookInfo.bookDetail.getUpdateTime();
+        boolean topCase = bookInfo.bookDetail.isTopCase();
         values.put(BookSetting.Detail.CHAPTER_LATEST,latest);
         values.put(BookSetting.Detail.UPDATE_TIME,updateTime);
+        values.put(BookSetting.Detail.TOP_CASE,topCase ? 1: 0);
         String where = BookSetting.Detail._ID +" = ?" ;
         cr.update(uri,values,where,new String[]{String.valueOf(bookInfo.bookDetail.getId())});
 
@@ -140,27 +142,6 @@ public class BookModel {
 
     }
 
-
-//    public void startLoad(){
-//        runOnWorkerThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                final ArrayList<BookInfo> list = loadAllBook();
-//                if(callBack != null){
-//                    runOnMainThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            callBack.loadFinish(list);
-//                        }
-//                    });
-//
-//                }
-//
-//            }
-//        });
-//
-//    }
-
     public ArrayList<BookInfo> loadAllBook(){
         mBookInfoList.clear();
         ArrayList<BookInfo> bookList = mBookInfoList;
@@ -175,8 +156,9 @@ public class BookModel {
         final int detailDescription = cursor.getColumnIndexOrThrow(BookSetting.Detail.DESCRIPTION);
         final int detailChapterLatest = cursor.getColumnIndexOrThrow(BookSetting.Detail.CHAPTER_LATEST);
         final int detailUpdateTime = cursor.getColumnIndexOrThrow(BookSetting.Detail.UPDATE_TIME);
-        //final int detailType = cursor.getColumnIndexOrThrow(BookSetting.Detail.TYPE);
-
+        final int detailType = cursor.getColumnIndexOrThrow(BookSetting.Detail.TYPE);
+        final int detailStatus = cursor.getColumnIndexOrThrow(BookSetting.Detail.STATUS);
+        final int detailTopCase = cursor.getColumnIndexOrThrow(BookSetting.Detail.TOP_CASE);
         try {
             while (cursor.moveToNext()){
 
@@ -187,7 +169,9 @@ public class BookModel {
                 String description = cursor.getString(detailDescription);
                 String chapterLatest = cursor.getString(detailChapterLatest);
                 String updateTime  = cursor.getString(detailUpdateTime);
-
+                int type = cursor.getInt(detailType);
+                int status = cursor.getInt(detailStatus);
+                int topCase = cursor.getInt(detailTopCase);
                 BookInfo bookInfo = new BookInfo();
                 bookInfo.bookDetail =  new BookDetail.Builder().setId(id)
                         .setAuthor(author)
@@ -196,6 +180,9 @@ public class BookModel {
                         .setDescription(description)
                         .setUpdateTime(updateTime)
                         .setChapterLatest(chapterLatest)
+                        .setType(type)
+                        .setStatus(status)
+                        .setTopCase(topCase)
                         .build();
                 bookList.add(bookInfo);
             }
@@ -265,29 +252,6 @@ public class BookModel {
         return null;
     }
 
-
-
-//    public void postAddCallBack(final BookInfo bookInfo, final boolean success){
-//        if(callBack != null) {
-//            runOnMainThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    callBack.addBookDataFinish(bookInfo,success);
-//                }
-//            });
-//        }
-//    }
-//
-//    public void postDeleteCallBack(final BookInfo bookInfo, final boolean success){
-//        if(callBack != null) {
-//            runOnMainThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    callBack.deleteBookDataFinish(bookInfo,success);
-//                }
-//            });
-//        }
-//    }
 
     public void deleteBook(final BookInfo bookInfo){
 
@@ -401,7 +365,7 @@ public class BookModel {
     /**
      * 判断是否在书架中
      * */
-    public boolean isCase(BookDetail bookDetail){
+    public boolean isBookCase(BookDetail bookDetail){
         String name = bookDetail.getName();
         String author = bookDetail.getAuthor();
         final ContentResolver cr = mContext.getContentResolver();
@@ -417,6 +381,17 @@ public class BookModel {
     }
 
 
+    public boolean isBookCase(long id){
+        int count = mBookInfoList.size();
+        for(int i = 0; i< count;i++) {
+            BookInfo bookInfo = mBookInfoList.get(i);
+            if(bookInfo.bookDetail.getId() == id){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public BookInfo getBookInfo(long id){
         int count = mBookInfoList.size();
         for(int i = 0; i< count;i++) {
@@ -429,6 +404,10 @@ public class BookModel {
         return null;
 
         //return null;
+    }
+
+    public ArrayList<BookInfo> getBookList(){
+        return mBookInfoList;
     }
 
     public void updateBookChapter(BookChapter bookChapter){
