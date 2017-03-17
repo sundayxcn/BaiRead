@@ -4,13 +4,20 @@ import android.content.Context;
 import android.os.Handler;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import okhttp3.Call;
+import okhttp3.Response;
 import sunday.app.bairead.activity.BookDetailActivity;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.WebInfo;
 import sunday.app.bairead.download.BookDownLoad;
+import sunday.app.bairead.download.OKHttpListener;
+import sunday.app.bairead.download.OKhttpManager;
+import sunday.app.bairead.parse.ParseBaiduSearch;
+import sunday.app.bairead.parse.ParseXml;
 import sunday.app.bairead.tool.FileManager;
 import sunday.app.bairead.tool.Temp;
 import sunday.app.bairead.tool.ThreadManager;
@@ -104,6 +111,42 @@ public class BookSearchPresenter {
                 }
             });
         }
+    }
+
+
+    public void searchBookDebug(final String name){
+
+        String fileName = FileManager.PATH + "/"+"baiduSearchResult.html";
+        //FileManager.writeByte(fileName, response.body().bytes());
+        final ArrayList<String> links = ParseXml.createParse(ParseBaiduSearch.class).from(fileName).parse();
+
+        OKhttpManager.getInstance().connectUrl(new OKHttpListener() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) {
+                if(response != null && response.body() != null){
+                    try {
+                        String fileName = FileManager.PATH + "/"+"baiduBookResult.html";
+                        FileManager.writeByte(fileName, response.body().bytes());
+                        ParseXml.createParse(ParseBaiduSearch.class).from(fileName).parse();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }finally {
+                        response.body().close();
+                    }
+                }
+            }
+
+            @Override
+            public String getLink() {
+
+                return links.get(1);
+            }
+        });
     }
 
 

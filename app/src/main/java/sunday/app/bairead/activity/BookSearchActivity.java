@@ -192,7 +192,8 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
                 mBookTextEditText.setText("");
                 mBookTextEditText.clearFocus();
                 bookSearchPresenter.addSearchHistory(getBaseContext(),name);
-                bookSearchPresenter.searchBook(BookSearchActivity.this,name);
+                //bookSearchPresenter.searchBook(BookSearchActivity.this,name);
+                bookSearchPresenter.searchBookDebug("重生完美时代");
             }
         });
         historyTextView = (TextView) findViewById(R.id.book_search_history);

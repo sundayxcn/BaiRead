@@ -39,6 +39,7 @@
     <string name="nav_restore_config_text">恢复默认设置</string>
     <string name="nav_suggest_report_text">发送建议</string>
     <string name="nav_add_source_web_text">添加修改源网站</string>
+    <string name="nav_version_text">免责声明</string>
 
     <string name="action_order_add_book_text">默认排序</string>
     <string name="action_order_update_time_text">更新时间排序</string>

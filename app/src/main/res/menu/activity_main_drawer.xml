@@ -4,36 +4,30 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_clear_cache"
-            android:icon="@drawable/ic_menu_share"
             android:title="@string/nav_clear_cache_text" />
         <item
             android:id="@+id/nav_restore_config"
-            android:icon="@drawable/ic_menu_send"
             android:title="@string/nav_restore_config_text" />
 
         <item
             android:id="@+id/nav_suggest_report"
-            android:icon="@drawable/ic_menu_send"
             android:title="@string/nav_suggest_report_text" />
 
         <item
             android:id="@+id/nav_add_source_web"
-            android:icon="@drawable/ic_menu_send"
             android:title="@string/nav_add_source_web_text" />
 
     </group>
 
-    <!--<item android:title="Communicate">-->
-        <!--<menu>-->
-            <!--<item-->
-                <!--android:id="@+id/nav_share"-->
-                <!--android:icon="@drawable/ic_menu_share"-->
-                <!--android:title="Share" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_send"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="Send" />-->
-        <!--</menu>-->
-    <!--</item>-->
+    <item android:title="更多">
+        <menu>
+            <item
+                android:id="@+id/nav_version"
+                android:title="@string/nav_version_text" />
+            <item
+                android:id="@+id/nav_send"
+                android:title="给个好评" />
+        </menu>
+    </item>
 
 </menu>

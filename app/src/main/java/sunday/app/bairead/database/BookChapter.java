@@ -37,6 +37,9 @@ public class BookChapter extends BookBase {
 
     /**
      * 当前阅读源
+     * 0 = 其他盗版源
+     * 1 = 当前盗版源
+     * 99 = 正版源
      */
     private boolean current;
 
