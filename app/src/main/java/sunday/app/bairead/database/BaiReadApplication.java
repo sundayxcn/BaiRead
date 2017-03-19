@@ -17,6 +17,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import java.io.File;
 import java.util.ArrayList;
 
+import sunday.app.bairead.tool.FileManager;
 import sunday.app.bairead.tool.NetworkTool;
 
 /**
@@ -55,13 +56,30 @@ public class BaiReadApplication extends Application {
 
         bookModel = new BookModel(this);
 
+
+        
+        registerReceiver();
+
+        createDir();
+
+    }
+
+    private void createDir(){
+        //缓存文件夹
         File file = getCacheDir();
         if (!file.exists()) {
             file.mkdirs();
         }
-        
-        registerReceiver();
+
+        //搜索临时文件夹
+        file = new File(FileManager.TEMP_DIR);
+        if(!file.exists()){
+            file.mkdirs();
+        }
+
+
     }
+
 
 
     private void registerReceiver(){

@@ -25,6 +25,8 @@ import java.util.regex.Pattern;
 public class FileManager {
     public static final String DIR = "BaiRead";
     public static final String PATH = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+DIR;
+    public static final String TEMP_DIR = PATH + "/" + "temp";
+    public static final String TEMP_BAIDU_SEARCH_FILE =  TEMP_DIR + "/" + "baiduSearchResult.html";
     public static final String TAG = "snuday";
     public static final String UTF8 = "UTF-8";
     public static final String GB2312 = "gb2312";

@@ -100,7 +100,7 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
         //没有设置ID，表示没有加入书架，就是在线阅读，不用缓存
         if(bookId == 0){
             bookInfo = Temp.getInstance().getBookInfo();
-            Temp.getInstance().clearBookInfo();
+            //Temp.getInstance().clearBookInfo();
         }else {
             bookInfo = baiReadApplication.getBookModel().getBookInfo(bookId);
         }
@@ -186,7 +186,6 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
         //String name = bookInfo.bookDetail.getName();
         return bookInfo.bookDetail.getName();
     }
-
     public ArrayList<BookChapter.Chapter> getChapterList(){
         return bookInfo.bookChapter.getChapterList();
     }

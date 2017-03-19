@@ -138,19 +138,19 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
             chapterTimeTView = (TextView) parent.findViewById(R.id.search_fragment_list_item_chapter_time);
         }
 
-        void setValue(BookDownLoad.SearchResult searchResult){
-            nameTView.setText(searchResult.title);
-            authorTView.setText(searchResult.author);
+        void setValue(BookInfo searchResult){
+            nameTView.setText(searchResult.bookDetail.getName());
+            authorTView.setText(searchResult.bookDetail.getAuthor());
             //sourceTView.setText(sourceTView.getText()+info.get);
-            //chapterLatestTView.setText(searchResult.updateTime);
-            chapterTimeTView.setText(searchResult.updateTime);
+            chapterLatestTView.setText(searchResult.bookDetail.getChapterLatest());
+            chapterTimeTView.setText(searchResult.bookDetail.getUpdateTime());
         }
 
     }
 
     private class BookAdapter extends BaseAdapter{
-        private ArrayList<BookDownLoad.SearchResult> list;
-        public BookAdapter(ArrayList<BookDownLoad.SearchResult> searchResults){
+        private ArrayList<BookInfo> list;
+        public BookAdapter(ArrayList<BookInfo> searchResults){
             list = searchResults;
         }
 
@@ -160,7 +160,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
         }
 
         @Override
-        public BookDownLoad.SearchResult getItem(int position) {
+        public BookInfo getItem(int position) {
             return list.get(position);
         }
 
@@ -193,7 +193,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
                 mBookTextEditText.clearFocus();
                 bookSearchPresenter.addSearchHistory(getBaseContext(),name);
                 //bookSearchPresenter.searchBook(BookSearchActivity.this,name);
-                bookSearchPresenter.searchBookDebug("重生完美时代");
+                bookSearchPresenter.searchBookDebug(name);
             }
         });
         historyTextView = (TextView) findViewById(R.id.book_search_history);
@@ -219,8 +219,10 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
         bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BookDownLoad.SearchResult searchResult = bookAdapter.getItem(position);
-                bookSearchPresenter.updateBookDetail(searchResult,BookSearchActivity.this);
+                //BookDownLoad.SearchResult searchResult = bookAdapter.getItem(position);
+                BookInfo bookInfo = bookAdapter.getItem(position);
+                goBookDetail(BookSearchActivity.this,bookInfo);
+//                bookSearchPresenter.updateBookDetail(bookInfo,BookSearchActivity.this);
             }
         });
         mToastView = (TextView) findViewById(R.id.book_search_book_dont_find);
@@ -251,8 +253,15 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
         showBookListPanel(true);
     }
 
+//    @Override
+//    public void bookSearchFinish(ArrayList<BookDownLoad.SearchResult> searchResultArrayList) {
+//        hideProgressDialog();
+//        bookAdapter = new BookAdapter(searchResultArrayList);
+//        bookListView.setAdapter(bookAdapter);
+//    }
+
     @Override
-    public void bookSearchFinish(ArrayList<BookDownLoad.SearchResult> searchResultArrayList) {
+    public void bookSearchFinish(ArrayList<BookInfo> searchResultArrayList) {
         hideProgressDialog();
         bookAdapter = new BookAdapter(searchResultArrayList);
         bookListView.setAdapter(bookAdapter);

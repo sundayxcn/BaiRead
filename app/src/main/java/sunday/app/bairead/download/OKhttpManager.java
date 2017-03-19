@@ -23,11 +23,6 @@ public class OKhttpManager{
 
     }
 
-    public interface ConnectListener extends Callback{
-        void start(String url);
-        //void end(String fileName);
-    }
-
     public static OKhttpManager getInstance() {
         return mOKhttpManager;
     }

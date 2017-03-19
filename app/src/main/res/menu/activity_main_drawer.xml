@@ -2,31 +2,39 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
+
+
         <item
-            android:id="@+id/nav_clear_cache"
-            android:title="@string/nav_clear_cache_text" />
+            android:id="@+id/nav_infalter_book"
+            android:title="@string/nav_infalter_book" />
+
         <item
             android:id="@+id/nav_restore_config"
             android:title="@string/nav_restore_config_text" />
 
-        <item
-            android:id="@+id/nav_suggest_report"
-            android:title="@string/nav_suggest_report_text" />
 
         <item
-            android:id="@+id/nav_add_source_web"
-            android:title="@string/nav_add_source_web_text" />
+            android:id="@+id/nav_clear_cache"
+            android:title="@string/nav_clear_cache_text" />
+
 
     </group>
 
     <item android:title="更多">
         <menu>
+
+
             <item
-                android:id="@+id/nav_version"
-                android:title="@string/nav_version_text" />
+                android:id="@+id/nav_suggest_report"
+                android:title="@string/nav_suggest_report_text" />
+
             <item
                 android:id="@+id/nav_send"
                 android:title="给个好评" />
+
+            <item
+                android:id="@+id/nav_version"
+                android:title="@string/nav_version_text" />
         </menu>
     </item>
 

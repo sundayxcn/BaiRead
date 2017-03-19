@@ -40,8 +40,12 @@ public class ParseDetail extends ParseXml {
         String title = ar[ar.length - 1];
         //获取网站名称-end
 
-        BookDetail.Builder builder = new BookDetail.Builder(metaMap);
-
-        return builder.build();
+        String readUrl = metaMap.get(BookDetail.Meta.CHAPTER_URL);
+        if(readUrl == null || readUrl.length() == 0){
+            return  null;
+        }else {
+            BookDetail.Builder builder = new BookDetail.Builder(metaMap);
+            return builder.build();
+        }
     }
 }

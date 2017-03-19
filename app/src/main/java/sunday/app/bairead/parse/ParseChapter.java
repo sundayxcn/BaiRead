@@ -22,7 +22,7 @@ public class ParseChapter extends ParseXml {
 
         final String linkHead = getChapterLink(document);
         Elements elements =  document.select("dd");
-
+        try {
         ArrayList<BookChapter.Chapter> list = new ArrayList<>();
         for(Element element : elements){
             String linkHref = element.select("a[href]").attr("href");
@@ -32,13 +32,20 @@ public class ParseChapter extends ParseXml {
             list.add(new BookChapter.Chapter(linkHead,Long.valueOf(s),chapterTitle));
         }
         sortAndRemoveDuplicate(list);
-        BookChapter.Builder builder = new BookChapter.Builder().
-                setChapterCount(list.size()).
-                setChapterLink(linkHead)
-                .setCurrent(true);
-        BookChapter bookChapter = builder.build();
-        bookChapter.setChapterList(list);
-        return bookChapter;
+
+            BookChapter.Builder builder = new BookChapter.Builder().
+                    setChapterCount(list.size()).
+                    setChapterLink(linkHead)
+                    .setCurrent(true);
+            BookChapter bookChapter = builder.build();
+            bookChapter.setChapterList(list);
+            return bookChapter;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+
     }
 
 

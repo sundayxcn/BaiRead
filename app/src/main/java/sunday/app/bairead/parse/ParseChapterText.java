@@ -12,12 +12,18 @@ import org.jsoup.select.Elements;
 
 public class ParseChapterText extends ParseXml {
 
+    public static final String TYPE_CONTENT_READ = "content_read";
+    public static final String TYPE_BOOK_READ = "content";
+
     @Override
     public String parse() {
 
         if(document == null) return null;
-        String s = "content_read";
-        Elements elements = document.getElementsByClass(s);
+        Elements elements = document.getElementsByClass(TYPE_CONTENT_READ);
+        if(elements.size() == 0){
+            elements = document.getElementsByClass(TYPE_BOOK_READ);
+        }
+
         for (Element element : elements) {
             String idString = element.select("div[id]").attr("id");
             if (idString.equals("content")) {

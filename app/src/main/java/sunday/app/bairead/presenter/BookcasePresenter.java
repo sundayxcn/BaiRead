@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import sunday.app.bairead.database.BaiReadApplication;
 import sunday.app.bairead.database.BookInfo;
@@ -62,27 +63,22 @@ public class BookcasePresenter{
         });
     }
 
-    private int bookCount = 0;
-
-    private  synchronized boolean checkFinish(){
-        Log.e("sunday","bookCount="+bookCount);
-        bookCount--;
-        if(bookCount <=0){
+    private void checkFinish(){
+        if(atomicInteger.decrementAndGet() <= 0){
             runOnMainThread(new Runnable() {
                 @Override
                 public void run() {
                     bookcasePresenterListener.onCheckFinish();
                 }
             });
-            return true;
-        }else {
-            return false;
         }
     }
 
     private synchronized void checkBookInit(int size){
-        bookCount = size;
+        atomicInteger = new AtomicInteger(size);
     }
+
+    private AtomicInteger atomicInteger;
 
 
     public void runOnMainThread(Runnable runnable){

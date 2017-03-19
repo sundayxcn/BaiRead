@@ -53,6 +53,9 @@
         <activity android:name=".activity.BookDetailActivity"
             />
 
+        <activity android:name=".activity.DisclaimerActivity"
+            />
+
     </application>
 
 </manifest>

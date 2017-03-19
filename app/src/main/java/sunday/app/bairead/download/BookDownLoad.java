@@ -99,7 +99,7 @@ public class BookDownLoad {
                     boolean writeSuccess = writeResponseBody(fileName, response);
                     if (writeSuccess) {
                         BookInfo newBookInfo = parseBookInfo(fileName);
-                        if(newBookInfo != null){
+                        if(newBookInfo.bookDetail != null){
                             newBookInfo.bookDetail.setId(getId());
                             downloadListener.onResult(newBookInfo);
                             return;

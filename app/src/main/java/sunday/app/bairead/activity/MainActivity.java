@@ -44,6 +44,8 @@ import sunday.app.bairead.tool.NewChapterShow;
 import sunday.app.bairead.tool.PreferenceSetting;
 import sunday.app.bairead.tool.TimeFormat;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, BookcasePresenter.IBookcasePresenterListener {
 
@@ -151,20 +153,34 @@ public class MainActivity extends BaseActivity
     }
 
     private void firstRunWork() {
-        final File baseDir = new File(FileManager.PATH);
-        if (baseDir.exists()) {
-            final int bookCount = baseDir.listFiles().length;
-            if (bookCount > 0) {
-                showConfirmDialog("检测到本地有缓存书籍，是否加载", "加载", "不加载", new DialogListenerIm() {
-                    @Override
-                    public void onConfirm() {
-                        new FirstRunAsyncTask(baseDir).execute();
-                    }
-                });
-            }
+        File[] files = checkBookCache();
+        if(files != null){
+            inflateBook(files);
         }
-
     }
+
+
+    private void inflateBook(File[] files){
+        final int bookCount = files.length;
+        if (bookCount > 0) {
+            showConfirmDialog("检测到本地有缓存书籍，是否加载", "加载", "不加载", new DialogListenerIm() {
+                @Override
+                public void onConfirm() {
+                    new FirstRunAsyncTask(new File(FileManager.PATH)).execute();
+                }
+            });
+        }
+    }
+
+    private File[] checkBookCache(){
+        final File baseDir = new File(FileManager.PATH);
+        if (baseDir.exists()){
+            return baseDir.listFiles();
+        }else{
+            return null;
+        }
+    }
+
 
     private void setupView() {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
@@ -326,8 +342,19 @@ public class MainActivity extends BaseActivity
             });
         } else if (id == R.id.nav_suggest_report) {
             FeedbackAPI.openFeedbackActivity();
-        } else if (id == R.id.nav_add_source_web) {
-
+        }else if (id == R.id.nav_infalter_book) {
+            File[] files = checkBookCache();
+            if(checkBookCache() == null){
+                showToast("本地无缓存");
+            }else{
+                inflateBook(files);
+            }
+        }
+        else if (id == R.id.nav_version) {
+            Intent intent = new Intent();
+            intent.setClass(this, DisclaimerActivity.class);
+            intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

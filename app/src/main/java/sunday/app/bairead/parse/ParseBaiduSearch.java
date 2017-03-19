@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 /**
  * Created by sunday on 2017/3/17.
+ * 返回的网站是百度加密的，通过访问网站进入对应的小说目录页，分析Detail得到真正的地址
+ *
  */
 
 public class ParseBaiduSearch extends ParseXml {
