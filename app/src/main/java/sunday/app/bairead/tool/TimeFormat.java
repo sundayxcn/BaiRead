@@ -1,5 +1,7 @@
 package sunday.app.bairead.tool;
 
+import android.support.annotation.NonNull;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,36 +14,30 @@ public class TimeFormat {
 
 
     public static final int HOUR_TO_MILL =  60 * 60 * 1000;
-    public static final int DAY_LENGTH = 10;
-
     public static String[] timeFormat = {
-            "yyyy-MM-dd",
-            "yyyy/MM/dd",
+//            "yyyy-MM-dd",
+//            "yyyy-MM-dd hh:mm",
             "yyyy-MM-dd hh:mm:ss",
+//            "yyyy/MM/dd",
+//            "yyyy/MM/dd hh:mm",
             "yyyy/MM/dd hh:mm:ss",
+
     };
-
-
 
     /**
      * 获取时间格式
      * */
+    @NonNull
     private static String getFormatString(String timeString){
+        int length = timeString.length();
+        int index = 0;
             if(timeString.contains("-")){
-                if(timeString.length() > DAY_LENGTH){
-                    return  "yyyy-MM-dd hh:mm:ss";
-                }else{
-                    return  "yyyy-MM-dd";
-                }
-            }else if(timeString.contains("/")){
-                if(timeString.length() > DAY_LENGTH){
-                    return  "yyyy/MM/dd hh:mm:ss";
-                }else{
-                    return  "yyyy/MM/dd";
-                }
-            }else{
-                return timeString;
+                index = 0;
+            }else if(timeString.contains("/")) {
+                index = 1;
             }
+
+        return timeFormat[index].substring(0,length);
     }
 
 

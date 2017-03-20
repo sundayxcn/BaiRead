@@ -200,7 +200,14 @@ public class BookDetail extends BookBase{
 
 
     public static boolean getStatus(String status){
-        return status.contains("连载");
+        if(status == null){
+            return true;
+        }else if(status.contains("连载")){
+            return true;
+        }else{
+            return false;
+        }
+
     }
 
 

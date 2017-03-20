@@ -80,6 +80,9 @@ public class BookModel {
 
 
     public void addBook(final BookInfo bookInfo){
+        if(isBookCase(bookInfo)){
+            return;
+        }
         final ContentValues detailValues = new ContentValues();
         final ContentValues chapterValues = new ContentValues();
         final ContentResolver cr = mContext.getContentResolver();
@@ -391,6 +394,16 @@ public class BookModel {
         }
         return false;
     }
+
+    public boolean isBookCase(BookInfo bookInfo){
+        for(BookInfo bookInfo1 : mBookInfoList){
+            if(bookInfo1.equals(bookInfo)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public BookInfo getBookInfo(long id){
         int count = mBookInfoList.size();

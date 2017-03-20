@@ -74,10 +74,9 @@ public class BookChapterCache {
      * 下载所有章节到本地
      */
     public void downloadAllChpater(final BookInfo bookInfo) {
-        new Thread() {
+        ThreadManager.getInstance().work(new Runnable() {
             @Override
             public void run() {
-                //super.run();
                 ArrayList<BookChapter.Chapter> list = bookInfo.bookChapter.getChapterList();
                 for (BookChapter.Chapter chapter : list) {
                     final String fileName = fullDir + "/" + chapter.getNum() + ".html";
@@ -88,12 +87,15 @@ public class BookChapterCache {
                             FileManager.writeByte(fileName, response.body().bytes());
                         } catch (IOException e) {
                             e.printStackTrace();
+                        }finally {
+                            response.body().close();
                         }
                     }
                 }
                 Log.e("sunday", "缓存完成");
             }
-        }.start();
+        });
+
     }
 
     public void setBookInfo(BookInfo bookinfo, ChapterListener chapterListener) {

@@ -12,23 +12,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import sunday.app.bairead.activity.BookDetailActivity;
-import sunday.app.bairead.database.BookChapter;
-import sunday.app.bairead.database.BookDetail;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.WebInfo;
 import sunday.app.bairead.download.BookDownLoad;
 import sunday.app.bairead.download.OKHttpListener;
 import sunday.app.bairead.download.OKhttpManager;
 import sunday.app.bairead.parse.ParseBaiduSearch;
-import sunday.app.bairead.parse.ParseChapter;
-import sunday.app.bairead.parse.ParseDetail;
 import sunday.app.bairead.parse.ParseXml;
 import sunday.app.bairead.tool.FileManager;
-import sunday.app.bairead.tool.Temp;
 import sunday.app.bairead.tool.ThreadManager;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by sunday on 2017/3/6.
@@ -41,24 +33,15 @@ public class BookSearchPresenter {
         void historyAddFinish(String name);
         void historyLoadFinish(ArrayList<String> list);
         void bookSearchStart();
-        //void bookSearchFinish(ArrayList<BookDownLoad.SearchResult> searchResultArrayList);
-        void bookSearchFinish(ArrayList<BookInfo> searchResultArrayList);
+        void bookSearching(BookInfo bookInfo);
+        void bookSearchFinish();
         void bookSearchError();
 
     }
 
-    public interface IBookInfoListener{
-        void bookInfoStart();
-        void bookInfoFinish(BookInfo bookInfo);
-        void bookInfoError();
-    }
-
-
     private Handler handler = new Handler();
     private IBookSearchListener bookSearchListener;
     private ArrayList<String> historyList;
-    private ArrayList<BookDownLoad.SearchResult> bookSearchList;
-
 
     public BookSearchPresenter(IBookSearchListener bookSearchListener){
         this.bookSearchListener = bookSearchListener;
@@ -114,7 +97,7 @@ public class BookSearchPresenter {
             ThreadManager.getInstance().work(new Runnable() {
                 @Override
                 public void run() {
-                    FileManager.deleteFile(fullName);
+                    FileManager.clearFileDir(fullName);
                 }
             });
         }
@@ -129,24 +112,24 @@ public class BookSearchPresenter {
         atomicInteger = new AtomicInteger(count);
     }
 
-    private void checkFinish(){
+    private void checkFinish(final BookInfo bookInfo){
         int i = atomicInteger.decrementAndGet();
         if( i <= 0){
-
-            ArrayList<BookInfo> cantParseChapterList = new ArrayList<>();
-            for(BookInfo bookInfo : searchBookInfoList){
-                if(bookInfo.bookChapter.getChapterCount() ==0){
-                    cantParseChapterList.add(bookInfo);
-                }
-            }
-            searchBookInfoList.removeAll(cantParseChapterList);
             runMainUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    bookSearchListener.bookSearchFinish(searchBookInfoList);
+                    bookSearchListener.bookSearchFinish();
                 }
             });
 
+        }else if(bookInfo != null && bookInfo.bookChapter != null && bookInfo.bookChapter.getChapterCount() !=0){
+
+            runMainUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    bookSearchListener.bookSearching(bookInfo);
+                }
+            });
         }
     }
 
@@ -184,30 +167,25 @@ public class BookSearchPresenter {
 
                 @Override
                 public void onStart() {
-
+                    FileManager.clearFileDir(FileManager.TEMP_DIR);
                 }
 
                 @Override
                 public void onError(int errorCode) {
                     Log.e("sunday","errorCode="+errorCode);
-                    checkFinish();
+                    checkFinish(null);
                 }
 
                 @Override
                 public void onResult(BookInfo result) {
-                    searchBookInfoList.add(result);
-                    checkFinish();
+                    //searchBookInfoList.add(result);
+                    checkFinish(result);
                 }
             });
         }
     }
 
-
-
-
     public void searchBookDebug(final String name){
-
-        //final ArrayList<String> links = ParseXml.createParse(ParseBaiduSearch.class).from(fileName).parse();
         bookSearchListener.bookSearchStart();
         OKhttpManager.getInstance().connectUrl(new OKHttpListener() {
             @Override
@@ -237,122 +215,6 @@ public class BookSearchPresenter {
             }
         });
     }
-
-
-    public void searchBook(Context context,final String name){
-        BookDownLoad bookDownLoad = new BookDownLoad();
-        bookDownLoad.updateSearchAsync(new BookDownLoad.DownloadListener<ArrayList<BookDownLoad.SearchResult>>() {
-
-            @Override
-            public String getFileName() {
-                return FileManager.SEARCH_FILE;
-            }
-
-            @Override
-            public String getLink() {
-                //String webName = WebInfo.TOP_WEB[0][0];
-                //String webLink = WebInfo.TOP_WEB[0][1];
-                String webSearchLink = WebInfo.TOP_WEB[0][2];
-                //final WebInfo webInfo = new WebInfo(webName,webLink,webSearchLink);
-                //return webInfo.getLink() + name ;
-                return webSearchLink + name;
-                //return webLink;
-            }
-
-            @Override
-            public long getId() {
-                return 0;
-            }
-
-            @Override
-            public void onStart() {
-                runMainUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        bookSearchListener.bookSearchStart();
-                    }
-                });
-
-            }
-
-            @Override
-            public void onError(int errorCode) {
-                runMainUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        bookSearchListener.bookSearchError();
-                    }
-                });
-
-            }
-
-            @Override
-            public void onResult(ArrayList< BookDownLoad.SearchResult> arrayList) {
-//                final ArrayList<BookDownLoad.SearchResult> list = arrayList;
-//                runMainUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        bookSearchListener.bookSearchFinish(list);
-//                    }
-//                });
-
-            }
-        });
-    }
-
-    public void updateBookDetail(final BookDownLoad.SearchResult searchResult,final IBookInfoListener bookInfoListener){
-        BookDownLoad bookDownLoad = new BookDownLoad();
-        bookDownLoad.updateBookInfoAsync(new BookDownLoad.DownloadListener<BookInfo>() {
-            @Override
-            public long getId() {
-                return 0;
-            }
-
-            @Override
-            public void onResult(final BookInfo newBookInfo) {
-                runMainUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        bookInfoListener.bookInfoFinish(newBookInfo);
-                    }
-                });
-
-            }
-
-            @Override
-            public String getFileName() {
-                return BookDownLoad.TEMP_FILE_NAME;
-            }
-
-            @Override
-            public String getLink() {
-                return searchResult.link;
-            }
-
-            @Override
-            public void onStart() {
-                runMainUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        bookInfoListener.bookInfoStart();
-                    }
-                });
-
-            }
-
-            @Override
-            public void onError(int errorCode) {
-                runMainUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        bookInfoListener.bookInfoError();
-                    }
-                });
-
-            }
-        });
-    }
-
 
     public void runMainUiThread(Runnable runnable){
         handler.post(runnable);

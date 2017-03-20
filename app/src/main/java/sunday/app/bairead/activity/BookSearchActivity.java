@@ -13,8 +13,10 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  * Created by sunday on 2017/3/6.
  */
 
-public class BookSearchActivity extends BaseActivity implements BookSearchPresenter.IBookSearchListener,BookSearchPresenter.IBookInfoListener{
+public class BookSearchActivity extends BaseActivity implements BookSearchPresenter.IBookSearchListener{
 
 
     private BookSearchPresenter bookSearchPresenter;
@@ -43,6 +45,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
         bookSearchPresenter = new BookSearchPresenter(this);
     }
 
+    private ImageButton mBackButton;
     private EditText mBookTextEditText;
     private ListView historyListView;
     private TextView historyTextView;
@@ -52,21 +55,11 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
     private BookAdapter bookAdapter;
     private TextView mToastView;
 
-    @Override
-    public void bookInfoStart() {
-        showProgressDialog();
-    }
+    private RelativeLayout mHotSearchPanel;
+    private RelativeLayout mHistoryPanel;
+    private RelativeLayout mResultPanel;
+    private TextView mResultTextView;
 
-    @Override
-    public void bookInfoFinish(BookInfo bookInfo) {
-        hideProgressDialog();
-        goBookDetail(this,bookInfo);
-    }
-
-    @Override
-    public void bookInfoError() {
-        hideProgressDialog();
-    }
 
     public static void goBookDetail(Context context,BookInfo bookInfo){
         Temp.getInstance().setBookInfo(bookInfo);
@@ -150,8 +143,13 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
 
     private class BookAdapter extends BaseAdapter{
         private ArrayList<BookInfo> list;
-        public BookAdapter(ArrayList<BookInfo> searchResults){
-            list = searchResults;
+
+        public void initList(){
+            list = new ArrayList<>();
+        }
+
+        public void addItem(BookInfo bookInfo){
+            list.add(bookInfo);
         }
 
         @Override
@@ -183,6 +181,15 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
     }
 
     private void setupView(){
+
+
+        mBackButton = (ImageButton) findViewById(R.id.book_search_button_back);
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         mBookTextEditText = (EditText) findViewById(R.id.book_search_edit_text);
         Button ButtonSearch = (Button) findViewById(R.id.book_search_button_search);
         ButtonSearch.setOnClickListener(new View.OnClickListener() {
@@ -196,8 +203,15 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
                 bookSearchPresenter.searchBookDebug(name);
             }
         });
-        historyTextView = (TextView) findViewById(R.id.book_search_history);
-        historyDeleteButton = (Button) findViewById(R.id.book_search_history_delete_button);
+
+
+        mHotSearchPanel = (RelativeLayout) findViewById(R.id.book_search_activity_hot_search_panel);
+
+        mHistoryPanel = (RelativeLayout) findViewById(R.id.book_search_activity_history_panel);
+
+
+        historyTextView = (TextView) mHistoryPanel.findViewById(R.id.book_search_history);
+        historyDeleteButton = (Button) mHistoryPanel.findViewById(R.id.book_search_history_delete_button);
         historyDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,17 +219,22 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
                 bookSearchPresenter.clearHistory(getBaseContext());
             }
         });
-        historyListView = (ListView) findViewById(R.id.book_search_history_list_view);
+        historyListView = (ListView) mHistoryPanel.findViewById(R.id.book_search_history_list_view);
         historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String name = (String) historyAdapter.getItem(position);
                 mBookTextEditText.setText(name);
                 mBookTextEditText.clearFocus();
-                bookSearchPresenter.searchBook(BookSearchActivity.this,name);
+                bookSearchPresenter.searchBookDebug(name);
             }
         });
-        bookListView = (ListView) findViewById(R.id.book_search_book_list_view);
+
+
+
+        mResultPanel = (RelativeLayout) findViewById(R.id.book_search_activity_result_panel);
+        mResultTextView = (TextView) mResultPanel.findViewById(R.id.book_search_activity_result_panel_text);
+        bookListView = (ListView) mResultPanel.findViewById(R.id.book_search_book_list_view);
         bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -225,7 +244,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
 //                bookSearchPresenter.updateBookDetail(bookInfo,BookSearchActivity.this);
             }
         });
-        mToastView = (TextView) findViewById(R.id.book_search_book_dont_find);
+
     }
 
     @Override
@@ -248,44 +267,47 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
 
     @Override
     public void bookSearchStart() {
-        showProgressDialog();
+        //showProgressDialog();
         showHistoryPanel(false);
-        showBookListPanel(true);
+        showResultPanel(true);
     }
 
-//    @Override
-//    public void bookSearchFinish(ArrayList<BookDownLoad.SearchResult> searchResultArrayList) {
-//        hideProgressDialog();
-//        bookAdapter = new BookAdapter(searchResultArrayList);
-//        bookListView.setAdapter(bookAdapter);
-//    }
+    @Override
+    public void bookSearching(BookInfo bookInfo) {
+        if(bookAdapter == null){
+            bookAdapter = new BookAdapter();
+            bookAdapter.initList();
+            bookListView.setAdapter(bookAdapter);
+        }
+        bookAdapter.addItem(bookInfo);
+        bookAdapter.notifyDataSetChanged();
+    }
 
     @Override
-    public void bookSearchFinish(ArrayList<BookInfo> searchResultArrayList) {
-        hideProgressDialog();
-        bookAdapter = new BookAdapter(searchResultArrayList);
-        bookListView.setAdapter(bookAdapter);
+    public void bookSearchFinish() {
+        mResultTextView.setText("搜索完成");
     }
 
 
     @Override
     public void bookSearchError() {
-        hideProgressDialog();
+        //hideProgressDialog();
         showToastNetworkUnconnect();
     }
 
     public void showHistoryPanel(boolean show){
         int visibility = show ? View.VISIBLE : View.GONE;
-        mToastView.setVisibility(visibility);
-        historyListView.setVisibility(visibility);
-        historyTextView.setVisibility(visibility);
-        historyDeleteButton.setVisibility(visibility);
+//        mToastView.setVisibility(visibility);
+//        historyListView.setVisibility(visibility);
+//        historyTextView.setVisibility(visibility);
+//        historyDeleteButton.setVisibility(visibility);
+        mHistoryPanel.setVisibility(visibility);
 
     }
 
-    public void showBookListPanel(boolean show){
+    public void showResultPanel(boolean show){
         int visibility = show ? View.VISIBLE : View.GONE;
-        bookListView.setVisibility(visibility);
+        mResultPanel.setVisibility(visibility);
     }
 
 

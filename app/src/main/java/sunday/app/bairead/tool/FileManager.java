@@ -175,18 +175,39 @@ public class FileManager {
     }
 
 
-    public static void deleteFolder(String fileName){
-        File file = new File(fileName);
-        if(file.isDirectory()){
+    public static void clearFileDir(File file){
+        if (!file.exists())
+            return;
+
+        if (file.isFile()) {
             file.delete();
+            return;
         }
+        File[] files = file.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            clearFileDir(files[i]);
+        }
+
+        //file.delete();
     }
+
+    public static void clearFileDir(String fileName){
+        File file = new File(fileName);
+        clearFileDir(file);
+    }
+
 
     public static void deleteFile(String fileName){
         File file = new File(fileName);
-        file.delete();
+        clearFileDir(file);
     }
 
+
+    public static void deleteFolder(String fileName){
+        deleteFile(fileName);
+        File file = new File(fileName);
+        file.delete();
+    }
 
     public static void writeSearchFile(byte[] bytes) {
         File file = new File(FileManager.PATH);

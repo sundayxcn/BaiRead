@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    >
+    android:background="@color/colorWhite">
 
 
     <LinearLayout
@@ -41,9 +40,25 @@
 
 
     <RelativeLayout
+        android:id="@+id/book_search_activity_hot_search_panel"
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="热门搜索区域"
+            android:textSize="30dp" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/book_search_activity_history_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/book_search_top_panel">
+        android:layout_below="@id/book_search_activity_hot_search_panel">
 
         <TextView
             android:id="@+id/book_search_history"
@@ -60,34 +75,40 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/default_padding_left"
             android:background="@drawable/button_background"
-            android:text="@string/search_text_history_delete_text"
-            />
+            android:text="@string/search_text_history_delete_text" />
 
         <ListView
-            android:layout_below="@id/book_search_history"
             android:id="@+id/book_search_history_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/book_search_history"
             android:layout_marginLeft="@dimen/default_padding_left" />
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/book_search_activity_result_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/book_search_activity_hot_search_panel"
+        android:visibility="gone">
+
+
+        <TextView
+            android:id="@+id/book_search_activity_result_panel_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="搜索中，请不要返回" />
 
         <ListView
             android:id="@+id/book_search_book_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/default_padding_left"
-            android:visibility="invisible" />
+            android:layout_below="@id/book_search_activity_result_panel_text"
+            android:layout_marginLeft="@dimen/default_padding_left" />
 
     </RelativeLayout>
-
-
-    <TextView
-        android:id="@+id/book_search_book_dont_find"
-        android:text="@string/book_search_book_dont_find_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        />
-
 
 </RelativeLayout>

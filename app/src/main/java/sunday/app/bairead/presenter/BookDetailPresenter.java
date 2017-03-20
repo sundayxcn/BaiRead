@@ -5,6 +5,7 @@ import android.content.Context;
 import sunday.app.bairead.database.BaiReadApplication;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.BookModel;
+import sunday.app.bairead.download.BookChapterCache;
 import sunday.app.bairead.tool.FileManager;
 
 /**
@@ -37,11 +38,11 @@ public class BookDetailPresenter {
     public boolean isBookCase(BookInfo bookInfo){
         BaiReadApplication application  = (BaiReadApplication) context.getApplicationContext();
         BookModel bookModel = application.getBookModel();
-        return bookModel.isBookCase(bookInfo.bookDetail.getId());
+        return bookModel.isBookCase(bookInfo);
     }
 
 
     public void cacheBook(BookInfo bookInfo){
-
+        BookChapterCache.getInstance().downloadAllChpater(bookInfo);
     }
 }

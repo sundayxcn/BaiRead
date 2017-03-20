@@ -1,10 +1,12 @@
 package sunday.app.bairead.database;
 
+import java.util.Objects;
+
 /**
  * Created by sunday on 2016/12/13.
  */
 
-public class BookInfo {
+public class BookInfo{
     public BookDetail bookDetail;
 
     /**
@@ -12,6 +14,25 @@ public class BookInfo {
      * */
     public BookChapter bookChapter;
 
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof BookInfo){
+            BookInfo bookInfo = (BookInfo) o;
+            if(bookDetail.getName().equals(bookInfo.bookDetail.getName())
+                    &&bookDetail.getAuthor().equals(bookInfo.bookDetail.getAuthor())){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        //return super.hashCode();
+        return bookDetail.getName().hashCode();
+    }
 }
 
 
