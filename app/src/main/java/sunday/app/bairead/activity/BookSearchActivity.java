@@ -196,11 +196,13 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
             @Override
             public void onClick(View v) {
                 String name = mBookTextEditText.getText().toString();
-                mBookTextEditText.setText("");
-                mBookTextEditText.clearFocus();
-                bookSearchPresenter.addSearchHistory(getBaseContext(),name);
-                //bookSearchPresenter.searchBook(BookSearchActivity.this,name);
-                bookSearchPresenter.searchBookDebug(name);
+                if(name.length()!=0) {
+                    mBookTextEditText.setText("");
+                    mBookTextEditText.clearFocus();
+                    bookSearchPresenter.addSearchHistory(getBaseContext(), name);
+                    //bookSearchPresenter.searchBook(BookSearchActivity.this,name);
+                    bookSearchPresenter.searchBookDebug(name);
+                }
             }
         });
 
