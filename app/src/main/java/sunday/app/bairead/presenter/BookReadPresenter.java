@@ -39,7 +39,7 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
         runMainUiThread(new Runnable() {
             @Override
             public void run() {
-                bookReadPresenterListener.onLoadFinish();
+                //bookReadPresenterListener.onLoadFinish();
             }
         });
     }
