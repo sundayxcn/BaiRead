@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/background_stroke_white"
-    android:paddingLeft="5dp">
+    >
 
     <ImageView
         android:id="@+id/xlist_item_cover_image"
@@ -13,6 +13,14 @@
         android:layout_marginLeft="10dp"
         android:scaleType="center"
         android:src="@drawable/default_book_detail_cover_image" />
+
+    <sunday.app.bairead.view.TopCaseView
+        android:id="@+id/xlist_item_top_case"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:visibility="gone"
+        />
+
 
     <RelativeLayout
         android:layout_width="wrap_content"

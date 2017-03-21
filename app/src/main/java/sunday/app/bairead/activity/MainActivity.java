@@ -222,13 +222,15 @@ public class MainActivity extends BaseActivity
         operatorListener.setBookInfo(bookInfo);
         if(bookInfo.bookDetail.topCase){
             operatorStringArray[0] = "取消置顶";
+        }else{
+            operatorStringArray[0] = "置顶";
         }
-        if (caseOperatorDialog == null) {
-            caseOperatorDialog = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+        //if (caseOperatorDialog == null) {
+         new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
                     .setTitle(bookName)
-                    .setItems(operatorStringArray, operatorListener).create();
-        }
-        caseOperatorDialog.show();
+                    .setItems(operatorStringArray, operatorListener).create().show();
+        //}
+        //caseOperatorDialog.show();
     }
 
     @Override
@@ -465,6 +467,7 @@ public class MainActivity extends BaseActivity
         TextView chapterIndexTView;
         TextView updateImageTView;
         TextView updateTimeTView;
+        TextView topCaseView;
         private long bookId;
 
         ViewHolder(ViewGroup parent) {
@@ -473,6 +476,7 @@ public class MainActivity extends BaseActivity
             chapterIndexTView = (TextView) parent.findViewById(R.id.xlist_item_chapter_index);
             updateImageTView = (TextView) parent.findViewById(R.id.xlist_item_chapter_update);
             updateTimeTView = (TextView) parent.findViewById(R.id.xlist_item_update_time);
+            topCaseView = (TextView) parent.findViewById(R.id.xlist_item_top_case);
         }
 
         public void setValue(BookInfo bookInfo) {
@@ -490,6 +494,8 @@ public class MainActivity extends BaseActivity
             boolean newChapter = NewChapterShow.getInstance().isHaveNewChapter(bookInfo.bookDetail.getId());
             updateImageTView.setVisibility(newChapter ? View.VISIBLE : View.INVISIBLE);
             bookId = bookInfo.bookDetail.getId();
+
+            topCaseView.setVisibility(bookInfo.bookDetail.isTopCase() ? View.VISIBLE:View.GONE);
         }
 
         public long getBookId() {
