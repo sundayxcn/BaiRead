@@ -9,31 +9,41 @@
         android:id="@+id/book_read_setting_panel_top_panel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        >
-
-        <TextView
-            android:id="@+id/book_read_setting_panel_title"
-            android:textColor="@color/colorWhite"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        android:background="@color/colorPrimary">
 
         <Button
-            android:layout_marginRight="50dp"
-            android:textSize="@dimen/button_text_style_small_text_size"
+            android:id="@+id/book_read_setting_top_panel_cache_book"
             style="@style/TextButton"
-            android:id="@+id/book_read_setting_panel_mark_add"
             android:layout_alignParentRight="true"
-            android:text="@string/book_read_setting_top_panel_mark_add_text" />
+            android:text="@string/book_read_setting_top_panel_cache_book_text"
+            android:textSize="@dimen/button_text_style_small_text_size" />
+
+        <Button
+            android:id="@+id/book_read_setting_panel_mark_add"
+            style="@style/TextButton"
+            android:layout_toLeftOf="@id/book_read_setting_top_panel_cache_book"
+            android:text="@string/book_read_setting_top_panel_mark_add_text"
+            android:textSize="@dimen/button_text_style_small_text_size" />
+
+        <Button
+            android:id="@+id/book_read_setting_top_panel_add_case"
+            style="@style/TextButton"
+            android:layout_toLeftOf="@id/book_read_setting_panel_mark_add"
+            android:text="@string/book_read_setting_top_panel_add_case_text"
+            android:textSize="@dimen/button_text_style_small_text_size" />
+
+
+
+
+
 
         <!--<Button-->
-            <!--android:layout_width="50dp"-->
-            <!--android:textSize="@dimen/button_text_style_small_text_size"-->
-            <!--style="@style/TextButton"-->
-            <!--android:id="@+id/book_read_setting_panel_source"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:text="@string/book_read_setting_top_panel_source_text" />-->
+        <!--android:layout_width="50dp"-->
+        <!--android:textSize="@dimen/button_text_style_small_text_size"-->
+        <!--style="@style/TextButton"-->
+        <!--android:id="@+id/book_read_setting_panel_source"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:text="@string/book_read_setting_top_panel_source_text" />-->
 
 
     </RelativeLayout>
@@ -45,8 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/book_read_setting_panel_chapter_menu"

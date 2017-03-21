@@ -79,9 +79,9 @@ public class BookModel {
     }
 
 
-    public void addBook(final BookInfo bookInfo){
+    public boolean addBook(final BookInfo bookInfo){
         if(isBookCase(bookInfo)){
-            return;
+            return false;
         }
         final ContentValues detailValues = new ContentValues();
         final ContentValues chapterValues = new ContentValues();
@@ -115,6 +115,7 @@ public class BookModel {
 
             }
         });
+        return true;
     }
 
 

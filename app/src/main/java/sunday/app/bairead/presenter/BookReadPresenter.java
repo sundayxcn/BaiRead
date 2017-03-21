@@ -11,6 +11,7 @@ import sunday.app.bairead.database.BaiReadApplication;
 import sunday.app.bairead.database.BookChapter;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.BookMarkInfo;
+import sunday.app.bairead.database.BookModel;
 import sunday.app.bairead.download.BookChapterCache;
 import sunday.app.bairead.tool.PreferenceSetting;
 import sunday.app.bairead.tool.Temp;
@@ -225,17 +226,40 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
     }
 
 
-    public void addBookMark(){
+    public boolean addBookMark(){
+
         BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-        BookMarkInfo bookMarkInfo = new BookMarkInfo();
-        bookMarkInfo.setNameId(bookInfo.bookDetail.getId());
-        int chapterIndex = bookInfo.bookChapter.getChapterIndex();
-        bookMarkInfo.chapterIndex = chapterIndex;
-        bookMarkInfo.text = BookChapterCache.getInstance().getMarkText(chapterIndex);
-        bookMarkInfo.title = BookChapterCache.getInstance().getMarkTitle(chapterIndex);
-        bookMarkList.add(bookMarkInfo);
-        baiReadApplication.getBookModel().addBookMark(bookMarkInfo);
+        BookModel bookModel = baiReadApplication.getBookModel();
+        if(bookModel.isBookCase(bookInfo)) {
+            BookMarkInfo bookMarkInfo = new BookMarkInfo();
+            bookMarkInfo.setNameId(bookInfo.bookDetail.getId());
+            int chapterIndex = bookInfo.bookChapter.getChapterIndex();
+            bookMarkInfo.chapterIndex = chapterIndex;
+            bookMarkInfo.text = BookChapterCache.getInstance().getMarkText(chapterIndex);
+            bookMarkInfo.title = BookChapterCache.getInstance().getMarkTitle(chapterIndex);
+            bookMarkList.add(bookMarkInfo);
+            bookModel.addBookMark(bookMarkInfo);
+            return true;
+        }else{
+            return false;
+        }
     }
+
+    public boolean addBookCase(){
+        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
+        return baiReadApplication.getBookModel().addBook(bookInfo);
+    }
+
+    public boolean cacheBook(){
+        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
+        if(baiReadApplication.getBookModel().isBookCase(bookInfo)) {
+            BookChapterCache.getInstance().downloadAllChpater(bookInfo);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
     public void deleteBookMark(){
         BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();

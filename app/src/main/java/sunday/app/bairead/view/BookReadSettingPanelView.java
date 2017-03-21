@@ -21,6 +21,7 @@ import sunday.app.bairead.database.BookChapter;
 import sunday.app.bairead.database.BookMarkInfo;
 import sunday.app.bairead.R;
 import sunday.app.bairead.download.BookChapterCache;
+import sunday.app.bairead.presenter.BookDetailPresenter;
 import sunday.app.bairead.tool.PreferenceSetting;
 import sunday.app.bairead.activity.BaseActivity;
 import sunday.app.bairead.activity.BookReadActivity;
@@ -90,12 +91,30 @@ public class BookReadSettingPanelView extends RelativeLayout {
                     //break;
 
 //                case R.id.book_read_setting_panel_source:
-//                    //break;
+                    break;
 //                    Toast.makeText(getContext(), "开发中", Toast.LENGTH_SHORT).show();
                 case R.id.book_read_setting_panel_mark_add:
-                    bookReadPresenter.addBookMark();
-                    Toast.makeText(getContext(), "已添加到书签", Toast.LENGTH_SHORT).show();
+                    if(bookReadPresenter.addBookMark()){
+                        Toast.makeText(getContext(), "已添加到书签", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getContext(), "请先添加到书架", Toast.LENGTH_SHORT).show();
+                    }
+
                     break;
+                case R.id.book_read_setting_top_panel_add_case:
+                    if( bookReadPresenter.addBookCase()){
+                        Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getContext(), "已添加到书架", Toast.LENGTH_SHORT).show();
+                    }
+
+                    break;
+                case R.id.book_read_setting_top_panel_cache_book:
+                    if(bookReadPresenter.cacheBook()){
+                        Toast.makeText(getContext(), "开始缓存", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getContext(), "请先添加到书架", Toast.LENGTH_SHORT).show();
+                    }
                 default:
                     break;
             }
@@ -126,8 +145,8 @@ public class BookReadSettingPanelView extends RelativeLayout {
     public void setReadPresenter(BookReadPresenter bookReadPresenter) {
         this.bookReadPresenter = bookReadPresenter;
         chapterOrder = bookReadPresenter.getChapterOrder();
-        TextView titleView = (TextView) settingTopPanel.findViewById(R.id.book_read_setting_panel_title);
-        titleView.setText(bookReadPresenter.getBookName());
+        //TextView titleView = (TextView) settingTopPanel.findViewById(R.id.book_read_setting_panel_title);
+        //titleView.setText(bookReadPresenter.getBookName());
     }
 
     private void setOnClick(ViewGroup viewGroup, OnClickListener onClickListener) {

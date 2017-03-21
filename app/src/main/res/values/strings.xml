@@ -37,6 +37,9 @@
     <string name="book_read_setting_bottom_button_text_size">字体</string>
     <string name="book_read_setting_bottom_button_text_more">更多</string>
     <string name="book_read_setting_top_panel_mark_add_text">添加书签</string>
+    <string name="book_read_setting_top_panel_add_case_text">添加到书架</string>
+    <string name="book_read_setting_top_panel_cache_book_text">缓存全本</string>
+
     <string name="book_read_setting_top_panel_source_text">换源</string>
     <string name="book_read_setting_top_button_delete_mark_text">清空书签</string>
     <string name="nav_clear_cache_text">清除本地缓存</string>
