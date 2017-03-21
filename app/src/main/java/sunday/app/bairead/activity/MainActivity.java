@@ -35,6 +35,7 @@ import java.util.HashMap;
 import sunday.app.bairead.database.BookChapter;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.R;
+import sunday.app.bairead.download.BookChapterCache;
 import sunday.app.bairead.parse.ParseChapter;
 import sunday.app.bairead.parse.ParseDetail;
 import sunday.app.bairead.parse.ParseXml;
@@ -443,6 +444,7 @@ public class MainActivity extends BaseActivity
                     BookSearchActivity.goBookDetail(getBaseContext(), bookInfo);
                     break;
                 case OPERATOR_CACHE:
+                    BookChapterCache.getInstance().downloadAllChpater(bookInfo);
                     break;
                 case OPERATOR_DELETE:
                     booklistAdapter.getBookInfoList().remove(bookInfo);

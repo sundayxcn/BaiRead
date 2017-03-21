@@ -64,7 +64,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
     private RelativeLayout mHistoryPanel;
     private RelativeLayout mResultPanel;
     private TextView mResultTextView;
-
+    private MaterialProgressView materialProgressView;
 
     public static void goBookDetail(Context context,BookInfo bookInfo){
         Temp.getInstance().setBookInfo(bookInfo);

@@ -78,6 +78,11 @@ public class BookChapterCache {
             @Override
             public void run() {
                 ArrayList<BookChapter.Chapter> list = bookInfo.bookChapter.getChapterList();
+                //首次进入书架，并没有读取章节
+                if(list == null){
+                    bookInfo.bookChapter = getChapter(bookInfo);
+                    list = bookInfo.bookChapter.getChapterList();
+                }
                 for (BookChapter.Chapter chapter : list) {
                     final String fileName = fullDir + "/" + chapter.getNum() + ".html";
                     if (!isChapterExists(fileName)) {
