@@ -80,6 +80,7 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
         settingPanel = (BookReadSettingPanelView) findViewById(R.id.book_read_setting_panel);
         settingPanel.setVisibility(View.INVISIBLE);
         settingPanel.setReadPresenter(bookReadPresenter);
+        showProgressDialog();
     }
 
 

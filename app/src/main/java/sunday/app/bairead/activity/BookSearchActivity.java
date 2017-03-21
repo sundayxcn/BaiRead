@@ -202,7 +202,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
             public void onClick(View v) {
                 String name = mBookTextEditText.getText().toString();
                 if(name.length()!=0) {
-                    mBookTextEditText.setText("");
+                    //mBookTextEditText.setText("");
                     mBookTextEditText.clearFocus();
                     bookSearchPresenter.addSearchHistory(getBaseContext(), name);
                     //bookSearchPresenter.searchBook(BookSearchActivity.this,name);
@@ -271,6 +271,16 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
         bookSearchPresenter.readSearchHistory(this);
     }
 
+
+    @Override
+    public void onBackPressed() {
+        if(materialProgressView.getVisibility() ==View.VISIBLE){
+            hideMaterialProgress();
+        }else{
+            super.onBackPressed();
+        }
+    }
+
     @Override
     public void historyAddFinish(String name) {
         historyAdapter.addItem(name);
@@ -289,16 +299,16 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
         showMaterialProgress();
         showHistoryPanel(false);
         showResultPanel(true);
-
+        //if(bookAdapter == null){
+            bookAdapter = new BookAdapter();
+            bookAdapter.initList();
+            bookListView.setAdapter(bookAdapter);
+        //}
     }
 
     @Override
     public void bookSearching(BookInfo bookInfo) {
-        if(bookAdapter == null){
-            bookAdapter = new BookAdapter();
-            bookAdapter.initList();
-            bookListView.setAdapter(bookAdapter);
-        }
+
         bookAdapter.addItem(bookInfo);
         bookAdapter.notifyDataSetChanged();
     }
