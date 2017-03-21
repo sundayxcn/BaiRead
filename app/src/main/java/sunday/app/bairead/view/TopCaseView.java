@@ -38,7 +38,7 @@ public class TopCaseView extends TextView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.save();
-        float[] l = {0,getHeight()-30,getHeight()-30,0};
+        float[] l = {-20,getHeight(),getHeight(),-20};
         canvas.drawLines(l,paint);
         canvas.restore();
     }

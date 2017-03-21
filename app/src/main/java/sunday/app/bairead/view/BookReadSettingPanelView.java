@@ -89,9 +89,9 @@ public class BookReadSettingPanelView extends RelativeLayout {
                 case R.id.book_read_setting_panel_more:
                     //break;
 
-                case R.id.book_read_setting_panel_source:
-                    //break;
-                    Toast.makeText(getContext(), "开发中", Toast.LENGTH_SHORT).show();
+//                case R.id.book_read_setting_panel_source:
+//                    //break;
+//                    Toast.makeText(getContext(), "开发中", Toast.LENGTH_SHORT).show();
                 case R.id.book_read_setting_panel_mark_add:
                     bookReadPresenter.addBookMark();
                     Toast.makeText(getContext(), "已添加到书签", Toast.LENGTH_SHORT).show();

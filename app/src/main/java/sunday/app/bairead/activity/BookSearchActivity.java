@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -26,6 +29,8 @@ import sunday.app.bairead.R;
 import sunday.app.bairead.download.BookDownLoad;
 import sunday.app.bairead.tool.Temp;
 import sunday.app.bairead.presenter.BookSearchPresenter;
+import sunday.app.bairead.view.MaterialProgressDrawable;
+import sunday.app.bairead.view.MaterialProgressView;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -182,7 +187,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
 
     private void setupView(){
 
-
+        materialProgressView = (MaterialProgressView) findViewById(R.id.book_search_activity_material_progress);
         mBackButton = (ImageButton) findViewById(R.id.book_search_button_back);
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,7 +240,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
 
 
         mResultPanel = (RelativeLayout) findViewById(R.id.book_search_activity_result_panel);
-        mResultTextView = (TextView) mResultPanel.findViewById(R.id.book_search_activity_result_panel_text);
+        //mResultTextView = (TextView) mResultPanel.findViewById(R.id.book_search_activity_result_panel_text);
         bookListView = (ListView) mResultPanel.findViewById(R.id.book_search_book_list_view);
         bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -247,6 +252,17 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
             }
         });
 
+    }
+
+
+    public void showMaterialProgress(){
+        materialProgressView.setVisibility(View.VISIBLE);
+        materialProgressView.start();
+    }
+
+    public void hideMaterialProgress(){
+        materialProgressView.setVisibility(View.GONE);
+        materialProgressView.stop();
     }
 
     @Override
@@ -270,8 +286,10 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
     @Override
     public void bookSearchStart() {
         //showProgressDialog();
+        showMaterialProgress();
         showHistoryPanel(false);
         showResultPanel(true);
+
     }
 
     @Override
@@ -287,7 +305,8 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
 
     @Override
     public void bookSearchFinish() {
-        mResultTextView.setText("搜索完成");
+        hideMaterialProgress();
+        //mResultTextView.setText("搜索完成");
     }
 
 

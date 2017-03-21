@@ -58,16 +58,11 @@ public class MainActivity extends BaseActivity
     public static final int OPERATOR_DELETE = 3;
     public static final int OPERATOR_ALL = 4;
 
-    //    private void init(){
-//        HashMap<Integer,Comparator<BookInfo>> hashMap = new HashMap<>();
-//        hashMap.put(PreferenceSetting.KEY_CASE_LIST_ORDER_DEFAULT,comparatorDefault);
-//    }
     public final String[] operatorStringArray = {"置顶", "书籍详情", "缓存全本", "删除本书", "批量操作"};
     private BookcasePresenter bookcasePresenter;
     private ListView mListView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private BookListAdapter booklistAdapter = new BookListAdapter();
-    private AlertDialog caseOperatorDialog;
     private OperatorListener operatorListener = new OperatorListener();
     private Comparator<BookInfo> comparatorDefault = new Comparator<BookInfo>() {
         @Override

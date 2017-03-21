@@ -5,6 +5,15 @@
     android:background="@color/colorWhite">
 
 
+    <sunday.app.bairead.view.MaterialProgressView
+        android:id="@+id/book_search_activity_material_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        />
+
+
     <LinearLayout
         android:id="@+id/book_search_top_panel"
         android:layout_width="match_parent"
@@ -40,11 +49,13 @@
 
 
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/book_search_activity_hot_search_panel"
         android:layout_width="match_parent"
         android:layout_height="150dp">
 
         <TextView
+
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -58,7 +69,7 @@
         android:id="@+id/book_search_activity_history_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/book_search_activity_hot_search_panel">
+        android:layout_below="@id/book_search_top_panel">
 
         <TextView
             android:id="@+id/book_search_history"
@@ -92,21 +103,20 @@
         android:id="@+id/book_search_activity_result_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/book_search_activity_hot_search_panel"
+        android:layout_below="@id/book_search_top_panel"
         android:visibility="gone">
 
 
-        <TextView
-            android:id="@+id/book_search_activity_result_panel_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="搜索中，请不要返回" />
-
+        <!--<TextView-->
+            <!--android:id="@+id/book_search_activity_result_panel_text"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="搜索中，请不要返回" />-->
+        <!--android:layout_below="@id/book_search_activity_result_panel_text"-->
         <ListView
             android:id="@+id/book_search_book_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/book_search_activity_result_panel_text"
             android:layout_marginLeft="@dimen/default_padding_left" />
 
     </RelativeLayout>

@@ -27,13 +27,13 @@
             android:layout_alignParentRight="true"
             android:text="@string/book_read_setting_top_panel_mark_add_text" />
 
-        <Button
-            android:layout_width="50dp"
-            android:textSize="@dimen/button_text_style_small_text_size"
-            style="@style/TextButton"
-            android:id="@+id/book_read_setting_panel_source"
-            android:layout_alignParentRight="true"
-            android:text="@string/book_read_setting_top_panel_source_text" />
+        <!--<Button-->
+            <!--android:layout_width="50dp"-->
+            <!--android:textSize="@dimen/button_text_style_small_text_size"-->
+            <!--style="@style/TextButton"-->
+            <!--android:id="@+id/book_read_setting_panel_source"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:text="@string/book_read_setting_top_panel_source_text" />-->
 
 
     </RelativeLayout>
