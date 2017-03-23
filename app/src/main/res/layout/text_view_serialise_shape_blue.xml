@@ -2,7 +2,7 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="20dp"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_shape_blue"
+    android:background="@drawable/background_shape_primary"
     android:gravity="center"
     android:text="@string/text_view_serialise_text"
     android:textColor="@color/colorWhite"

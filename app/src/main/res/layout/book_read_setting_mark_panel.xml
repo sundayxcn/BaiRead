@@ -21,7 +21,7 @@
         <Button
             android:id="@+id/book_read_setting_panel_mark_delete_button"
             android:text="@string/book_read_setting_top_button_delete_mark_text"
-            style="@style/TextButton"
+            style="@style/NormalButton"
             android:layout_alignParentRight="true"
              />
     </RelativeLayout>

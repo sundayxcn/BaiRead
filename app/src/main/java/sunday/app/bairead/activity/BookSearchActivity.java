@@ -316,6 +316,9 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
     @Override
     public void bookSearchFinish() {
         hideMaterialProgress();
+        if(bookAdapter.getCount() == 0){
+            showTipsDialog("这位小哥，为了节省流量，目前只支持精确搜索，请确定你没有写错书名");
+        }
         //mResultTextView.setText("搜索完成");
     }
 

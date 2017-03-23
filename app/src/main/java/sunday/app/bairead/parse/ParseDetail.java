@@ -32,12 +32,12 @@ public class ParseDetail extends ParseXml {
         }
         //获取meta标签属性-end
         //获取网站名称-start
-        Elements elements2 = document.select("title");
-        String[] ar = elements2.get(0).text().split("_");
-        if(ar.length < 2){
-            ar = elements2.get(0).text().split("-");
-        }
-        String title = ar[ar.length - 1];
+//        Elements elements2 = document.select("title");
+//        String[] ar = elements2.get(0).text().split("_");
+//        if(ar.length < 2){
+//            ar = elements2.get(0).text().split("-");
+//        }
+//        String title = ar[ar.length - 1];
         //获取网站名称-end
 
         String readUrl = metaMap.get(BookDetail.Meta.CHAPTER_URL);

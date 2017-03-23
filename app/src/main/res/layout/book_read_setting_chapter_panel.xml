@@ -2,7 +2,7 @@
 <sunday.app.bairead.view.ChapterPanel xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorChapterListBg"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -19,7 +19,7 @@
 
         <Button
             android:id="@+id/book_read_setting_panel_chapter_list_order_button"
-            style="@style/TextButton"
+            style="@style/NormalButton"
             android:layout_alignParentRight="true"
              />
     </RelativeLayout>

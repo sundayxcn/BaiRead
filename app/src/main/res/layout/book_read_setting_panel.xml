@@ -8,33 +8,37 @@
     <RelativeLayout
         android:id="@+id/book_read_setting_panel_top_panel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:background="@color/colorPrimary">
 
-        <Button
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
             android:id="@+id/book_read_setting_top_panel_cache_book"
-            style="@style/TextButton"
+            style="@style/NormalButton"
             android:layout_alignParentRight="true"
-            android:text="@string/book_read_setting_top_panel_cache_book_text"
-            android:textSize="@dimen/button_text_style_small_text_size" />
+            android:scaleType="center"
+            android:src="@drawable/ic_download" />
 
-        <Button
+        <ImageView
             android:id="@+id/book_read_setting_panel_mark_add"
-            style="@style/TextButton"
+            style="@style/NormalButton"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/book_read_setting_top_panel_cache_book"
-            android:text="@string/book_read_setting_top_panel_mark_add_text"
-            android:textSize="@dimen/button_text_style_small_text_size" />
+            android:scaleType="center"
+            android:src="@drawable/ic_book_mark" />
 
-        <Button
+        <ImageView
+            android:scaleType="center"
+            android:src="@drawable/ic_book_case"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
             android:id="@+id/book_read_setting_top_panel_add_case"
-            style="@style/TextButton"
+            style="@style/NormalButton"
             android:layout_toLeftOf="@id/book_read_setting_panel_mark_add"
-            android:text="@string/book_read_setting_top_panel_add_case_text"
-            android:textSize="@dimen/button_text_style_small_text_size" />
-
-
-
-
+ />
 
 
         <!--<Button-->

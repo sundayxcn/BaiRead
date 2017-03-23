@@ -179,4 +179,8 @@ public class BaseActivity extends AppCompatActivity implements BaiReadApplicatio
         showConfirmDialog(string,"确定","取消",dialogListenerIm);
     }
 
+    public void showTipsDialog(String tips){
+        new AlertDialog.Builder(this).setMessage(tips).setNegativeButton("在下明白了",null).create().show();
+    }
+
 }

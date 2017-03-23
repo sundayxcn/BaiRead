@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -213,60 +214,66 @@ public class BookReadSettingPanelView extends RelativeLayout {
 
 
     private void showMarkPanel(){
-        bookMarkPanel = (BookMarkPanel)LayoutInflater.from(getContext()).inflate(R.layout.book_read_setting_mark_panel, null, false);
-        TextView titleView = (TextView) bookMarkPanel.findViewById(R.id.book_read_setting_panel_mark_title);
-        titleView.setText(bookReadPresenter.getBookName());
-        Button markDeleteButton = (Button) bookMarkPanel.findViewById(R.id.book_read_setting_panel_mark_delete_button);
-        markDeleteButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BookReadActivity bookReadActivity = (BookReadActivity) getContext();
-                bookReadActivity.showConfirmDialog("清空标签", new BaseActivity.DialogListenerIm() {
-                    @Override
-                    public void onConfirm() {
-                        bookReadPresenter.deleteBookMark();
-                    }
-                });
-            }
-        });
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        ListView bookListView = (ListView) bookMarkPanel.findViewById(R.id.book_read_setting_panel_mark_list);
-        ArrayList<BookMarkInfo> list = bookReadPresenter.getBookMarkList();
-        markAdapter = new MarkAdapter(list);
-        bookListView.setAdapter(markAdapter);
-        bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BookMarkInfo bookMarkInfo = (BookMarkInfo) markAdapter.getItem(position);
-                bookReadPresenter.setChapterIndex(bookMarkInfo.chapterIndex);
-                hide();
-            }
-        });
-        bookListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                final BookMarkInfo bookMarkInfo = (BookMarkInfo) markAdapter.getItem(position);
-                BookReadActivity bookReadActivity = (BookReadActivity) getContext();
-                bookReadActivity.showConfirmDialog("删除标签\n"+bookMarkInfo.title, new BaseActivity.DialogListenerIm() {
-                    @Override
-                    public void onConfirm() {
-                        markAdapter.removeItem(bookMarkInfo);
-                        bookReadPresenter.deleteBookMark(bookMarkInfo);
-                    }
-                });
 
-                return true;
-            }
-        });
-        addView(bookMarkPanel, layoutParams);
+        if(bookReadPresenter.getBookMarkList().size() == 0){
+            BookReadActivity bookReadActivity = (BookReadActivity) getContext();
+            bookReadActivity.showTipsDialog("兄台，书签是空的~~");
+        }else {
+            bookMarkPanel = (BookMarkPanel) LayoutInflater.from(getContext()).inflate(R.layout.book_read_setting_mark_panel, null, false);
+            TextView titleView = (TextView) bookMarkPanel.findViewById(R.id.book_read_setting_panel_mark_title);
+            titleView.setText(bookReadPresenter.getBookName());
+            Button markDeleteButton = (Button) bookMarkPanel.findViewById(R.id.book_read_setting_panel_mark_delete_button);
+            markDeleteButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BookReadActivity bookReadActivity = (BookReadActivity) getContext();
+                    bookReadActivity.showConfirmDialog("清空标签", new BaseActivity.DialogListenerIm() {
+                        @Override
+                        public void onConfirm() {
+                            bookReadPresenter.deleteBookMark();
+                        }
+                    });
+                }
+            });
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            ListView bookListView = (ListView) bookMarkPanel.findViewById(R.id.book_read_setting_panel_mark_list);
+            ArrayList<BookMarkInfo> list = bookReadPresenter.getBookMarkList();
+            markAdapter = new MarkAdapter(list);
+            bookListView.setAdapter(markAdapter);
+            bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    BookMarkInfo bookMarkInfo = (BookMarkInfo) markAdapter.getItem(position);
+                    bookReadPresenter.setChapterIndex(bookMarkInfo.chapterIndex);
+                    hide();
+                }
+            });
+            bookListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    final BookMarkInfo bookMarkInfo = (BookMarkInfo) markAdapter.getItem(position);
+                    BookReadActivity bookReadActivity = (BookReadActivity) getContext();
+                    bookReadActivity.showConfirmDialog("删除标签\n" + bookMarkInfo.title, new BaseActivity.DialogListenerIm() {
+                        @Override
+                        public void onConfirm() {
+                            markAdapter.removeItem(bookMarkInfo);
+                            bookReadPresenter.deleteBookMark(bookMarkInfo);
+                        }
+                    });
+
+                    return true;
+                }
+            });
+            addView(bookMarkPanel, layoutParams);
+        }
     }
 
 
     private void setupTypeView(View parent, String title, String key) {
         TextView titleView = (TextView) parent.findViewById(R.id.book_read_setting_size_line_title);
-        Button reduceButton = (Button) parent.findViewById(R.id.book_read_setting_size_line_button_reduce);
-        Button addButton = (Button) parent.findViewById(R.id.book_read_setting_size_line_button_add);
+        ImageView reduceButton = (ImageView) parent.findViewById(R.id.book_read_setting_size_line_button_reduce);
+        ImageView addButton = (ImageView) parent.findViewById(R.id.book_read_setting_size_line_button_add);
         titleView.setText(title);
         reduceButton.setTag(key);
         addButton.setTag(key);

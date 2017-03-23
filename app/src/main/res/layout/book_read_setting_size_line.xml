@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="100dp">
 
-    <Button
+    <ImageView
         style="@style/TextWeightButton"
-        android:textColor="@color/colorDark"
         android:id="@+id/book_read_setting_size_line_button_reduce"
-        android:text="-"
+        android:src="@drawable/ic_font_reduce"
          />
     <TextView
         android:id="@+id/book_read_setting_size_line_title"
@@ -15,10 +14,9 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:textColor="@color/colorDark"
+    <ImageView
         style="@style/TextWeightButton"
         android:id="@+id/book_read_setting_size_line_button_add"
-        android:text="+"
+        android:src="@drawable/ic_font_add"
  />
 </LinearLayout>

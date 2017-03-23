@@ -26,23 +26,29 @@
             android:id="@+id/book_search_button_back"
             android:layout_width="@dimen/default_image_button_width"
             android:layout_height="match_parent"
-            android:background="@color/colorTransparent"
+            android:background="@drawable/background_ripper"
             android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha" />
 
         <EditText
+            android:paddingLeft="10dp"
             android:id="@+id/book_search_edit_text"
+            android:layout_gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:textSize="16sp"
+            android:layout_height="38dp"
             android:layout_weight="1"
+            android:textCursorDrawable="@null"
             android:hint="@string/search_edit_text_hint"
-            android:textColor="@color/colorWhite"
+            android:background="@drawable/background_stroke_white"
+            android:imeOptions="actionSearch"
+            android:textColor="@color/colorDark"
             android:textColorHint="@color/colorGray" />
 
         <Button
+            android:background="@drawable/background_ripper"
             android:id="@+id/book_search_button_search"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/colorTransparent"
             android:text="@string/search_text"
             android:textColor="@color/colorWhite" />
     </LinearLayout>
@@ -85,7 +91,7 @@
             android:layout_height="@dimen/default_image_button_height"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/default_padding_left"
-            android:background="@drawable/button_background"
+            android:background="@drawable/background_ripper"
             android:text="@string/search_text_history_delete_text" />
 
         <ListView

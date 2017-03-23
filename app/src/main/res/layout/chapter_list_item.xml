@@ -4,6 +4,7 @@
     android:layout_height="wrap_content">
 
     <TextView
+        android:drawableLeft="@drawable/ic_dot"
         android:id="@+id/chapter_list_item_text"
         android:layout_width="300dp"
         android:layout_height="50dp"
@@ -15,11 +16,11 @@
         android:textColor="@color/colorWhite"
         android:id="@+id/chapter_list_item_cache_text"
         android:layout_width="20dp"
-        android:textSize="14dp"
+        android:textSize="13dp"
         android:layout_height="wrap_content"
         android:layout_gravity="right|center_vertical"
         android:text="@string/chapter_list_item_cache_text"
-        android:background="@drawable/background_shape_blue"
+        android:background="@drawable/background_icon"
         android:visibility="gone" />
 
 </FrameLayout>
