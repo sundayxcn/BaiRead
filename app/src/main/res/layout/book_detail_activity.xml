@@ -118,12 +118,14 @@
 
         <Button
             android:id="@+id/book_detail_activity_button_read"
+            style="@style/ShapeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:text="@string/search_book_detail_button_read_text" />
 
         <Button
+            style="@style/ShapeButton"
             android:id="@+id/book_detail_activity_button_case"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -131,6 +133,7 @@
             android:text="@string/search_book_detail_button_bookcase_text" />
 
         <Button
+            style="@style/ShapeButton"
             android:id="@+id/book_detail_activity_button_cache"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -1,2 +1,3 @@
 <!--?xml version="1.0" encoding="utf-8"?-->
-<ripple android:color="@color/colorPrimary" xmlns:android="http://schemas.android.com/apk/res/android"/>
+<ripple android:color="@color/colorWhite" xmlns:android="http://schemas.android.com/apk/res/android"
+    />

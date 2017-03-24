@@ -21,7 +21,6 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
 
@@ -30,19 +29,17 @@ import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 
+import sunday.app.bairead.R;
 import sunday.app.bairead.database.BookChapter;
 import sunday.app.bairead.database.BookInfo;
-import sunday.app.bairead.R;
 import sunday.app.bairead.download.BookChapterCache;
 import sunday.app.bairead.parse.ParseChapter;
 import sunday.app.bairead.parse.ParseDetail;
 import sunday.app.bairead.parse.ParseXml;
 import sunday.app.bairead.presenter.BookDetailPresenter;
-import sunday.app.bairead.tool.FileManager;
-import sunday.app.bairead.tool.NetworkTool;
 import sunday.app.bairead.presenter.BookcasePresenter;
+import sunday.app.bairead.tool.FileManager;
 import sunday.app.bairead.tool.NewChapterShow;
 import sunday.app.bairead.tool.PreferenceSetting;
 import sunday.app.bairead.tool.TimeFormat;
@@ -256,13 +253,13 @@ public class MainActivity extends BaseActivity
             super.onBackPressed();
         }else {
             click++;
-            showToast("双击退出");
+            showToast("再按一次退出应用");
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     click = 0;
                 }
-            }, 1000);
+            }, 3000);
         }
     }
 

@@ -32,6 +32,12 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
+    <style name="ShapeButton" parent="NormalButton">
+        <item name="android:background">@drawable/background_button_shape</item>
+
+    </style>
+
     <style name="TextWeightButton" parent="NormalButton">
         <item name="android:textSize">@dimen/button_text_style_text_size</item>
         <item name="android:textColor">@color/colorWhite</item>
