@@ -126,16 +126,16 @@ public class BookChapterCache {
         ThreadManager.getInstance().work(new Runnable() {
             @Override
             public void run() {
-                if (bookinfo.bookChapter.getChapterList() == null){
+                if (bookinfo.bookChapter.getChapterList() == null || bookinfo.bookChapter.getChapterCount() == 0){
                     bookinfo.bookChapter = getChapter(bookinfo);
                 }
 
                 /*
                  * 网络中断导致获取失败后，清除本地章节link缓存
                  * */
-                if(bookinfo.bookChapter == null){
-//                    String fileName = BookDownLoadListener.getFullChapterFileName(bookinfo.bookDetail.getName());
-//                    FileManager.deleteFile(fileName);
+                if(bookinfo.bookChapter == null || bookinfo.bookChapter.getChapterCount() == 0){
+                    String fileName = BookDownLoad.getFullChapterFileName(bookinfo.bookDetail.getName());
+                    FileManager.deleteFile(fileName);
                     chapterListener.cacheError();
                 }else{
                     init();
