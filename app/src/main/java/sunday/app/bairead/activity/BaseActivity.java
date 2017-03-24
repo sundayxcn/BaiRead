@@ -3,7 +3,6 @@ package sunday.app.bairead.activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,8 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import sunday.app.bairead.database.BaiReadApplication;
-import sunday.app.bairead.tool.NetworkTool;
-import sunday.app.bairead.tool.ThreadManager;
+import sunday.app.bairead.utils.NetworkTool;
 
 /**
  * Created by Administrator on 2017/3/5.

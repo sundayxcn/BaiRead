@@ -4,10 +4,13 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewStub;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import sunday.app.bairead.R;
 import sunday.app.bairead.download.BookChapterCache;
+import sunday.app.bairead.utils.PreferenceSetting;
 import sunday.app.bairead.view.BookReadSettingPanelView;
 import sunday.app.bairead.view.BookTextView;
 import sunday.app.bairead.presenter.BookReadPresenter;
@@ -69,6 +72,22 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
         mBookTextTView.setReadSize(BookReadPresenter.getReadSize(this));
         mBookTextTView.setOnChangeListener(this);
         bookReadPresenter = new BookReadPresenter(this,this,bookId);
+
+        if(PreferenceSetting.getInstance(this).isFirstRead()){
+            ViewStub viewStub = (ViewStub) findViewById(R.id.book_read_activity_guide_layout_viewstub);
+            viewStub.inflate();
+            PreferenceSetting.getInstance(this).putBooleanValue(PreferenceSetting.KEY_FIRST_READ,false);
+            final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.book_read_activity_guide);
+            linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    linearLayout.setVisibility(View.GONE);
+                }
+            });
+        }
+
+
+
 
         int page = bookReadPresenter.getChapterPage();
         mBookTextTView.initPage(page);

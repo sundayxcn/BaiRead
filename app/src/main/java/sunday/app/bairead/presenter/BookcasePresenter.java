@@ -2,10 +2,7 @@ package sunday.app.bairead.presenter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Handler;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,9 +11,9 @@ import sunday.app.bairead.database.BaiReadApplication;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.BookModel;
 import sunday.app.bairead.download.BookDownLoad;
-import sunday.app.bairead.tool.FileManager;
+import sunday.app.bairead.utils.FileManager;
 import sunday.app.bairead.activity.BookReadActivity;
-import sunday.app.bairead.tool.ThreadManager;
+import sunday.app.bairead.utils.ThreadManager;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 

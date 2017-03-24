@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.R;
-import sunday.app.bairead.tool.Temp;
+import sunday.app.bairead.utils.Temp;
 import sunday.app.bairead.presenter.BookDetailPresenter;
 import sunday.app.bairead.view.BookStatusView;
 import sunday.app.bairead.view.BookTypeView;

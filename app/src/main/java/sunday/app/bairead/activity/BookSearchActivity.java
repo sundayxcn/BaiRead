@@ -1,23 +1,17 @@
 package sunday.app.bairead.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,10 +20,8 @@ import java.util.ArrayList;
 
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.R;
-import sunday.app.bairead.download.BookDownLoad;
-import sunday.app.bairead.tool.Temp;
+import sunday.app.bairead.utils.Temp;
 import sunday.app.bairead.presenter.BookSearchPresenter;
-import sunday.app.bairead.view.MaterialProgressDrawable;
 import sunday.app.bairead.view.MaterialProgressView;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;

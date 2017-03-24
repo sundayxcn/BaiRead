@@ -39,10 +39,10 @@ import sunday.app.bairead.parse.ParseDetail;
 import sunday.app.bairead.parse.ParseXml;
 import sunday.app.bairead.presenter.BookDetailPresenter;
 import sunday.app.bairead.presenter.BookcasePresenter;
-import sunday.app.bairead.tool.FileManager;
-import sunday.app.bairead.tool.NewChapterShow;
-import sunday.app.bairead.tool.PreferenceSetting;
-import sunday.app.bairead.tool.TimeFormat;
+import sunday.app.bairead.utils.FileManager;
+import sunday.app.bairead.utils.NewChapterShow;
+import sunday.app.bairead.utils.PreferenceSetting;
+import sunday.app.bairead.utils.TimeFormat;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 

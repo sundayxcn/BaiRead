@@ -33,4 +33,11 @@
         layout="@layout/book_read_setting_panel"/>
 
 
+    <ViewStub
+        android:id="@+id/book_read_activity_guide_layout_viewstub"
+        android:layout="@layout/guide_read_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
 </FrameLayout>

@@ -12,7 +12,7 @@ import sunday.app.bairead.parse.ParseChapterText;
 import sunday.app.bairead.parse.ParseDetail;
 import sunday.app.bairead.parse.ParseSearch;
 import sunday.app.bairead.parse.ParseXml;
-import sunday.app.bairead.tool.FileManager;
+import sunday.app.bairead.utils.FileManager;
 
 /**
  * Created by Administrator on 2017/3/5.

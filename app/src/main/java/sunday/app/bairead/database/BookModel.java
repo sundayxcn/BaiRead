@@ -12,11 +12,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import sunday.app.bairead.parse.ParseChapter;
-import sunday.app.bairead.parse.ParseXml;
-import sunday.app.bairead.tool.DeferredHandler;
-import sunday.app.bairead.tool.FileManager;
-import sunday.app.bairead.tool.Temp;
+import sunday.app.bairead.utils.DeferredHandler;
 
 /**
  * Created by sunday on 2016/12/13.

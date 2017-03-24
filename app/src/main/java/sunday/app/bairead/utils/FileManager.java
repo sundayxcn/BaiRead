@@ -1,6 +1,5 @@
-package sunday.app.bairead.tool;
+package sunday.app.bairead.utils;
 
-import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
@@ -9,7 +8,6 @@ import org.apache.http.util.EncodingUtils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;

@@ -15,10 +15,9 @@ import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.parse.ParseChapter;
 import sunday.app.bairead.parse.ParseChapterText;
 import sunday.app.bairead.parse.ParseXml;
-import sunday.app.bairead.tool.FileManager;
-import sunday.app.bairead.tool.NewChapterShow;
-import sunday.app.bairead.tool.ThreadManager;
-import sunday.app.bairead.view.BookTextView;
+import sunday.app.bairead.utils.FileManager;
+import sunday.app.bairead.utils.NewChapterShow;
+import sunday.app.bairead.utils.ThreadManager;
 
 /**
  * Created by sunday on 2016/12/8.

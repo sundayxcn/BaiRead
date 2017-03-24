@@ -13,14 +13,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import okhttp3.Call;
 import okhttp3.Response;
 import sunday.app.bairead.database.BookInfo;
-import sunday.app.bairead.database.WebInfo;
 import sunday.app.bairead.download.BookDownLoad;
 import sunday.app.bairead.download.OKHttpListener;
 import sunday.app.bairead.download.OKhttpManager;
 import sunday.app.bairead.parse.ParseBaiduSearch;
 import sunday.app.bairead.parse.ParseXml;
-import sunday.app.bairead.tool.FileManager;
-import sunday.app.bairead.tool.ThreadManager;
+import sunday.app.bairead.utils.FileManager;
+import sunday.app.bairead.utils.ThreadManager;
 
 /**
  * Created by sunday on 2017/3/6.

@@ -1,16 +1,9 @@
-package sunday.app.bairead.tool;
+package sunday.app.bairead.utils;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
-import android.widget.Toast;
-
-import java.util.ArrayList;
 
 /**
  * Created by sunday on 2016/12/7.

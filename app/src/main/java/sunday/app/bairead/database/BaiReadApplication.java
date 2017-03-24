@@ -11,14 +11,10 @@ import android.net.Network;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
-import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
-import com.tencent.bugly.crashreport.CrashReport;
-
 import java.io.File;
 import java.util.ArrayList;
 
-import sunday.app.bairead.tool.FileManager;
-import sunday.app.bairead.tool.NetworkTool;
+import sunday.app.bairead.utils.FileManager;
 
 /**
  * Created by sunday on 2016/12/13.

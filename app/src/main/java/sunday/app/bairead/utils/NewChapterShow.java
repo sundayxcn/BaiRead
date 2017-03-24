@@ -1,4 +1,4 @@
-package sunday.app.bairead.tool;
+package sunday.app.bairead.utils;
 
 import java.util.HashMap;
 

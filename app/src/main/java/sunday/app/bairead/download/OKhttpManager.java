@@ -5,11 +5,10 @@ import java.io.IOException;
 
 import okhttp3.Cache;
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import sunday.app.bairead.tool.FileManager;
+import sunday.app.bairead.utils.FileManager;
 
 /**
  * 下载html到本地

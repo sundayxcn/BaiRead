@@ -1,4 +1,4 @@
-package sunday.app.bairead.tool;
+package sunday.app.bairead.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,6 +13,7 @@ public class PreferenceSetting {
 
     public static final String KEY_FIRST_RUN = "firstRun";
 
+    public static final String KEY_FIRST_READ = "firstRead";
     /*
     * 阅读文字大小
     * */
@@ -58,6 +59,11 @@ public class PreferenceSetting {
         sharedPreferences.edit().putInt(key,value).commit();
     }
 
+    public void putBooleanValue(String key,boolean value){
+        sharedPreferences.edit().putBoolean(key,value).commit();
+    }
+
+
     public int getIntValue(String key,int defaultValue){
         return sharedPreferences.getInt(key,defaultValue);
     }
@@ -69,6 +75,10 @@ public class PreferenceSetting {
 
     public  boolean isFirstRun(){
         return sharedPreferences.getBoolean(KEY_FIRST_RUN,true);
+    }
+
+    public  boolean isFirstRead(){
+        return sharedPreferences.getBoolean(KEY_FIRST_READ,true);
     }
 
     public  void setFirstRunFalse(){

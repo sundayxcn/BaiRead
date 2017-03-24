@@ -1,9 +1,7 @@
 package sunday.app.bairead.presenter;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Handler;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -13,9 +11,9 @@ import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.BookMarkInfo;
 import sunday.app.bairead.database.BookModel;
 import sunday.app.bairead.download.BookChapterCache;
-import sunday.app.bairead.tool.PreferenceSetting;
-import sunday.app.bairead.tool.Temp;
-import sunday.app.bairead.tool.ThreadManager;
+import sunday.app.bairead.utils.PreferenceSetting;
+import sunday.app.bairead.utils.Temp;
+import sunday.app.bairead.utils.ThreadManager;
 import sunday.app.bairead.view.BookTextView;
 
 /**
