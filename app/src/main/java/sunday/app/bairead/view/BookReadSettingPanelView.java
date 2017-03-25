@@ -269,11 +269,13 @@ public class BookReadSettingPanelView extends RelativeLayout {
     }
 
 
-    private void setupTypeView(View parent, String title, String key) {
+    private void setupTypeView(View parent,int imgLeftId,int imgRightId,int titleId, String key) {
         TextView titleView = (TextView) parent.findViewById(R.id.book_read_setting_size_line_title);
         ImageView reduceButton = (ImageView) parent.findViewById(R.id.book_read_setting_size_line_button_reduce);
+        reduceButton.setImageResource(imgLeftId);
         ImageView addButton = (ImageView) parent.findViewById(R.id.book_read_setting_size_line_button_add);
-        titleView.setText(title);
+        addButton.setImageResource(imgRightId);
+        titleView.setText(titleId);
         reduceButton.setTag(key);
         addButton.setTag(key);
         reduceButton.setOnClickListener(sizeOnReduceClickListener);
@@ -281,18 +283,34 @@ public class BookReadSettingPanelView extends RelativeLayout {
     }
 
 
+
+    static class PreferView{
+        int imgLeftId;
+        int imgRightId;
+        int titleId;
+        String prefKey;
+        public PreferView(int imgLeftId,int imgRightId,int titleId,String key){
+            this.imgLeftId = imgLeftId;
+            this.imgRightId = imgRightId;
+            this.titleId = titleId;
+            this.prefKey = key;
+        }
+    }
+
     private void showBookTextSizePanel() {
         bookReadSettingTextSizePanel = (BookReadSettingTextSizePanel) LayoutInflater.from(getContext()).inflate(R.layout.book_read_setting_size_panel, null, false);
-        String[][] titleKeys = new String[][]{
-                {"文字", PreferenceSetting.KEY_TEXT_SIZE},
-                {"行间距", PreferenceSetting.KEY_LINE_SIZE},
-                {"边距", PreferenceSetting.KEY_MARGIN_SIZE}
+        PreferView[] preferViews = new PreferView[]{
+                new PreferView(R.drawable.ic_font_reduce,R.drawable.ic_font_add,R.string.book_read_preference_title_font,PreferenceSetting.KEY_TEXT_SIZE),
+                new PreferView(R.drawable.ic_line_reduce,R.drawable.ic_line_add,R.string.book_read_preference_title_line,PreferenceSetting.KEY_LINE_SIZE),
+                new PreferView(R.drawable.ic_margin_reduce,R.drawable.ic_margin_add,R.string.book_read_preference_title_margin,PreferenceSetting.KEY_MARGIN_SIZE),
         };
+
+
 
         int childCount = bookReadSettingTextSizePanel.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View view = bookReadSettingTextSizePanel.getChildAt(i);
-            setupTypeView(view, titleKeys[i][0], titleKeys[i][1]);
+            setupTypeView(view, preferViews[i].imgLeftId,preferViews[i].imgRightId,preferViews[i].titleId,preferViews[i].prefKey);
         }
 
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
