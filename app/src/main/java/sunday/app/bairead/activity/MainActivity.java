@@ -45,6 +45,7 @@ import sunday.app.bairead.utils.PreferenceSetting;
 import sunday.app.bairead.utils.TimeFormat;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static sunday.app.bairead.R.id.dialog_select_layout_title;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, BookcasePresenter.IBookcasePresenterListener {
@@ -219,9 +220,44 @@ public class MainActivity extends BaseActivity
             operatorStringArray[0] = "置顶";
         }
         //if (caseOperatorDialog == null) {
-         new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
-                    .setTitle(bookName)
-                    .setItems(operatorStringArray, operatorListener).create().show();
+         AlertDialog alertDialog = new AlertDialog.Builder(this)
+                    .setView(R.layout.dialog_select_layout).create();
+
+        TextView titleView = (TextView) alertDialog.findViewById(dialog_select_layout_title);
+        titleView.setText(bookName);
+        ListView selectListView = (ListView) alertDialog.findViewById(R.id.dialog_select_layout_list_view);
+        selectListView.setOnClickListener(operatorListener);
+        selectListView.setAdapter(new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return operatorStringArray.length;
+            }
+
+            @Override
+            public Object getItem(int position) {
+                return operatorStringArray[position];
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return position;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if(convertView == null){
+                    TextView textView = (TextView) LayoutInflater.from(getBaseContext()).inflate(R.layout.dialog_select_list_item,null,false);
+                    textView.setTag(position);
+                    convertView = textView;
+                }
+
+                ((TextView)convertView).setText(operatorStringArray[position]);
+
+                return null;
+            }
+        });
+
+        alertDialog.show();
         //}
         //caseOperatorDialog.show();
     }
@@ -421,7 +457,7 @@ public class MainActivity extends BaseActivity
         NewChapterShow.getInstance().clearNewChapterList();
     }
 
-    class OperatorListener implements DialogInterface.OnClickListener {
+    class OperatorListener implements View.OnClickListener {
         private BookInfo bookInfo;
 
         private void setBookInfo(BookInfo bookInfo) {
@@ -429,7 +465,8 @@ public class MainActivity extends BaseActivity
         }
 
         @Override
-        public void onClick(DialogInterface dialog, int which) {
+        public void onClick(View v) {
+            int which = (int) v.getTag();
             switch (which) {
                 case OPERATOR_TOP:
                     boolean topCase = bookInfo.bookDetail.isTopCase();

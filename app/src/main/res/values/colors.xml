@@ -10,4 +10,5 @@
     <color name="colorDark">#FF000000</color>
     <color name="colorChapterListBg">#FFC0C0C0</color>
     <color name="colorButtonPress">#28282828</color>
+    <color name="colorOrange">#FFFF7D00</color>
 </resources>
