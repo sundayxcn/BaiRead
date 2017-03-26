@@ -7,9 +7,10 @@
 
 界面UI
 
-![Alt text](https://github.com/xindasunday/BaiRead/tree/master/Screenshots/main_ui.png)
-![Alt text](https://github.com/xindasunday/BaiRead/tree/master/Screenshots/draw_ui.png)
-![Alt text](https://github.com/xindasunday/BaiRead/tree/master/Screenshots/read_ui.png)
+![index](https://github.com/xindasunday/BaiRead/tree/master/Screenshots/main_ui.png)
+![index](https://github.com/xindasunday/BaiRead/tree/master/Screenshots/draw_ui.png)
+![index](https://github.com/xindasunday/BaiRead/tree/master/Screenshots/read_ui.png)
+
 -------------------
 
 
