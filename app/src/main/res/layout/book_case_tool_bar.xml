@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/book_case_tool_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:background="@color/colorPrimary"
+    android:orientation="horizontal"
+    android:visibility="gone">
+
+    <ImageView
+        android:id="@+id/book_case_tool_bar_top"
+        style="@style/ToolbarButton"
+        android:src="@drawable/ic_top" />
+
+    <ImageView
+        android:id="@+id/book_case_tool_bar_cache"
+        style="@style/ToolbarButton"
+        android:src="@drawable/ic_downloads"
+        />
+
+    <ImageView
+        android:id="@+id/book_case_tool_bar_delete"
+        style="@style/ToolbarButton"
+        android:src="@drawable/ic_clear" />
+
+</LinearLayout>

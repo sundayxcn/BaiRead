@@ -5,7 +5,17 @@
     android:background="@drawable/background_stroke_white"
     >
 
+    <CheckBox
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:focusable="false"
+        android:id="@+id/xlist_item_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <ImageView
+        android:layout_toRightOf="@id/xlist_item_check_box"
         android:id="@+id/xlist_item_cover_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

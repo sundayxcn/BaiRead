@@ -24,6 +24,11 @@
     <string name="search_book_detail_button_cache_text">全本缓存</string>
 	<string name="book_search_book_dont_find_text">Sorry,找不到这本书，本软件暂时只支持精确搜索，请确认输入的书名是否正确</string>
 
+
+    <!--书架页面-->
+    <string name="book_case_tool_bar_top">置顶</string>
+    <string name="book_case_tool_bar_cache">缓存</string>
+    <string name="book_case_tool_bar_delete">删除</string>
 	<string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>
     <string name="xlistview_header_hint_loading">正在加载...</string>
