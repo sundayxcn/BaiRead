@@ -28,7 +28,7 @@ public class BookDetailPresenter {
         BookcasePresenter.readBook(context,bookInfo);
     }
 
-    public void addToBookCase(BookInfo bookInfo){
+    public static void addToBookCase(Context context,BookInfo bookInfo){
         BaiReadApplication application  = (BaiReadApplication) context.getApplicationContext();
         BookModel bookModel = application.getBookModel();
         bookModel.addBook(bookInfo);

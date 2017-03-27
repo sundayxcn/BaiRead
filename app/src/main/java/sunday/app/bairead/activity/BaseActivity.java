@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import sunday.app.bairead.database.BaiReadApplication;
 import sunday.app.bairead.utils.NetworkTool;
+import sunday.app.bairead.view.ListDialog;
 
 /**
  * Created by Administrator on 2017/3/5.
@@ -180,5 +182,19 @@ public class BaseActivity extends AppCompatActivity implements BaiReadApplicatio
     public void showTipsDialog(String tips){
         new AlertDialog.Builder(this).setMessage(tips).setNegativeButton("在下明白了",null).create().show();
     }
+
+
+    private ListDialog mListDialog;
+    public void showListDialog(String title,String[] texts, AdapterView.OnItemClickListener onItemClickListener){
+        mListDialog = new ListDialog(this);
+        mListDialog.show(title,texts,onItemClickListener);
+    }
+
+    public void hideListDialog(){
+        if(mListDialog != null){
+            mListDialog.dismiss();
+        }
+    }
+
 
 }

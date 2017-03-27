@@ -231,4 +231,14 @@ public class FileManager {
         file.delete();
     }
 
+
+    public static File[] checkBookCache(){
+        final File baseDir = new File(FileManager.PATH);
+        if (baseDir.exists()){
+            return baseDir.listFiles();
+        }else{
+            return null;
+        }
+    }
+
 }
