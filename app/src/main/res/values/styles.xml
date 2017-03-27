@@ -29,7 +29,7 @@
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:gravity">center</item>
         <item name="android:clickable">true</item>
-        <item name="android:background">@drawable/background_button</item>
+        <item name="android:background">@drawable/background_ripper</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:drawablePadding">0dp</item>
@@ -37,17 +37,14 @@
 
     <style name="ShapeButton" parent="NormalButton">
         <item name="android:background">@drawable/background_button_shape</item>
-
     </style>
 
     <style name="TextWeightButton" parent="NormalButton">
-        <item name="android:background">@drawable/background_ripper</item>
         <item name="android:scaleType">center</item>
         <item name="android:layout_weight">1</item>
     </style>
 
     <style name="ToolbarButton" parent="TextWeightButton">
-        <item name="android:background">@drawable/background_ripper</item>
         <item name="android:height">100dp</item>
     </style>
 
