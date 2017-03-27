@@ -53,8 +53,9 @@ import sunday.app.bairead.utils.FileManager;
 import sunday.app.bairead.utils.NewChapterShow;
 import sunday.app.bairead.utils.PreferenceSetting;
 import sunday.app.bairead.utils.TimeFormat;
+import sunday.app.bairead.view.ListDialog;
 
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static sunday.app.bairead.R.id.dialog_select_layout_title;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, BookcasePresenter.IBookcasePresenterListener {
@@ -309,7 +310,7 @@ public class MainActivity extends BaseActivity
         booklistAdapter.notifyDataSetChanged();
     }
 
-
+    private ListDialog listDialog;
     public void showCaseOperatorDialog(BookInfo bookInfo) {
         String bookName = bookInfo.bookDetail.getName();
         operatorListener.setBookInfo(bookInfo);
@@ -318,13 +319,17 @@ public class MainActivity extends BaseActivity
         }else{
             operatorStringArray[0] = "置顶";
         }
-        //if (caseOperatorDialog == null) {
-         new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
-                    .setTitle(bookName)
-                    .setItems(operatorStringArray, operatorListener).create().show();
-        //}
-        //caseOperatorDialog.show();
+
+
+        listDialog = new ListDialog(this);
+        listDialog.show(bookName,operatorStringArray,operatorListener);
+
     }
+
+    public void hideCaseOperatorDialog(){
+        listDialog.dismiss();
+    }
+
 
     @Override
     protected void onResume() {
@@ -474,7 +479,7 @@ public class MainActivity extends BaseActivity
         else if (id == R.id.nav_version) {
             Intent intent = new Intent();
             intent.setClass(this, DisclaimerActivity.class);
-            intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
 
@@ -526,7 +531,7 @@ public class MainActivity extends BaseActivity
         NewChapterShow.getInstance().clearNewChapterList();
     }
 
-    class OperatorListener implements DialogInterface.OnClickListener {
+    class OperatorListener implements AdapterView.OnItemClickListener {
         private BookInfo bookInfo;
 
         private void setBookInfo(BookInfo bookInfo) {
@@ -534,8 +539,8 @@ public class MainActivity extends BaseActivity
         }
 
         @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            switch (position) {
                 case OPERATOR_TOP:
                     boolean topCase = bookInfo.bookDetail.isTopCase();
                     bookInfo.bookDetail.setTopCase(!topCase);
@@ -557,7 +562,11 @@ public class MainActivity extends BaseActivity
                     showBookCaseToolBar();
                     break;
                 default:
+                    break;
             }
+
+            hideCaseOperatorDialog();
+
         }
     }
 

@@ -11,12 +11,12 @@
     <ImageView
         android:id="@+id/book_case_tool_bar_top"
         style="@style/ToolbarButton"
-        android:src="@drawable/ic_top" />
+         />
 
     <ImageView
         android:id="@+id/book_case_tool_bar_cache"
         style="@style/ToolbarButton"
-        android:src="@drawable/ic_downloads"
+
         />
 
     <ImageView

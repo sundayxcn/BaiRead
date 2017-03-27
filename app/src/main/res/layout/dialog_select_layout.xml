@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/dialog_select_layout_title"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:textSize="25dp" />
+
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="1dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/colorOrange"
+         />
 
     <ListView
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
         android:id="@+id/dialog_select_layout_list_view"
+        android:layout_width="250dp"
+        android:layout_height="300dp"
+        android:layout_below="@id/dialog_select_layout_title"
+        android:layout_centerHorizontal="true"
+        android:divider="@null"
+        android:dividerHeight="8dp" />
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
-
-
-    <Button
-        android:layout_marginBottom="@dimen/dialog_button_margin_bottom"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/dialog_select_layout_button_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-
-</RelativeLayout>
+        android:layout_height="20dp"/>
+    
+</LinearLayout>
