@@ -6,33 +6,30 @@
     android:orientation="vertical">
 
     <TextView
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:id="@+id/dialog_select_layout_title"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="25dp" />
+        android:textSize="@dimen/dialog_title_text_size" />
 
-    <TextView
+    <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_height="@dimen/div_view_height"
+        android:layout_marginLeft="@dimen/div_view_margin_left"
+        android:layout_marginRight="@dimen/div_view_margin_right"
         android:background="@color/colorOrange"
          />
 
     <ListView
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginTop="@dimen/dialog_list_margin_top"
         android:id="@+id/dialog_select_layout_list_view"
-        android:layout_width="250dp"
-        android:layout_height="300dp"
+        android:layout_width="@dimen/dialog_list_width"
+        android:layout_height="@dimen/dialog_list_height"
         android:layout_below="@id/dialog_select_layout_title"
         android:layout_centerHorizontal="true"
         android:divider="@null"
-        android:dividerHeight="8dp" />
+        android:dividerHeight="@dimen/dialog_list_div_height" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="20dp"/>
-    
 </LinearLayout>

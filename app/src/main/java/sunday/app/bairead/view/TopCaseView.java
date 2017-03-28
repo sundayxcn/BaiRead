@@ -30,7 +30,7 @@ public class TopCaseView extends TextView {
     private void init(){
         paint = new Paint();
         paint.setARGB(155,48,63,159);
-        paint.setStrokeWidth(15);
+        paint.setStrokeWidth(25);
 }
 
 

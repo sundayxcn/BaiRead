@@ -19,16 +19,14 @@
             android:id="@+id/search_fragment_list_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18dp"
-         />
+            android:textSize="@dimen/search_list_item_name_text_size" />
 
 
         <TextView
             android:id="@+id/search_fragment_list_item_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/search_item_author_text"
-             />
+            android:text="@string/search_item_author_text" />
 
         <TextView
             android:id="@+id/search_fragment_list_item_chapter_latest"
@@ -41,21 +39,15 @@
             android:id="@+id/search_fragment_list_item_chapter_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/search_item_author_update_time"
-            />
-
-
-
-
-
+            android:text="@string/search_item_author_update_time" />
 
         <TextView
             android:id="@+id/search_fragment_list_item_source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/search_item_author_source"
-            android:visibility="gone"
-            android:textColor="@color/colorGray" />
+            android:textColor="@color/colorGray"
+            android:visibility="gone" />
     </LinearLayout>
 
 

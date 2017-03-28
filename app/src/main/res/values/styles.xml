@@ -36,7 +36,11 @@
     </style>
 
     <style name="ShapeButton" parent="NormalButton">
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
         <item name="android:background">@drawable/background_button_shape</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_weight">1</item>
     </style>
 
     <style name="TextWeightButton" parent="NormalButton">
@@ -55,4 +59,15 @@
         <item name="android:windowCloseOnTouchOutside">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="shapeIcon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/shape_icon_height</item>
+        <item name="android:textSize">@dimen/shape_icon_text_size</item>
+        <item name="android:paddingLeft">@dimen/shape_icon_padding_left</item>
+        <item name="android:paddingRight">@dimen/shape_icon_padding_right</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
 </resources>

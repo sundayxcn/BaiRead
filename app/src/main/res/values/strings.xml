@@ -57,7 +57,9 @@
     <string name="restore_config">恢复默认设置</string>
     <string name="delete_all_book">删除所有的数据缓存</string>
     <string name="top_book_tips">置顶选中书籍</string>
+    <string name="cache_one_book_tips">缓存书籍，建议在WIFI下缓存</string>
     <string name="cache_book_tips">缓存选中书籍，建议在WIFI下缓存</string>
+    <string name="delete_one_book_tips">删除书籍,缓存也将一起删除且不能恢复...</string>
     <string name="delete_book_tips">删除选中的书籍,缓存也将一起删除且不能恢复...</string>
 	<string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>

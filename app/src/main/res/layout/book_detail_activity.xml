@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="20dp"
+    android:layout_marginBottom="30dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     android:orientation="vertical">
@@ -35,8 +35,9 @@
                 android:layout_height="wrap_content"
                 android:textSize="18dp" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:paddingTop="10dp"
+                android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -45,15 +46,16 @@
                     android:id="@+id/book_detail_activity_type"
                     layout="@layout/book_type_view" />
 
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="1dp"/>
+
                 <include
                     android:id="@+id/book_detail_activity_status"
                     layout="@layout/book_status_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/book_detail_activity_type" />
+                     />
 
-            </RelativeLayout>
+            </LinearLayout>
 
 
             <TextView
@@ -112,34 +114,26 @@
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button
+        <TextView
             android:id="@+id/book_detail_activity_button_read"
             style="@style/ShapeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:text="@string/search_book_detail_button_read_text" />
 
-        <Button
+        <TextView
             style="@style/ShapeButton"
             android:id="@+id/book_detail_activity_button_case"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:text="@string/search_book_detail_button_bookcase_text" />
 
-        <Button
+        <TextView
             style="@style/ShapeButton"
             android:id="@+id/book_detail_activity_button_cache"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:text="@string/search_book_detail_button_cache_text" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

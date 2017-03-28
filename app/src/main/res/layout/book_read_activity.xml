@@ -8,20 +8,20 @@
     <TextView
         android:id="@+id/book_read_activity_book_title"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="@dimen/read_title_text_height"
         android:maxLines="1"
         android:ellipsize="marquee"
-        android:textSize="15dp" />
+        android:textSize="@dimen/read_title_text_size" />
 
     <sunday.app.bairead.view.BookTextView
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="@dimen/read_text_margin_top"
         android:id="@+id/book_read_activity_book_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="18dp" />
+        android:textSize="@dimen/read_text_text_size_default" />
 
     <TextView
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="@dimen/read_page_index_margin_right"
         android:id="@+id/book_read_activity_book_page"
         android:layout_gravity="bottom|right"
         android:layout_width="wrap_content"

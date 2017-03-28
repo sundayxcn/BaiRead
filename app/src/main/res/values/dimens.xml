@@ -17,11 +17,51 @@
     <dimen name="search_fragment_list_item_author_text_size">13dp</dimen>
     <dimen name="search_fragment_book_detail_description_height">80dp</dimen>
 
-    <dimen name="button_text_style_text_size">16dp</dimen>
+    <dimen name="button_text_style_text_size">14dp</dimen>
     <dimen name="button_text_style_small_text_size">13dp</dimen>
 
 
 <!--选择对话框-->
     <dimen name="dialog_select_list_item_width">200dp</dimen>
     <dimen name="dialog_button_margin_bottom">20dp</dimen>
+
+    <!--书架操作对话框-->
+    <dimen name="div_view_margin_left">10dp</dimen>
+    <dimen name="div_view_margin_right">10dp</dimen>
+    <dimen name="div_view_width">1dp</dimen>
+    <dimen name="div_view_height">1dp</dimen>
+    <dimen name="dialog_title_text_size">20dp</dimen>
+    <dimen name="dialog_list_item_text_size">16dp</dimen>
+    <dimen name="dialog_list_width">250dp</dimen>
+    <dimen name="dialog_list_height">300dp</dimen>
+    <dimen name="dialog_list_div_height">8dp</dimen>
+    <dimen name="dialog_list_margin_top">20dp</dimen>
+    <dimen name="dialog_list_margin_left">20dp</dimen>
+    <dimen name="book_case_list_item_div_height">5dp</dimen>
+
+    <dimen name="nav_head_margin_top">50dp</dimen>
+    <dimen name="nav_head_margin_left">50dp</dimen>
+    <dimen name="nav_head_text_size">20dp</dimen>
+
+
+    <!--搜索界面-->
+    <dimen name="search_list_item_name_text_size">20dp</dimen>
+
+    <dimen name="shape_icon_width">20dp</dimen>
+    <dimen name="shape_icon_height">20dp</dimen>
+    <dimen name="shape_icon_text_size">12sp</dimen>
+    <dimen name="shape_icon_padding_left">10dp</dimen>
+    <dimen name="shape_icon_padding_right">10dp</dimen>
+
+    <!--阅读界面-->
+    <dimen name="read_title_text_size">15dp</dimen>
+    <!--<dimen name="read_title_text_width">300dp</dimen>-->
+    <dimen name="read_title_text_height">20dp</dimen>
+    <dimen name="read_text_margin_top">25dp</dimen>
+    <dimen name="read_text_text_size_default">18dp</dimen>
+    <dimen name="read_page_index_margin_right">15dp</dimen>
+    <dimen name="chapter_list_item_width">300dp</dimen>
+    <dimen name="chapter_list_item_height">50dp</dimen>
+    <dimen name="chapter_list_item_margin_right">25dp</dimen>
+
 </resources>

@@ -31,7 +31,7 @@ public class BookStatusView extends MyTextView {
         //int strokeWidth = 1; // 边框宽度
         int roundRadius = 8; //  圆角半径
         //int strokeColor = Color.parseColor("#00FFFF");//边框颜色
-        int fillColor = Color.parseColor("#808080");//内部填充颜色
+        int fillColor = Color.parseColor("#0080ff");//内部填充颜色
 
         GradientDrawable gd = new GradientDrawable();//创建drawable
         gd.setColor(fillColor);
@@ -40,7 +40,7 @@ public class BookStatusView extends MyTextView {
 
         setBackground(gd);
 
-        String text = status ? "连" : "完";
+        String text = status ? "连载" : "完结";
         setText(text);
     }
 

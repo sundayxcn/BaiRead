@@ -30,9 +30,9 @@ public class BookDetailActivity extends BaseActivity implements BookDetailPresen
     private BookTypeView bookTypeView;
     private BookStatusView bookStatusView;
 
-    private Button mButtonReadView;
-    private Button mButtonCaseView;
-    private Button mButtonCahceView;
+    private TextView mButtonReadView;
+    private TextView mButtonCaseView;
+    private TextView mButtonCahceView;
 
 
     //private BookDetailPresenter bookDetailPresenter;
@@ -61,9 +61,9 @@ public class BookDetailActivity extends BaseActivity implements BookDetailPresen
         bookStatusView = (BookStatusView) findViewById(R.id.book_detail_activity_status);
         mDescriptionTView = (TextView) findViewById(R.id.book_detail_activity_description);
 
-        mButtonReadView = (Button) findViewById(R.id.book_detail_activity_button_read);
-        mButtonCaseView = (Button) findViewById(R.id.book_detail_activity_button_case);
-        mButtonCahceView = (Button) findViewById(R.id.book_detail_activity_button_cache);
+        mButtonReadView = (TextView) findViewById(R.id.book_detail_activity_button_read);
+        mButtonCaseView = (TextView) findViewById(R.id.book_detail_activity_button_case);
+        mButtonCahceView = (TextView) findViewById(R.id.book_detail_activity_button_cache);
         mButtonReadView.setOnClickListener(onClickListener);
         mButtonCaseView.setOnClickListener(onClickListener);
         mButtonCahceView.setOnClickListener(onClickListener);

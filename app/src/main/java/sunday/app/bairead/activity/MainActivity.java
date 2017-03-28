@@ -479,12 +479,25 @@ public class MainActivity extends BaseActivity
                     BookSearchActivity.goBookDetail(getBaseContext(), bookInfo);
                     break;
                 case OPERATOR_CACHE:
-                    BookChapterCache.getInstance().downloadAllChpater(bookInfo);
+                    showConfirmDialog(R.string.cache_one_book_tips,new DialogListenerIm(){
+                        @Override
+                        public void onConfirm() {
+                            super.onConfirm();
+                            BookChapterCache.getInstance().downloadAllChpater(bookInfo);
+                        }
+                    });
+
                     break;
                 case OPERATOR_DELETE:
-                    booklistAdapter.getBookInfoList().remove(bookInfo);
-                    booklistAdapter.notifyDataSetChanged();
-                    bookcasePresenter.deleteBook(bookInfo);
+                    showConfirmDialog(R.string.delete_one_book_tips,new DialogListenerIm(){
+                        @Override
+                        public void onConfirm() {
+                            super.onConfirm();
+                            booklistAdapter.getBookInfoList().remove(bookInfo);
+                            booklistAdapter.notifyDataSetChanged();
+                            bookcasePresenter.deleteBook(bookInfo);
+                        }
+                    });
                     break;
                 case OPERATOR_ALL:
                     showBookCaseToolBar();

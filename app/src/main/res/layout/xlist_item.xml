@@ -26,8 +26,8 @@
 
     <sunday.app.bairead.view.TopCaseView
         android:id="@+id/xlist_item_top_case"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:visibility="gone"
         />
 

@@ -1,9 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
-<sunday.app.bairead.view.BookStatusView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textSize="12dp"
-    android:gravity="center"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp"
-    android:textColor="@color/colorWhite" />
+<sunday.app.bairead.view.BookStatusView
+    style="@style/shapeIcon" />
