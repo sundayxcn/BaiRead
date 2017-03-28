@@ -23,12 +23,42 @@
     <string name="search_book_detail_button_bookcase_add_text">已加入到书架</string>
     <string name="search_book_detail_button_cache_text">全本缓存</string>
 	<string name="book_search_book_dont_find_text">Sorry,找不到这本书，本软件暂时只支持精确搜索，请确认输入的书名是否正确</string>
-
+    <string name="network_connect_failed">网络连接不上，请检查网络</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <string name="confirm_tips">在下明白了</string>
+    <string name="double_click_cancel">再按一次退出应用</string>
+    <string name="nav_clear_cache_text">清除本地缓存</string>
+    <string name="nav_restore_config_text">恢复默认设置</string>
+    <string name="nav_inflater_book">加载缓存书籍</string>
+    <string name="nav_suggest_report_text">发送建议</string>
+    <string name="nav_add_source_web_text">添加修改源网站</string>
+    <string name="text_view_serialise_text">连</string>
+    <string name="text_view_end_text">完</string>
+    <string name="nav_rate_text">给个好评</string>
+    <string name="nav_disclaimer_text">免责声明</string>
 
     <!--书架页面-->
     <string name="book_case_tool_bar_top">置顶</string>
     <string name="book_case_tool_bar_cache">缓存</string>
     <string name="book_case_tool_bar_delete">删除</string>
+    <string name="book_case_dialog_list_top">@string/book_case_tool_bar_top</string>
+    <string name="book_case_dialog_list_top_cancel">取消置顶</string>
+    <string name="book_case_dialog_list_detail">书籍详情</string>
+    <string name="book_case_dialog_list_cache">缓存全本</string>
+    <string name="book_case_dialog_list_delete">删除本书</string>
+    <string name="book_case_dialog_list_opera">批量操作</string>
+    <string name="update_finish">更新完毕</string>
+    <string name="update_finish_no_new">更新完毕,无新章节</string>
+    <string name="no_cache">本地无缓存</string>
+    <string name="cache_book_title">检测到本地有缓存书籍</string>
+    <string name="cache_book_confirm">加载</string>
+    <string name="cache_book_cancel">不加载</string>
+    <string name="restore_config">恢复默认设置</string>
+    <string name="delete_all_book">删除所有的数据缓存</string>
+    <string name="top_book_tips">置顶选中书籍</string>
+    <string name="cache_book_tips">缓存选中书籍，建议在WIFI下缓存</string>
+    <string name="delete_book_tips">删除选中的书籍,缓存也将一起删除且不能恢复...</string>
 	<string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>
     <string name="xlistview_header_hint_loading">正在加载...</string>
@@ -37,6 +67,11 @@
     <string name="xlistview_footer_hint_ready">松开载入更多</string>
     <string name="xlistview_item_chapter_update_text">新</string>
     <string name="chapter_list_item_cache_text">缓</string>
+
+    <!--搜索界面-->
+    <string name="search_result_null">这位小哥，为了节省流量，目前只支持精确搜索，请确定你没有写错书名</string>
+
+    <!--阅读界面-->
     <string name="book_read_setting_bottom_button_text_chapter">目录</string>
     <string name="book_read_setting_bottom_button_text_mark">书签</string>
     <string name="book_read_setting_bottom_button_text_size">字体</string>
@@ -44,22 +79,11 @@
     <string name="book_read_setting_top_panel_mark_add_text">添加书签</string>
     <string name="book_read_setting_top_panel_add_case_text">添加到书架</string>
     <string name="book_read_setting_top_panel_cache_book_text">缓存全本</string>
-
-    <string name="book_read_setting_top_panel_source_text">换源</string>
-    <string name="book_read_setting_top_button_delete_mark_text">清空书签</string>
-    <string name="nav_clear_cache_text">清除本地缓存</string>
-    <string name="nav_restore_config_text">恢复默认设置</string>
-    <string name="nav_infalter_book">加载缓存书籍</string>
-    <string name="nav_suggest_report_text">发送建议</string>
-    <string name="nav_add_source_web_text">添加修改源网站</string>
-    <string name="text_view_serialise_text">连</string>
-    <string name="text_view_end_text">完</string>
-    <string name="nav_disclaimer_text">免责声明</string>
-
-    <!--阅读设置-->
     <string name="book_read_preference_title_font">文字</string>
     <string name="book_read_preference_title_line">行间距</string>
     <string name="book_read_preference_title_margin">左右边距</string>
+    <string name="book_read_setting_top_panel_source_text">换源</string>
+    <string name="book_read_setting_top_button_delete_mark_text">清空书签</string>
 
 
     <string name="disclaimer">"百读小说提醒您：在使用百读小说前，请您务必仔细阅读并透彻理解本声明。您可以选择不使用百读小说，但如果您使用百读小说，您的使用行为将被视为对本声明全部内容的认可。

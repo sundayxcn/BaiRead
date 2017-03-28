@@ -309,7 +309,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
     public void bookSearchFinish() {
         hideMaterialProgress();
         if(bookAdapter.getCount() == 0){
-            showTipsDialog("这位小哥，为了节省流量，目前只支持精确搜索，请确定你没有写错书名");
+            showTipsDialog(R.string.search_result_null);
         }
         //mResultTextView.setText("搜索完成");
     }
@@ -318,15 +318,12 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
     @Override
     public void bookSearchError() {
         //hideProgressDialog();
-        showToastNetworkUnconnect();
+        hideMaterialProgress();
+        showToastNetworkUnConnect();
     }
 
     public void showHistoryPanel(boolean show){
         int visibility = show ? View.VISIBLE : View.GONE;
-//        mToastView.setVisibility(visibility);
-//        historyListView.setVisibility(visibility);
-//        historyTextView.setVisibility(visibility);
-//        historyDeleteButton.setVisibility(visibility);
         mHistoryPanel.setVisibility(visibility);
 
     }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="dialog_list_operator_top">
+        <item>置顶</item>
+        <item>书籍详情</item>
+        <item>缓存全本</item>
+        <item>删除本书</item>
+        <item>批量操作</item>
+    </string-array>
+
+    <string-array name="dialog_list_operator_top_cancel">
+        <item>取消置顶</item>
+        <item>书籍详情</item>
+        <item>缓存全本</item>
+        <item>删除本书</item>
+        <item>批量操作</item>
+    </string-array>
+</resources>

@@ -35,7 +35,7 @@ public class BookDetailActivity extends BaseActivity implements BookDetailPresen
     private Button mButtonCahceView;
 
 
-    private BookDetailPresenter bookDetailPresenter;
+    //private BookDetailPresenter bookDetailPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class BookDetailActivity extends BaseActivity implements BookDetailPresen
         setContentView(R.layout.book_detail_activity);
         bookInfo = Temp.getInstance().getBookInfo();
         //Temp.getInstance().clearBookInfo();
-        bookDetailPresenter = new BookDetailPresenter(this,this);
+        //bookDetailPresenter = new BookDetailPresenter(this,this);
         setTitle("图书简介");
         setupView();
         initView();
@@ -76,13 +76,13 @@ public class BookDetailActivity extends BaseActivity implements BookDetailPresen
             int id = v.getId();
             switch (id) {
                 case R.id.book_detail_activity_button_read:
-                    bookDetailPresenter.readBook(bookInfo);
+                    BookDetailPresenter.readBook(getApplicationContext(),bookInfo);
                     break;
                 case R.id.book_detail_activity_button_case:
-                    bookDetailPresenter.addToBookCase(bookInfo);
+                    BookDetailPresenter.addToBookCase(getApplicationContext(),bookInfo);
                     break;
                 case R.id.book_detail_activity_button_cache:
-                    bookDetailPresenter.cacheBook(bookInfo);
+                    BookDetailPresenter.cacheBook(bookInfo);
                     break;
                 //case R.id.book_detail_activity_author:
                 default:
@@ -98,7 +98,7 @@ public class BookDetailActivity extends BaseActivity implements BookDetailPresen
         chapterTimeTView.setText(bookInfo.bookDetail.getUpdateTime());
         mDescriptionTView.setText(bookInfo.bookDetail.getDescription());
 
-        if(bookDetailPresenter.isBookCase(bookInfo)) {
+        if(BookDetailPresenter.isBookCase(getApplicationContext(),bookInfo)) {
             mButtonCaseView.setEnabled(false);
         }
 

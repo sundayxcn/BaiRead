@@ -5,9 +5,9 @@
 
 
         <item
-            android:id="@+id/nav_infalter_book"
+            android:id="@+id/nav_inflater_book"
             android:icon="@drawable/ic_cache_book"
-            android:title="@string/nav_infalter_book" />
+            android:title="@string/nav_inflater_book" />
 
         <item
             android:id="@+id/nav_restore_config"
@@ -35,12 +35,12 @@
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_quote"
-                android:title="给个好评" />
+                android:title="@string/nav_rate_text" />
 
             <item
                 android:id="@+id/nav_version"
                 android:icon="@drawable/ic_version"
-                android:title="@string/nav_version_text" />
+                android:title="@string/nav_disclaimer_text" />
         </menu>
     </item>
 

@@ -44,7 +44,7 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
     @Override
     public void onLoadError() {
         hideProgressDialog();
-        showToast("网络未连接，没有下载章节，请检查网络后重试");
+        showToast(R.string.network_connect_failed);
 
     }
 

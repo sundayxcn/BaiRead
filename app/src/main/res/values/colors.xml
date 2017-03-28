@@ -12,4 +12,5 @@
     <color name="colorButtonPress">#28282828</color>
     <color name="colorGreen">#baff75</color>
     <color name="colorOrange">#e79429</color>
+    <color name="colorRed">#FFFF0000</color>
 </resources>

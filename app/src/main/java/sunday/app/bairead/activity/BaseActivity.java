@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import sunday.app.bairead.R;
 import sunday.app.bairead.database.BaiReadApplication;
 import sunday.app.bairead.utils.NetworkTool;
 import sunday.app.bairead.view.ListDialog;
@@ -127,22 +128,23 @@ public class BaseActivity extends AppCompatActivity implements BaiReadApplicatio
         return NetworkTool.isNetworkConnect(this);
     }
 
-    public void showToastNetworkUnconnect(){
-        showToast("网络连接不上，请检查网络");
+    public void showToastNetworkUnConnect(){
+        showToast(R.string.network_connect_failed);
     }
 
-    public void showToast(final String text){
+    public void showToast(final int resId){
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getBaseContext(),text,Toast.LENGTH_SHORT).show();
+                String tips = getResources().getString(resId);
+                Toast.makeText(getBaseContext(),tips,Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
     AlertDialog confirmDialog;
-    public void showConfirmDialog(String string,String confirmText,String cancelText,final DialogListenerIm dialogListenerIm) {
+    private void showConfirmDialog(String string,String confirmText,String cancelText,final DialogListenerIm dialogListenerIm) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(string)
@@ -175,12 +177,21 @@ public class BaseActivity extends AppCompatActivity implements BaiReadApplicatio
         confirmDialog.show();
     }
 
-    public void showConfirmDialog(String string,final DialogListenerIm dialogListenerIm) {
-        showConfirmDialog(string,"确定","取消",dialogListenerIm);
+    public void showConfirmDialog(int resId, DialogListenerIm dialogListenerIm) {
+        showConfirmDialog(resId,R.string.confirm,R.string.cancel,dialogListenerIm);
     }
 
-    public void showTipsDialog(String tips){
-        new AlertDialog.Builder(this).setMessage(tips).setNegativeButton("在下明白了",null).create().show();
+    public void showConfirmDialog(int resId,int confirmResId,int cancelResId,DialogListenerIm dialogListenerIm){
+        String title = getResources().getString(resId);
+        String confirm = getResources().getString(confirmResId);
+        String cancel = getResources().getString(cancelResId);
+        showConfirmDialog(title,confirm,cancel,dialogListenerIm);
+    }
+
+    public void showTipsDialog(int resId){
+        String tips = getResources().getString(resId);
+        String confirm = getResources().getString(R.string.confirm_tips);
+        new AlertDialog.Builder(this).setMessage(tips).setNegativeButton(confirm,null).create().show();
     }
 
 

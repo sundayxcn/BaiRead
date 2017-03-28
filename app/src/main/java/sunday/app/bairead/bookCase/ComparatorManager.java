@@ -17,46 +17,7 @@ import sunday.app.bairead.utils.TimeFormat;
 public class ComparatorManager {
 
 
-    class ComparatorPref{
-        int prefValue;
-        Comparator<BookInfo> comparator;
-        ComparatorPref(int prefValue,Comparator<BookInfo> comparator){
-            this.prefValue = prefValue;
-            this.comparator = comparator;
-        }
-    }
-
-    private HashMap<Integer,ComparatorPref> hashMap;
-    public ComparatorManager(){
-        hashMap = new HashMap<>();
-        hashMap.put(R.id.action_order_add_book,new ComparatorPref(PreferenceSetting.KEY_VALUE_CASE_LIST_ORDER_DEFAULT,comparatorDefault));
-        hashMap.put(R.id.action_order_update_time,new ComparatorPref(PreferenceSetting.KEY_VALUE_CASE_LIST_ORDER_UPDATE_TIME,comparatorUpdateTime));
-        hashMap.put(R.id.action_order_chapter_count,new ComparatorPref(PreferenceSetting.KEY_VALUE_CASE_LIST_ORDER_CHAPTER_COUNT,comparatorChapterCount));
-        hashMap.put(R.id.action_order_author,new ComparatorPref(PreferenceSetting.KEY_VALUE_CASE_LIST_ORDER_AUTHOR,comparatorAuthor));
-    }
-
-
-    public int getOrder(int menuId){
-        try {
-            return hashMap.get(menuId).prefValue;
-        }catch (Exception e){
-            e.printStackTrace();
-            return PreferenceSetting.KEY_VALUE_CASE_LIST_ORDER_DEFAULT;
-        }
-    }
-
-    public Comparator<BookInfo> getComparator(int order){
-        Iterator iter = hashMap.entrySet().iterator();
-        while (iter.hasNext()) {
-            ComparatorPref comparatorPref = (ComparatorPref) iter.next();
-            if(comparatorPref.prefValue == order){
-                return comparatorPref.comparator;
-            }
-        }
-        return comparatorDefault;
-    }
-
-
+    private HashMap<Integer, ComparatorPref> hashMap;
     private Comparator<BookInfo> comparatorDefault = new java.util.Comparator<BookInfo>() {
         @Override
         public int compare(BookInfo a, BookInfo b) {
@@ -110,5 +71,44 @@ public class ComparatorManager {
             }
         }
     };
+
+
+    public ComparatorManager() {
+        hashMap = new HashMap<>();
+        hashMap.put(R.id.action_order_add_book, new ComparatorPref(PreferenceSetting.KEY_VALUE_CASE_LIST_ORDER_DEFAULT, comparatorDefault));
+        hashMap.put(R.id.action_order_update_time, new ComparatorPref(PreferenceSetting.KEY_VALUE_CASE_LIST_ORDER_UPDATE_TIME, comparatorUpdateTime));
+        hashMap.put(R.id.action_order_chapter_count, new ComparatorPref(PreferenceSetting.KEY_VALUE_CASE_LIST_ORDER_CHAPTER_COUNT, comparatorChapterCount));
+        hashMap.put(R.id.action_order_author, new ComparatorPref(PreferenceSetting.KEY_VALUE_CASE_LIST_ORDER_AUTHOR, comparatorAuthor));
+    }
+
+    public int getOrder(int menuId) {
+        try {
+            return hashMap.get(menuId).prefValue;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return PreferenceSetting.KEY_VALUE_CASE_LIST_ORDER_DEFAULT;
+        }
+    }
+
+    public Comparator<BookInfo> getComparator(int order) {
+        Iterator iter = hashMap.entrySet().iterator();
+        while (iter.hasNext()) {
+            ComparatorPref comparatorPref = (ComparatorPref) iter.next();
+            if (comparatorPref.prefValue == order) {
+                return comparatorPref.comparator;
+            }
+        }
+        return comparatorDefault;
+    }
+
+    class ComparatorPref {
+        int prefValue;
+        Comparator<BookInfo> comparator;
+
+        ComparatorPref(int prefValue, Comparator<BookInfo> comparator) {
+            this.prefValue = prefValue;
+            this.comparator = comparator;
+        }
+    }
 
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -35,26 +36,24 @@ import sunday.app.bairead.presenter.BookcasePresenter;
 import sunday.app.bairead.utils.FileManager;
 import sunday.app.bairead.utils.NewChapterShow;
 import sunday.app.bairead.utils.PreferenceSetting;
-import sunday.app.bairead.utils.TimeFormat;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, BookcasePresenter.IBookcasePresenterListener {
 
 
     public static final int OPERATOR_TOP = 0;
-    public static final int OPERATOR_DETAIL = 1;
-    public static final int OPERATOR_CACHE = 2;
-    public static final int OPERATOR_DELETE = 3;
-    public static final int OPERATOR_ALL = 4;
+    public static final int OPERATOR_DETAIL = OPERATOR_TOP + 1;
+    public static final int OPERATOR_CACHE = OPERATOR_DETAIL + 1;
+    public static final int OPERATOR_DELETE = OPERATOR_CACHE + 1;
+    public static final int OPERATOR_ALL = OPERATOR_DELETE + 1;
 
-    public final String[] operatorStringArray = {"置顶", "书籍详情", "缓存全本", "删除本书", "批量操作"};
     Handler handler = new Handler();
     ComparatorManager comparatorManager = new ComparatorManager();
     private BookcasePresenter bookcasePresenter;
     private ListView mListView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayout mBookCaseToolBar;
-    private BookListAdapter booklistAdapter = new BookListAdapter(this);
+    private BookListAdapter booklistAdapter;
     private OperatorListener operatorListener = new OperatorListener();
     private int click;
     private View.OnClickListener toolbarOnclick = new View.OnClickListener() {
@@ -62,20 +61,20 @@ public class MainActivity extends BaseActivity
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.book_case_tool_bar_top:
-                    showConfirmDialog("确定将选中书籍置顶吗", new DialogListenerIm() {
+                    showConfirmDialog(R.string.top_book_tips, new DialogListenerIm() {
                         @Override
                         public void onConfirm() {
                             super.onConfirm();
                             ArrayList<Long> bookIdList = booklistAdapter.getCheckList();
                             if (bookIdList != null) {
                                 topBook(bookIdList);
-                                onBackPressed();
                             }
+                            onBackPressed();
                         }
                     });
                     break;
                 case R.id.book_case_tool_bar_cache:
-                    showConfirmDialog("确定缓存选中的书籍吗?建议在WIFI下缓存...", new DialogListenerIm() {
+                    showConfirmDialog(R.string.cache_book_tips, new DialogListenerIm() {
                         @Override
                         public void onConfirm() {
                             super.onConfirm();
@@ -91,7 +90,7 @@ public class MainActivity extends BaseActivity
                     });
                     break;
                 case R.id.book_case_tool_bar_delete:
-                    showConfirmDialog("确定删除选中的书籍吗?缓存也将一起删除且不能恢复...", new DialogListenerIm() {
+                    showConfirmDialog(R.string.delete_book_tips, new DialogListenerIm() {
                         @Override
                         public void onConfirm() {
                             super.onConfirm();
@@ -131,20 +130,18 @@ public class MainActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         if (PreferenceSetting.getInstance(this).isFirstRun()) {
-            PreferenceSetting.getInstance(this).setFirstRunFalse();
             firstRunWork();
         }
-
-
         setupView();
+
         bookcasePresenter = new BookcasePresenter(this, this);
         bookcasePresenter.init();
 
     }
 
     private void firstRunWork() {
+        PreferenceSetting.getInstance(this).setFirstRunFalse();
         File[] files = FileManager.checkBookCache();
         if (files != null) {
             inflateBook(files);
@@ -154,7 +151,7 @@ public class MainActivity extends BaseActivity
     private void inflateBook(File[] files) {
         final int bookCount = files.length;
         if (bookCount > 0) {
-            showConfirmDialog("检测到本地有缓存书籍，是否加载", "加载", "不加载", new DialogListenerIm() {
+            showConfirmDialog(R.string.cache_book_title, R.string.cache_book_confirm, R.string.cache_book_cancel, new DialogListenerIm() {
                 @Override
                 public void onConfirm() {
                     new FirstRunAsyncTask(new File(FileManager.PATH), getApplicationContext()) {
@@ -180,7 +177,8 @@ public class MainActivity extends BaseActivity
 
     private void setupView() {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setColorSchemeColors(0xFFFF0000);
+        int color = ContextCompat.getColor(this,R.color.colorRed);
+        swipeRefreshLayout.setColorSchemeColors(color);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -188,7 +186,7 @@ public class MainActivity extends BaseActivity
                     bookcasePresenter.checkNewChapter(booklistAdapter.getBookInfoList());
                 } else {
                     swipeRefreshLayout.setRefreshing(false);
-                    showToastNetworkUnconnect();
+                    showToastNetworkUnConnect();
                 }
             }
         });
@@ -247,14 +245,13 @@ public class MainActivity extends BaseActivity
     public void showCaseOperatorDialog(BookInfo bookInfo) {
         String bookName = bookInfo.bookDetail.getName();
         operatorListener.setBookInfo(bookInfo);
-        if (bookInfo.bookDetail.topCase) {
-            operatorStringArray[0] = "取消置顶";
-        } else {
-            operatorStringArray[0] = "置顶";
+        String[] operator;
+        if(bookInfo.bookDetail.topCase){
+            operator = getResources().getStringArray(R.array.dialog_list_operator_top_cancel);
+        }else{
+            operator = getResources().getStringArray(R.array.dialog_list_operator_top);
         }
-
-
-        showListDialog(bookName, operatorStringArray, operatorListener);
+        showListDialog(bookName, operator, operatorListener);
     }
 
     public void hideCaseOperatorDialog() {
@@ -291,7 +288,7 @@ public class MainActivity extends BaseActivity
             super.onBackPressed();
         } else {
             click++;
-            showToast("再按一次退出应用");
+            showToast(R.string.double_click_cancel);
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -351,7 +348,7 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_clear_cache) {
-            showConfirmDialog("是否删除所有的数据缓存", new DialogListenerIm() {
+            showConfirmDialog(R.string.delete_all_book, new DialogListenerIm() {
                 @Override
                 public void onConfirmAsync() {
                     super.onConfirmAsync();
@@ -359,7 +356,7 @@ public class MainActivity extends BaseActivity
                 }
             });
         } else if (id == R.id.nav_restore_config) {
-            showConfirmDialog("恢复默认设置", new DialogListenerIm() {
+            showConfirmDialog(R.string.restore_config, new DialogListenerIm() {
                 @Override
                 public void onConfirmAsync() {
                     super.onConfirmAsync();
@@ -377,7 +374,7 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_infalter_book) {
             File[] files = FileManager.checkBookCache();
             if (files == null) {
-                showToast("本地无缓存");
+                showToast(R.string.no_cache);
             } else {
                 inflateBook(files);
             }
@@ -405,10 +402,12 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void loadBookFinish(ArrayList<BookInfo> bookList) {
-        booklistAdapter = new BookListAdapter(this);
-        booklistAdapter.setBookInfoList(bookList);
-        reOrderList();
-        mListView.setAdapter(booklistAdapter);
+        if(bookList != null) {
+            booklistAdapter = new BookListAdapter(this);
+            booklistAdapter.setBookInfoList(bookList);
+            reOrderList();
+            mListView.setAdapter(booklistAdapter);
+        }
         hideProgressDialog();
     }
 
@@ -416,16 +415,16 @@ public class MainActivity extends BaseActivity
     public void onCheckNewChapter(BookInfo bookInfo) {
         if (bookInfo != null) {
             NewChapterShow.getInstance().addNewChapter(bookInfo.bookDetail.getId(), bookInfo.bookChapter.getChapterCount() - 1);
+            booklistAdapter.notifyDataSetChanged();
         }
-        booklistAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onCheckFinish() {
         if (NewChapterShow.getInstance().isHaveNewChapter()) {
-            showToast("更新完毕");
+            showToast(R.string.update_finish);
         } else {
-            showToast("更新完毕,无新章节");
+            showToast(R.string.update_finish_no_new);
         }
 
         swipeRefreshLayout.setRefreshing(false);

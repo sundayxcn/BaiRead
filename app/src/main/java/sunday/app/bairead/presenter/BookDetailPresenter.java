@@ -24,7 +24,7 @@ public class BookDetailPresenter {
         this.bookDetailListener = bookDetailListener;
     }
 
-    public void readBook(BookInfo bookInfo){
+    public static void readBook(Context context,BookInfo bookInfo){
         BookcasePresenter.readBook(context,bookInfo);
     }
 
@@ -34,14 +34,14 @@ public class BookDetailPresenter {
         bookModel.addBook(bookInfo);
     }
 
-    public boolean isBookCase(BookInfo bookInfo){
+    public static boolean isBookCase(Context context,BookInfo bookInfo){
         BaiReadApplication application  = (BaiReadApplication) context.getApplicationContext();
         BookModel bookModel = application.getBookModel();
         return bookModel.isBookCase(bookInfo);
     }
 
 
-    public void cacheBook(BookInfo bookInfo){
+    public static void cacheBook(BookInfo bookInfo){
         BookChapterCache.getInstance().downloadAllChpater(bookInfo);
     }
 }

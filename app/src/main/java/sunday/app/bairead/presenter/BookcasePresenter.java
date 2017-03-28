@@ -3,6 +3,7 @@ package sunday.app.bairead.presenter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Looper;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,7 +26,7 @@ public class BookcasePresenter{
 
     private Context context;
     private BookModel bookModel;
-    Handler handler = new Handler();
+    Handler handler = new Handler(Looper.getMainLooper());
 
     public interface IBookcasePresenterListener{
         void loadBookStart();
