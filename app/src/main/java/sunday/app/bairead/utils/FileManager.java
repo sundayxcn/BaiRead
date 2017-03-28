@@ -186,7 +186,7 @@ public class FileManager {
             clearFileDir(files[i]);
         }
 
-        //file.delete();
+        file.delete();
     }
 
     public static void clearFileDir(String fileName){

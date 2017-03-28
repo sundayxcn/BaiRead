@@ -85,4 +85,8 @@ public class PreferenceSetting {
         sharedPreferences.edit().putBoolean(KEY_FIRST_RUN,false).commit();
     }
 
+    public void clear(){
+        sharedPreferences.edit().clear().commit();
+    }
+
 }

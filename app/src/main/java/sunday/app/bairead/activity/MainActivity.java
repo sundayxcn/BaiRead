@@ -360,12 +360,7 @@ public class MainActivity extends BaseActivity
                 @Override
                 public void onConfirmAsync() {
                     super.onConfirmAsync();
-                    StringBuffer fileName = new StringBuffer("/data/data/");
-                    fileName.append(getPackageName().toString())
-                            .append("/shared_prefs/")
-                            .append(getPackageName().toString())
-                            .append("_preferences.xml");
-                    FileManager.deleteFile(fileName.toString());
+                    PreferenceSetting.getInstance(MainActivity.this).clear();
                     PreferenceSetting.getInstance(MainActivity.this).setFirstRunFalse();
                 }
             });
