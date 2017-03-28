@@ -83,8 +83,9 @@
     <string name="book_read_preference_title_line">行间距</string>
     <string name="book_read_preference_title_margin">左右边距</string>
     <string name="book_read_setting_top_panel_source_text">换源</string>
-    <string name="book_read_setting_top_button_delete_mark_text">清空书签</string>
-
+    <string name="mark_clear">清空书签</string>
+    <string name="mark_null">兄台，书签是空的~~</string>
+    <string name="mark_delete">删除书签</string>
 
     <string name="disclaimer">"百读小说提醒您：在使用百读小说前，请您务必仔细阅读并透彻理解本声明。您可以选择不使用百读小说，但如果您使用百读小说，您的使用行为将被视为对本声明全部内容的认可。
  　　百读小说是一款提供网络小说即时更新的工具，为广大小说爱好者提供一种方便、快捷、舒适的试读体验。百读小说致力于最大程度的减少网络小说阅读者在自行搜寻过程中毫无意义的时间浪费，通过专业搜索展示不同网站中网络小说的最新章节。 百读小说为广大小说爱好者提供方便、快捷、舒适的试读体验的同时，也使优秀网络小说得以更迅捷、更广泛的传播，从而达到了在一定程度促进网络文学充分繁荣发展之目的。

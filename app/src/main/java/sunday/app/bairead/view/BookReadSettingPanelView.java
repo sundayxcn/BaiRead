@@ -216,7 +216,7 @@ public class BookReadSettingPanelView extends RelativeLayout {
 
         if(bookReadPresenter.getBookMarkList().size() == 0){
             BookReadActivity bookReadActivity = (BookReadActivity) getContext();
-            bookReadActivity.showTipsDialog("兄台，书签是空的~~");
+            bookReadActivity.showTipsDialog(R.string.mark_null);
         }else {
             bookMarkPanel = (BookMarkPanel) LayoutInflater.from(getContext()).inflate(R.layout.book_read_setting_mark_panel, null, false);
             TextView titleView = (TextView) bookMarkPanel.findViewById(R.id.book_read_setting_panel_mark_title);
@@ -226,7 +226,7 @@ public class BookReadSettingPanelView extends RelativeLayout {
                 @Override
                 public void onClick(View v) {
                     BookReadActivity bookReadActivity = (BookReadActivity) getContext();
-                    bookReadActivity.showConfirmDialog("清空标签", new BaseActivity.DialogListenerIm() {
+                    bookReadActivity.showConfirmDialog(R.string.mark_clear, new BaseActivity.DialogListenerIm() {
                         @Override
                         public void onConfirm() {
                             bookReadPresenter.deleteBookMark();
@@ -253,7 +253,7 @@ public class BookReadSettingPanelView extends RelativeLayout {
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                     final BookMarkInfo bookMarkInfo = (BookMarkInfo) markAdapter.getItem(position);
                     BookReadActivity bookReadActivity = (BookReadActivity) getContext();
-                    bookReadActivity.showConfirmDialog("删除标签\n" + bookMarkInfo.title, new BaseActivity.DialogListenerIm() {
+                    bookReadActivity.showConfirmDialog(R.string.mark_delete, new BaseActivity.DialogListenerIm() {
                         @Override
                         public void onConfirm() {
                             markAdapter.removeItem(bookMarkInfo);

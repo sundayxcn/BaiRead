@@ -371,7 +371,7 @@ public class MainActivity extends BaseActivity
             });
         } else if (id == R.id.nav_suggest_report) {
             FeedbackAPI.openFeedbackActivity();
-        } else if (id == R.id.nav_infalter_book) {
+        } else if (id == R.id.nav_inflater_book) {
             File[] files = FileManager.checkBookCache();
             if (files == null) {
                 showToast(R.string.no_cache);

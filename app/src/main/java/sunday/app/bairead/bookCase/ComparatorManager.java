@@ -3,6 +3,7 @@ package sunday.app.bairead.bookCase;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import sunday.app.bairead.R;
@@ -93,7 +94,9 @@ public class ComparatorManager {
     public Comparator<BookInfo> getComparator(int order) {
         Iterator iter = hashMap.entrySet().iterator();
         while (iter.hasNext()) {
-            ComparatorPref comparatorPref = (ComparatorPref) iter.next();
+            Map.Entry entry =  (Map.Entry) iter.next();
+            int key = (int) entry.getKey();
+            ComparatorPref comparatorPref = (ComparatorPref) entry.getValue();
             if (comparatorPref.prefValue == order) {
                 return comparatorPref.comparator;
             }
