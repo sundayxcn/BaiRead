@@ -80,6 +80,7 @@ public class BookDetailActivity extends BaseActivity implements BookDetailPresen
                     break;
                 case R.id.book_detail_activity_button_case:
                     BookDetailPresenter.addToBookCase(getApplicationContext(),bookInfo);
+                    mButtonCaseView.setEnabled(false);
                     break;
                 case R.id.book_detail_activity_button_cache:
                     BookDetailPresenter.cacheBook(bookInfo);

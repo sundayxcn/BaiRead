@@ -24,7 +24,7 @@
         android:scaleType="center"
         android:src="@drawable/default_book_detail_cover_image" />
 
-    <sunday.app.bairead.view.TopCaseView
+    <sunday.app.bairead.bookCase.TopCaseView
         android:id="@+id/xlist_item_top_case"
         android:layout_width="10dp"
         android:layout_height="10dp"

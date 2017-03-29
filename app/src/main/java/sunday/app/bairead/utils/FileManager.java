@@ -22,13 +22,15 @@ import java.util.regex.Pattern;
  */
 public class FileManager {
     public static final String DIR = "BaiRead";
+    //release版本用此地址
+    //public static String PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath()+"/"+DIR;
     public static final String PATH = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+DIR;
     public static final String TEMP_DIR = PATH + "/" + "temp";
     public static final String TEMP_BAIDU_SEARCH_FILE =  TEMP_DIR + "/" + "baiduSearchResult.html";
     public static final String TAG = "snuday";
     public static final String UTF8 = "UTF-8";
     public static final String GB2312 = "gb2312";
-    public static final String SEARCH_FILE = FileManager.PATH + "/" + "searchResult.html";
+    //public static final String SEARCH_FILE = FileManager.PATH + "/" + "searchResult.html";
 
 //    private static FileManager mFileManager;
 
@@ -48,12 +50,10 @@ public class FileManager {
 //
 //
        public static String createDir(String dirPath) {
-
         File file = new File(dirPath);
         if (!file.exists()) {
             file.mkdirs();
         }
-
         return dirPath;
     }
 
@@ -173,7 +173,8 @@ public class FileManager {
     }
 
 
-    public static void clearFileDir(File file){
+    public static void deleteFile(String fileName){
+        File file = new File(fileName);
         if (!file.exists())
             return;
 
@@ -181,42 +182,74 @@ public class FileManager {
             file.delete();
             return;
         }
+    }
+
+    /**
+     * 清理临时文件夹，不删除文件夹
+     * **/
+    public static void clearTempFolder(){
+        File file = new File(TEMP_DIR);
+        clearFolder(file);
+    }
+
+
+    /**
+     * 清理文件，不删除文件夹
+     * **/
+    public static void clearFolder(File file){
+        if (!file.exists())
+            return;
+
+        if (file.isFile()) {
+            file.delete();
+            return;
+        }
+
         File[] files = file.listFiles();
         for (int i = 0; i < files.length; i++) {
-            clearFileDir(files[i]);
+            clearFolder(files[i]);
+        }
+    }
+
+    /**
+     * 清理文件，删除文件夹
+     * **/
+    public static void deleteFolder(File file){
+        if (!file.exists())
+            return;
+
+        if (file.isFile()) {
+            file.delete();
+            return;
+        }
+
+        File[] files = file.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            deleteFolder(files[i]);
         }
 
         file.delete();
     }
 
-    public static void clearFileDir(String fileName){
-        File file = new File(fileName);
-        clearFileDir(file);
-    }
 
-
-    public static void deleteFile(String fileName){
-        File file = new File(fileName);
-        clearFileDir(file);
-    }
-
-
+    /**
+     * 清理文件，删除文件夹
+     * **/
     public static void deleteFolder(String fileName){
-        deleteFile(fileName);
         File file = new File(fileName);
-        file.delete();
+        deleteFolder(file);
     }
 
     public static void writeSearchFile(byte[] bytes) {
-        File file = new File(FileManager.PATH);
-        if(!file.exists()){
-            file.mkdirs();
-        }
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(SEARCH_FILE);
+//            File file = new File(TEMP_BAIDU_SEARCH_FILE);
+//            if(!file.exists()){
+//                file.createNewFile();
+//            }
+            FileOutputStream fileOutputStream = new FileOutputStream(TEMP_BAIDU_SEARCH_FILE);
             fileOutputStream.write(bytes);
             fileOutputStream.close();
-            Log.e(TAG,"writeByte"+SEARCH_FILE+"  bytes.length=="+bytes.length);
+            //Log.e(TAG,"writeByte"+SEARCH_FILE+"  bytes.length=="+bytes.length);
         } catch(IOException e){
             e.printStackTrace();
         } catch (Exception e) {

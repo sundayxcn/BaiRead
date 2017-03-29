@@ -1,4 +1,4 @@
-package sunday.app.bairead.activity;
+package sunday.app.bairead.bookRead;
 
 import android.graphics.Point;
 import android.os.Bundle;
@@ -9,17 +9,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import sunday.app.bairead.R;
-import sunday.app.bairead.download.BookChapterCache;
+import sunday.app.bairead.activity.BaseActivity;
 import sunday.app.bairead.utils.PreferenceSetting;
-import sunday.app.bairead.view.BookReadSettingPanelView;
 import sunday.app.bairead.view.BookTextView;
-import sunday.app.bairead.presenter.BookReadPresenter;
 
 /**
  * Created by sunday on 2016/12/21.
  */
 
-public class BookReadActivity extends BaseActivity implements BookReadPresenter.IBookReadPresenterListener , BookTextView.IChapterChangeListener{
+public class BookReadActivity extends BaseActivity implements BookReadPresenter.IBookReadPresenterListener,BookChapterCacheNew.IBookChapterCacheListener, BookTextView.IChapterChangeListener{
 
     public static final String EXTRAS_BOOK_ID = "BookId";
     public static final Point READ_POINT = new Point();
@@ -30,35 +28,6 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
     private BookReadSettingPanelView settingPanel;
 
     private BookReadPresenter bookReadPresenter;
-
-    @Override
-    public void onLoadStart() {
-        showProgressDialog();
-    }
-
-    @Override
-    public void onLoadFinish() {
-        hideProgressDialog();
-    }
-
-    @Override
-    public void onLoadError() {
-        hideProgressDialog();
-        showToast(R.string.network_connect_failed);
-
-    }
-
-    @Override
-    public void onReadTextChange(BookChapterCache.ReadText readText) {
-        hideProgressDialog();
-        mBookTitleTView.setText(readText.title);
-        mBookTextTView.setText(readText.text);
-    }
-
-    @Override
-    public void onReadSizeChange(BookTextView.ReadSize readSize) {
-        mBookTextTView.setReadSize(readSize);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +41,8 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
         mBookTextTView.setReadSize(BookReadPresenter.getReadSize(this));
         mBookTextTView.setOnChangeListener(this);
         bookReadPresenter = new BookReadPresenter(this,this,bookId);
+        bookReadPresenter.init();
+        BookChapterCacheNew.getInstance().init(this,bookId,this);
 
         if(PreferenceSetting.getInstance(this).isFirstRead()){
             ViewStub viewStub = (ViewStub) findViewById(R.id.book_read_activity_guide_layout_viewstub);
@@ -86,9 +57,6 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
             });
         }
 
-
-
-
         int page = bookReadPresenter.getChapterPage();
         mBookTextTView.initPage(page);
 
@@ -99,15 +67,8 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
         settingPanel = (BookReadSettingPanelView) findViewById(R.id.book_read_setting_panel);
         settingPanel.setVisibility(View.INVISIBLE);
         settingPanel.setReadPresenter(bookReadPresenter);
-        showProgressDialog();
     }
 
-
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        bookReadPresenter.init();
-    }
 
     @Override
     protected void onDestroy() {
@@ -152,12 +113,16 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
 
     @Override
     public void onChapterNext() {
-        bookReadPresenter.ChapterNext();
+        if(!BookChapterCacheNew.getInstance().nextChapter()) {
+            showToast(R.string.last_chapter);
+        }
     }
 
     @Override
     public void onChapterPrev() {
-        bookReadPresenter.ChapterPrev();
+        if(!BookChapterCacheNew.getInstance().prevChapter()) {
+            showToast(R.string.first_chapter);
+        }
     }
 
     @Override
@@ -167,5 +132,33 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
         page++;
         String text = page + "/" + pageCount ;
         mBookTextPageTView.setText(text);
+    }
+
+    @Override
+    public void updateStart() {
+        showProgressDialog();
+    }
+
+    @Override
+    public void updateFinish() {
+        hideProgressDialog();
+    }
+
+    @Override
+    public void updateReadTextSuccess(BookChapterCacheNew.ReadText readText) {
+        mBookTitleTView.setText(readText.title);
+        mBookTextTView.setText(readText.text);
+    }
+
+    @Override
+    public void updateReadTextFailed(int errorCode) {
+        //if(errorCode == BookDownLoad.ERROR_NetworkFailed) {
+            showTipsDialog(R.string.network_connect_failed);
+        //}
+    }
+
+    @Override
+    public void onReadSizeChange(BookTextView.ReadSize readSize) {
+        mBookTextTView.setReadSize(readSize);
     }
 }

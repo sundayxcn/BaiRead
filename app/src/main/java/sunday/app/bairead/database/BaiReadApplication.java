@@ -56,25 +56,13 @@ public class BaiReadApplication extends Application {
         
         registerReceiver();
 
-        createDir();
+        //createDir();
 
     }
 
-    private void createDir(){
-        //缓存文件夹
-        File file = getCacheDir();
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-
-        //搜索临时文件夹
-        file = new File(FileManager.TEMP_DIR);
-        if(!file.exists()){
-            file.mkdirs();
-        }
 
 
-    }
+
 
 
 
@@ -97,7 +85,6 @@ public class BaiReadApplication extends Application {
     public void clearListener(){
         mListenerList.clear();
     }
-
 
 
     @Override

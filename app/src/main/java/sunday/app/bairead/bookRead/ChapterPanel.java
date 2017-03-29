@@ -1,4 +1,4 @@
-package sunday.app.bairead.view;
+package sunday.app.bairead.bookRead;
 
 import android.content.Context;
 import android.util.AttributeSet;

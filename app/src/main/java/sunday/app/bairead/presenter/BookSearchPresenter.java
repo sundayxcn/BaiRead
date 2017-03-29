@@ -96,7 +96,7 @@ public class BookSearchPresenter {
             ThreadManager.getInstance().work(new Runnable() {
                 @Override
                 public void run() {
-                    FileManager.clearFileDir(fullName);
+                    FileManager.deleteFile(fullName);
                 }
             });
         }
@@ -166,7 +166,7 @@ public class BookSearchPresenter {
 
                 @Override
                 public void onStart() {
-                    FileManager.clearFileDir(FileManager.TEMP_DIR);
+                    FileManager.clearTempFolder();
                 }
 
                 @Override
@@ -196,7 +196,7 @@ public class BookSearchPresenter {
             public void onResponse(Call call, Response response) {
                 if(response != null && response.body() != null){
                     try {
-                        FileManager.writeByte(FileManager.TEMP_BAIDU_SEARCH_FILE, response.body().bytes());
+                        FileManager.writeSearchFile(response.body().bytes());
                         baiduSearchList = ParseXml.createParse(ParseBaiduSearch.class).from(FileManager.TEMP_BAIDU_SEARCH_FILE).parse();
                         findRealLink();
                     } catch (IOException e) {

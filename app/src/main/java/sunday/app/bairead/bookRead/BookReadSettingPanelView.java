@@ -1,4 +1,4 @@
-package sunday.app.bairead.view;
+package sunday.app.bairead.bookRead;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -21,11 +21,9 @@ import java.util.Collections;
 import sunday.app.bairead.database.BookChapter;
 import sunday.app.bairead.database.BookMarkInfo;
 import sunday.app.bairead.R;
-import sunday.app.bairead.download.BookChapterCache;
 import sunday.app.bairead.utils.PreferenceSetting;
 import sunday.app.bairead.activity.BaseActivity;
-import sunday.app.bairead.activity.BookReadActivity;
-import sunday.app.bairead.presenter.BookReadPresenter;
+import sunday.app.bairead.view.BookTextView;
 
 
 /**
@@ -173,12 +171,12 @@ public class BookReadSettingPanelView extends RelativeLayout {
         chapterPanel = (ChapterPanel) LayoutInflater.from(getContext()).inflate(R.layout.book_read_setting_chapter_panel, null, false);
 
         TextView bookNameView = (TextView) chapterPanel.findViewById(R.id.book_read_setting_panel_chapter_list_title);
-        String bookName = bookReadPresenter.getBookName();
+        String bookName = BookChapterCacheNew.getInstance().getBookName();
         bookNameView.setText(bookName);
 
         //if(chapterAdapter == null){
         chapterAdapter = new ChapterAdapter();
-        chapterAdapter.setChapterList(bookReadPresenter.getChapterList());
+        chapterAdapter.setChapterList(BookChapterCacheNew.getInstance().getChapterArrayList());
         if (!chapterOrder) {
             reverseChapterList();
         }
@@ -189,7 +187,7 @@ public class BookReadSettingPanelView extends RelativeLayout {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int chapterIndex = chapterOrder ? position : chapterAdapter.getCount() - position - 1;
-                bookReadPresenter.setChapterIndex(chapterIndex);
+                BookChapterCacheNew.getInstance().setChapterIndex(chapterIndex);
                 hide();
             }
         });
@@ -220,7 +218,7 @@ public class BookReadSettingPanelView extends RelativeLayout {
         }else {
             bookMarkPanel = (BookMarkPanel) LayoutInflater.from(getContext()).inflate(R.layout.book_read_setting_mark_panel, null, false);
             TextView titleView = (TextView) bookMarkPanel.findViewById(R.id.book_read_setting_panel_mark_title);
-            titleView.setText(bookReadPresenter.getBookName());
+            titleView.setText(BookChapterCacheNew.getInstance().getBookName());
             Button markDeleteButton = (Button) bookMarkPanel.findViewById(R.id.book_read_setting_panel_mark_delete_button);
             markDeleteButton.setOnClickListener(new OnClickListener() {
                 @Override
@@ -244,7 +242,7 @@ public class BookReadSettingPanelView extends RelativeLayout {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     BookMarkInfo bookMarkInfo = (BookMarkInfo) markAdapter.getItem(position);
-                    bookReadPresenter.setChapterIndex(bookMarkInfo.chapterIndex);
+                    BookChapterCacheNew.getInstance().setChapterIndex(bookMarkInfo.chapterIndex);
                     hide();
                 }
             });
@@ -392,7 +390,7 @@ public class BookReadSettingPanelView extends RelativeLayout {
 
             viewHolder.textView.setText(chapter.getTitle());
 
-            boolean isCache = BookChapterCache.getInstance().isChapterExists(chapter);
+            boolean isCache = BookChapterCacheNew.getInstance().isChapterExists(chapter);
             viewHolder.cacheShowView.setVisibility(isCache ? VISIBLE : INVISIBLE);
 
             return convertView;

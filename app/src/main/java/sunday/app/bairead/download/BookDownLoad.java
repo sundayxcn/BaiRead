@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Response;
+import sunday.app.bairead.bookRead.*;
 import sunday.app.bairead.database.BookChapter;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.parse.ParseChapter;
@@ -73,6 +74,16 @@ public class BookDownLoad {
 
         void onResult(T result);
     }
+
+
+    private static class BookDownLoadHolder {
+        private static final BookDownLoad sInstance = new BookDownLoad();
+    }
+
+    public static BookDownLoad getInstance(){
+        return BookDownLoadHolder.sInstance;
+    }
+
 
     public  static String createFileDir(String bookName){
         return FileManager.createDir(FileManager.PATH +"/"+bookName);
@@ -161,20 +172,38 @@ public class BookDownLoad {
         return null;
     }
 
-    public String updateBookChapterTextAsync(String url,String fileName) {
-        Response response = OKhttpManager.getInstance().connectUrl(url);
-        if (response != null && response.body() != null) {
-            try {
-                String name = fileName == null ?  TEMP_TEXT_NAME : fileName;
-                FileManager.writeByte(name, response.body().bytes());
-                return parseBookChapterText(name);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }finally {
-                response.body().close();
+    public String updateBookChapterTextAsync(final DownloadListener<String> downloadListener) {
+        OKhttpManager.getInstance().connectUrl(new OKHttpListener() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                downloadListener.onError(ERROR_NetworkFailed);
             }
-        }
+
+            @Override
+            public void onResponse(Call call, Response response) {
+                if (response != null && response.body() != null) {
+                    try {
+                        String name = downloadListener.getFileName();
+                        FileManager.writeByte(name, response.body().bytes());
+                        String text = parseBookChapterText(name);
+                        downloadListener.onResult(text);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        downloadListener.onError(ERROR_ParseHtmlFailed);
+                    }finally {
+                        response.body().close();
+                    }
+                }
+            }
+
+            @Override
+            public String getLink() {
+                return downloadListener.getLink();
+            }
+        });
+
+
+
 
         return null;
     }

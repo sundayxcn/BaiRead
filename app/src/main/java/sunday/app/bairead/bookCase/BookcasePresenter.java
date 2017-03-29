@@ -1,4 +1,4 @@
-package sunday.app.bairead.presenter;
+package sunday.app.bairead.bookCase;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,7 @@ import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.BookModel;
 import sunday.app.bairead.download.BookDownLoad;
 import sunday.app.bairead.utils.FileManager;
-import sunday.app.bairead.activity.BookReadActivity;
+import sunday.app.bairead.bookRead.BookReadActivity;
 import sunday.app.bairead.utils.ThreadManager;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;

@@ -1,4 +1,4 @@
-package sunday.app.bairead.presenter;
+package sunday.app.bairead.bookRead;
 
 import android.content.Context;
 import android.os.Handler;
@@ -20,65 +20,9 @@ import sunday.app.bairead.view.BookTextView;
  * Created by sunday on 2017/3/6.
  */
 
-public class BookReadPresenter implements BookChapterCache.ChapterListener {
-
-    @Override
-    public void initStart() {
-        runMainUiThread(new Runnable() {
-            @Override
-            public void run() {
-                bookReadPresenterListener.onLoadStart();
-            }
-        });
-
-    }
-
-    @Override
-    public void initEnd() {
-        runMainUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //bookReadPresenterListener.onLoadFinish();
-            }
-        });
-    }
-
-    @Override
-    public void cacheStart() {
-        runMainUiThread(new Runnable() {
-            @Override
-            public void run() {
-                bookReadPresenterListener.onLoadStart();
-            }
-        });
-    }
-
-    @Override
-    public void cacheEnd(final BookChapterCache.ReadText readText) {
-        runMainUiThread(new Runnable() {
-            @Override
-            public void run() {
-                bookReadPresenterListener.onReadTextChange(readText);
-                bookReadPresenterListener.onLoadFinish();
-            }
-        });
-    }
-
-    @Override
-    public void cacheError() {
-        runMainUiThread(new Runnable() {
-            @Override
-            public void run() {
-                bookReadPresenterListener.onLoadError();
-            }
-        });
-    }
+public class BookReadPresenter  {
 
     public interface IBookReadPresenterListener{
-        void onLoadStart();
-        void onLoadFinish();
-        void onLoadError();
-        void onReadTextChange(BookChapterCache.ReadText readText);
         void onReadSizeChange(BookTextView.ReadSize readSize);
     }
 
@@ -106,9 +50,9 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
     }
 
     public void init(){
-        BookChapterCache bookChapterCache = BookChapterCache.getInstance();
-        bookChapterCache.setBookInfo(bookInfo,this);
-        bookChapterCache.initChapterRead();
+//        BookChapterCache bookChapterCache = BookChapterCache.getInstance();
+//        bookChapterCache.setBookInfo(bookInfo,this);
+//        bookChapterCache.initChapterRead();
         ThreadManager.getInstance().work(new Runnable() {
             @Override
             public void run() {
@@ -161,15 +105,15 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
     }
 
 
-    public void ChapterNext(){
-        BookChapterCache.getInstance().nextChapter(context);
-        updateDataBookIndex();
-    }
-
-    public void ChapterPrev(){
-        BookChapterCache.getInstance().prevChapter(context);
-        updateDataBookIndex();
-    }
+//    public void ChapterNext(){
+//        BookChapterCache.getInstance().nextChapter(context);
+//        updateDataBookIndex();
+//    }
+//
+//    public void ChapterPrev(){
+//        BookChapterCache.getInstance().prevChapter(context);
+//        updateDataBookIndex();
+//    }
 
     public void updateDataBookIndex(){
         BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
@@ -181,32 +125,33 @@ public class BookReadPresenter implements BookChapterCache.ChapterListener {
         BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
         baiReadApplication.getBookModel().updateBookChapter(bookInfo.bookChapter);
     }
-    public String getBookName(){
-        //String name = bookInfo.bookDetail.getName();
-        return bookInfo.bookDetail.getName();
-    }
-    public ArrayList<BookChapter.Chapter> getChapterList(){
-        return bookInfo.bookChapter.getChapterList();
-    }
 
-    /**
-     * 如果存在本地html文件就表示已经下载缓存了
-     * @param chapterIndex 章节序号
-     * @return
-     * */
-    public boolean isChapterCache(int chapterIndex){
-        return false;
-    }
+//    public String getBookName(){
+//        //String name = bookInfo.bookDetail.getName();
+//        return bookInfo.bookDetail.getName();
+//    }
+//    public ArrayList<BookChapter.Chapter> getChapterList(){
+//        return bookInfo.bookChapter.getChapterList();
+//    }
 
-    /**
-     * 指定章节重新缓存
-     * @param chapterIndex 章节序号
-     * */
-    public void setChapterIndex(int chapterIndex){
-        bookReadPresenterListener.onLoadStart();
-        BookChapterCache.getInstance().setChapter(chapterIndex);
-        updateDataBookIndex();
-    }
+//    /**
+//     * 如果存在本地html文件就表示已经下载缓存了
+//     * @param chapterIndex 章节序号
+//     * @return
+//     * */
+//    public boolean isChapterCache(int chapterIndex){
+//        return false;
+//    }
+
+//    /**
+//     * 指定章节重新缓存
+//     * @param chapterIndex 章节序号
+//     * */
+//    public void setChapterIndex(int chapterIndex){
+//        bookReadPresenterListener.onLoadStart();
+//        BookChapterCache.getInstance().setChapter(chapterIndex);
+//        updateDataBookIndex();
+//    }
 
     /**
      * 记录章节阅读页面

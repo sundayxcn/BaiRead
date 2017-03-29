@@ -1,4 +1,4 @@
-package sunday.app.bairead.activity;
+package sunday.app.bairead.bookCase;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,14 +25,14 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import sunday.app.bairead.R;
-import sunday.app.bairead.bookCase.BookListAdapter;
-import sunday.app.bairead.bookCase.ComparatorManager;
-import sunday.app.bairead.bookCase.FirstRunAsyncTask;
+import sunday.app.bairead.activity.BaseActivity;
+import sunday.app.bairead.activity.BookSearchActivity;
+import sunday.app.bairead.activity.DisclaimerActivity;
+import sunday.app.bairead.bookRead.BookChapterCacheNew;
 import sunday.app.bairead.database.BaiReadApplication;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.BookModel;
 import sunday.app.bairead.download.BookChapterCache;
-import sunday.app.bairead.presenter.BookcasePresenter;
 import sunday.app.bairead.utils.FileManager;
 import sunday.app.bairead.utils.NewChapterShow;
 import sunday.app.bairead.utils.PreferenceSetting;
@@ -112,9 +112,26 @@ public class MainActivity extends BaseActivity
         }
     };
 
+
+    private void createDir(){
+
+        //缓存文件夹
+        File file = getCacheDir();
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        //搜索临时文件夹
+        file = new File(FileManager.TEMP_DIR);
+        if(!file.exists()){
+            file.mkdirs();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createDir();
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -388,6 +405,7 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        BookChapterCacheNew.getInstance().closeCache();
     }
 
     @Override
