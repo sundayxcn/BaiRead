@@ -285,15 +285,17 @@ public class BookChapterCache {
         return bookinfo.bookChapter.getChapter(chapterIndex).getTitle();
     }
 
-    public void stopCache(){
-        isProductRun = false;
-    }
-
     public String getMarkText(int chapterIndex) {
         String textT = getChapterText(chapterIndex);
         int length = textT.length() > 100 ? 100 : textT.length();
         return textT.substring(0, length);
     }
+
+    public void stopCache(){
+        isProductRun = false;
+    }
+
+
 
     private String getChapterText(int chapterIndex) {
         if (isOnline()) {

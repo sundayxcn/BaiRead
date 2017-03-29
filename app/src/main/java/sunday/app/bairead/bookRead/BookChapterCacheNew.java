@@ -7,14 +7,17 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import okhttp3.Response;
 import sunday.app.bairead.database.BaiReadApplication;
 import sunday.app.bairead.database.BookChapter;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.download.BookDownLoad;
+import sunday.app.bairead.download.OKhttpManager;
 import sunday.app.bairead.parse.ParseChapter;
 import sunday.app.bairead.parse.ParseChapterText;
 import sunday.app.bairead.parse.ParseXml;
@@ -430,6 +433,51 @@ public class BookChapterCacheNew {
             isProductRun = true;
 
         }
+    }
+
+
+    public String getMarkTitle(int chapterIndex) {
+        return bookInfo.bookChapter.getChapter(chapterIndex).getTitle();
+    }
+
+    public String getMarkText(int chapterIndex) {
+        String textT = getChapterText(chapterIndex);
+        int length = textT.length() > 100 ? 100 : textT.length();
+        return textT.substring(0, length);
+    }
+
+
+    /**
+     * 下载所有章节到本地
+     */
+    public void downloadAllChpater(final BookInfo bookInfo) {
+        ThreadManager.getInstance().work(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<BookChapter.Chapter> list = bookInfo.bookChapter.getChapterList();
+                //首次进入书架，并没有读取章节
+                if(list == null){
+                    bookInfo.bookChapter = getChapter(bookInfo);
+                    list = bookInfo.bookChapter.getChapterList();
+                }
+                for (BookChapter.Chapter chapter : list) {
+                    final String fileName = fullDir + "/" + chapter.getNum() + ".html";
+                    if (!isChapterExists(chapter)) {
+                        final String url = chapter.getLink();
+                        Response response = OKhttpManager.getInstance().connectUrl(url);
+                        try {
+                            FileManager.writeByte(fileName, response.body().bytes());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }finally {
+                            response.body().close();
+                        }
+                    }
+                }
+                Log.e("sunday", "缓存完成");
+            }
+        });
+
     }
 
 }
