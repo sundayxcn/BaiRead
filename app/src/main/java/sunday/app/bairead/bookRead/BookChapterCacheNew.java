@@ -405,7 +405,7 @@ public class BookChapterCacheNew {
         public void run() {
             //super.run();
             while (isProductRun) {
-                if(index == chapterArrayList.size()){
+                if(index >= chapterArrayList.size()){
                     isProductRun = false;
                     Log.e("sunday","product Chapter size=" + CACHE_COUNT);
                 }else {
