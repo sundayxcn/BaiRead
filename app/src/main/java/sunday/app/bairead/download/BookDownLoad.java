@@ -173,6 +173,7 @@ public class BookDownLoad {
     }
 
     public String updateBookChapterTextAsync(final DownloadListener<String> downloadListener) {
+        downloadListener.onStart();
         OKhttpManager.getInstance().connectUrl(new OKHttpListener() {
             @Override
             public void onFailure(Call call, IOException e) {

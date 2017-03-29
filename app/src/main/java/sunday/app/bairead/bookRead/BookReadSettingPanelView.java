@@ -75,6 +75,7 @@ public class BookReadSettingPanelView extends RelativeLayout {
     private OnClickListener buttonOnClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
+            BookReadActivity bookReadActivity = (BookReadActivity) getContext();
             switch (v.getId()) {
                 case R.id.book_read_setting_panel_chapter_menu:
                     showChapterList();
@@ -92,26 +93,26 @@ public class BookReadSettingPanelView extends RelativeLayout {
                     break;
 //                    Toast.makeText(getContext(), "开发中", Toast.LENGTH_SHORT).show();
                 case R.id.book_read_setting_panel_mark_add:
+
                     if(bookReadPresenter.addBookMark()){
-                        Toast.makeText(getContext(), "已添加到书签", Toast.LENGTH_SHORT).show();
+                        bookReadActivity.showToast(R.string.mark_success);
                     }else{
-                        Toast.makeText(getContext(), "请先添加到书架", Toast.LENGTH_SHORT).show();
+                        bookReadActivity.showToast(R.string.case_add_tips);
                     }
 
                     break;
                 case R.id.book_read_setting_top_panel_add_case:
                     if( bookReadPresenter.addBookCase()){
-                        Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
+                        bookReadActivity.showToast(R.string.case_add_success);
                     }else{
-                        Toast.makeText(getContext(), "已添加到书架", Toast.LENGTH_SHORT).show();
+                        bookReadActivity.showToast(R.string.case_add_tips);
                     }
-
                     break;
                 case R.id.book_read_setting_top_panel_cache_book:
                     if(bookReadPresenter.cacheBook()){
-                        Toast.makeText(getContext(), "开始缓存", Toast.LENGTH_SHORT).show();
+                        bookReadActivity.showToast(R.string.cache_book);
                     }else{
-                        Toast.makeText(getContext(), "请先添加到书架", Toast.LENGTH_SHORT).show();
+                        bookReadActivity.showToast(R.string.case_add_tips);
                     }
                 default:
                     break;
@@ -163,8 +164,7 @@ public class BookReadSettingPanelView extends RelativeLayout {
 
 
     public void setOrderText(boolean order) {
-        String orderString = order ? "正序" : "逆序";
-        chapterOrderButtonView.setText(orderString);
+        chapterOrderButtonView.setText(order ? R.string.order_default : R.string.order_revert);
     }
 
     private void showChapterList() {
