@@ -22,6 +22,7 @@ import sunday.app.bairead.parse.ParseChapter;
 import sunday.app.bairead.parse.ParseChapterText;
 import sunday.app.bairead.parse.ParseXml;
 import sunday.app.bairead.utils.FileManager;
+import sunday.app.bairead.utils.NewChapterShow;
 import sunday.app.bairead.utils.Temp;
 import sunday.app.bairead.utils.ThreadManager;
 
@@ -86,7 +87,7 @@ public class BookChapterCacheNew {
         }else {
             bookInfo = baiReadApplication.getBookModel().getBookInfo(bookId);
         }
-
+        NewChapterShow.getInstance().removeNewChapter(bookId);
         this.bookChapterCacheListener = listener;
         if (bookInfo.bookDetail.getId() == 0) {
             online = true;
