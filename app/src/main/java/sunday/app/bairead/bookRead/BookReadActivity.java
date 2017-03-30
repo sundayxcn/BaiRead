@@ -115,6 +115,8 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
     public void onChapterNext() {
         if(!BookChapterCacheNew.getInstance().nextChapter()) {
             showToast(R.string.last_chapter);
+        }else{
+            bookReadPresenter.updateDataBookIndex();
         }
     }
 
@@ -122,6 +124,8 @@ public class BookReadActivity extends BaseActivity implements BookReadPresenter.
     public void onChapterPrev() {
         if(!BookChapterCacheNew.getInstance().prevChapter()) {
             showToast(R.string.first_chapter);
+        }else{
+            bookReadPresenter.updateDataBookIndex();
         }
     }
 

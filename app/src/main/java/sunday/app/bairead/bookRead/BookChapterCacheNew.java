@@ -191,6 +191,11 @@ public class BookChapterCacheNew {
     }
 
 
+    public int getChapterIndex(){
+        return bookInfo.bookChapter.getChapterIndex();
+    }
+
+
     public void updateChapterIndex(int index){
         bookInfo.bookChapter.setChapterIndex(index);
     }

@@ -183,6 +183,10 @@ public class BookReadSettingPanelView extends RelativeLayout {
         //}
         ListView chapterListView = (ListView) chapterPanel.findViewById(R.id.book_read_setting_panel_chapter_list);
         chapterListView.setAdapter(chapterAdapter);
+        int index = BookChapterCacheNew.getInstance().getChapterIndex() - 5;
+        index = index < 0 ? 0 : index;
+        index = chapterOrder ? index : chapterAdapter.getCount() - index - 1;
+        chapterListView.setSelection(index);
         chapterListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
