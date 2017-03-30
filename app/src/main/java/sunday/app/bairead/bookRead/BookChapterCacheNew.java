@@ -165,7 +165,9 @@ public class BookChapterCacheNew {
             updateChapterIndex(index);
             loadReadText(index);
             try {
-                linkedBlockingQueue.take();
+                if(linkedBlockingQueue.size() > 0) {
+                    linkedBlockingQueue.take();
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
