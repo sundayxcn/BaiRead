@@ -2,6 +2,7 @@ package sunday.app.bairead.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -75,6 +76,9 @@ public class BookTextView extends TextView {
 
     }
 
+
+    private Paint.FontMetrics fontMetrics;
+    private int realCalc;
     /**
      * 将整个字符串先按段分成组，由于段落太长，一行放不下，所以需要将段处理成行，
      * 然后将行封装进每一页的结构中，在刷新过程中按页刷新
@@ -89,7 +93,8 @@ public class BookTextView extends TextView {
         textPaint = new TextPaint();
         textPaint.setAntiAlias(true);
         textPaint.setTextSize(readSize.textSize);
-        paddingLeft = 0;
+        fontMetrics = textPaint.getFontMetrics();
+        paddingLeft = getPaddingLeft();
         ArrayList<String> lineTextList = new ArrayList<>();
         for (String str : textArray) {
             str = "    " + str;//增加行首空格
@@ -104,19 +109,30 @@ public class BookTextView extends TextView {
             lineTextList.add(str);
         }
 
-        //根据高度计算一页能放多少行
-        PageText pageText = new PageText(readSize.textSize + readSize.lineSize);
-        int lineCount = (int) Math.ceil(mHeight / pageText.getHeight());
+        //根据高度计算一页能放多少行,得出行数和第一行上面的空白
+        //设x = 行数
+        //计算公式： fontSize * x + lineSize *(x-1) = height
+        //最后将剩下的空白高度取一半,相当于居中
+        PageText pageText = new PageText(readSize.textSize);
+        int lineHeight = pageText.getHeight() + readSize.lineSize;
+        int top = getPaddingTop();
+        int bottom = getPaddingBottom();
+        int realHeight = (mHeight - top - bottom + readSize.lineSize);
+        int lineCount = (int) Math.floor(realHeight / lineHeight);
+        int calc = realHeight - (lineCount * lineHeight);
+        realCalc = calc / 2;
 
+        //将新生产的page页面放入链表
         pageTextList.add(pageText);
 
+        //将截取的行字串放入page页
         for (int i = 0, j = 0; i < lineTextList.size(); i++, j++) {
             if (j == lineCount) {
                 j = 0;
-                pageText = new PageText(readSize.textSize + readSize.lineSize);
+                pageText = new PageText(readSize.textSize);
                 pageTextList.add(pageText);
             }
-            pageText.lineTextList.add(lineTextList.get(i));
+            pageText.addLineText(lineTextList.get(i));
         }
 
         if(chapterChangeListener != null) {
@@ -193,23 +209,28 @@ public class BookTextView extends TextView {
 
     class PageText {
         public int mHeight = 80;
+        private int top;
         public ArrayList<String> lineTextList = new ArrayList<>();
 
         public PageText(int height) {
             mHeight = height;
+            top = (int) (mHeight - fontMetrics.descent + 5 + getPaddingTop()+ realCalc);
         }
 
         public int getHeight() {
             return mHeight;
         }
 
+        public void addLineText(String lineText){
+            lineTextList.add(lineText);
+        }
+
         public void onDraw(Canvas canvas) {
             canvas.save();
             int count = lineTextList.size();
-            int top = getTop();
             for (int i = 0; i < count; i++) {
                 String s = lineTextList.get(i);
-                int height = top + i * mHeight;
+                int height = top + i * (mHeight + readSize.lineSize);
                 canvas.drawText(s, paddingLeft + readSize.marginSize, height, textPaint);
             }
             canvas.restore();

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/read_bg_0">
 
 
     <TextView
+        android:layout_alignParentTop="true"
         android:id="@+id/book_read_activity_book_title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/read_title_text_height"
@@ -14,17 +15,22 @@
         android:textSize="@dimen/read_title_text_size" />
 
     <sunday.app.bairead.view.BookTextView
+        android:paddingTop="5dp"
+        android:layout_below="@id/book_read_activity_book_title"
         android:id="@+id/book_read_activity_book_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="20dp"
         android:textSize="@dimen/read_text_text_size_default" />
 
     <TextView
         android:layout_marginRight="@dimen/read_page_index_margin_right"
         android:id="@+id/book_read_activity_book_page"
-        android:layout_gravity="bottom|right"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:gravity="center_vertical"
+        android:layout_height="20dp" />
 
     <include
         android:layout_width="match_parent"
@@ -39,4 +45,4 @@
         android:layout_height="match_parent" />
 
 
-</FrameLayout>
+</RelativeLayout>

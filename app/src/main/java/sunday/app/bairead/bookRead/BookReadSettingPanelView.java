@@ -48,11 +48,17 @@ public class BookReadSettingPanelView extends RelativeLayout {
             String key = (String) v.getTag();
             BookTextView.ReadSize readSize = BookReadPresenter.getReadSize(getContext());
             if (key.equals(PreferenceSetting.KEY_TEXT_SIZE)) {
-                readSize.textSize -= 4;
+                if(readSize.textSize > 30) {
+                    readSize.textSize -= 4;
+                }
             } else if (key.equals(PreferenceSetting.KEY_LINE_SIZE)) {
-                readSize.lineSize -= 6;
+                if(readSize.lineSize > 6) {
+                    readSize.lineSize -= 6;
+                }
             } else if (key.equals(PreferenceSetting.KEY_MARGIN_SIZE)) {
-                readSize.marginSize -= 6;
+                if(readSize.marginSize > 6) {
+                    readSize.marginSize -= 6;
+                }
             }
             bookReadPresenter.setReadSize(readSize);
         }
