@@ -14,7 +14,6 @@
         android:textSize="@dimen/read_title_text_size" />
 
     <sunday.app.bairead.view.BookTextView
-        android:layout_marginTop="@dimen/read_text_margin_top"
         android:id="@+id/book_read_activity_book_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

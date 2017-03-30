@@ -56,14 +56,16 @@ public class FirstRunAsyncTask extends AsyncTask<Void, String, Void> {
                 BookInfo bookInfo = new BookInfo();
                 bookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(fileName).parse();
                 bookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).from(fileName).parse();
-                BookDetailPresenter.addToBookCase(context,bookInfo);
-                StringBuffer stringBuffer = new StringBuffer("加载第");
-                stringBuffer
-                        .append(i)
-                        .append('/')
-                        .append(bookCount)
-                        .append("本书");
-                publishProgress(stringBuffer.toString());
+                if(bookInfo.bookDetail != null) {
+                    BookDetailPresenter.addToBookCase(context, bookInfo);
+                    StringBuffer stringBuffer = new StringBuffer("加载第");
+                    stringBuffer
+                            .append(i)
+                            .append('/')
+                            .append(bookCount)
+                            .append("本书");
+                    publishProgress(stringBuffer.toString());
+                }
                 i++;
             }
         }
