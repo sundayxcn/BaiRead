@@ -162,7 +162,7 @@ public class MainActivity extends BaseActivity
         bookcasePresenter = new BookcasePresenter(this, this);
         bookcasePresenter.init();
 
-        showMaterialShowcaseView();
+        //showMaterialShowcaseView();
     }
 
     private void firstRunWork() {
