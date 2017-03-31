@@ -111,7 +111,7 @@ public class BookReadSettingPanelView extends RelativeLayout {
                     if( bookReadPresenter.addBookCase()){
                         bookReadActivity.showToast(R.string.case_add_success);
                     }else{
-                        bookReadActivity.showToast(R.string.case_add_tips);
+                        bookReadActivity.showToast(R.string.case_add_failed);
                     }
                     break;
                 case R.id.book_read_setting_top_panel_cache_book:

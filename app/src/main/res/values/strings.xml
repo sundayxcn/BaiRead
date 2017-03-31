@@ -93,6 +93,7 @@
     <string name="first_chapter">已到第一章</string>
     <string name="mark_success">书签添加成功</string>
     <string name="case_add_success">成功添加到书架</string>
+    <string name="case_add_failed">添加失败</string>
     <string name="case_add_tips">请先添加本书到书架</string>
     <string name="cache_book">已添加到缓存队列</string>
     <string name="order_default">正序</string>

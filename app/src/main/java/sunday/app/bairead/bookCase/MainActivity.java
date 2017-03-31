@@ -1,6 +1,8 @@
 package sunday.app.bairead.bookCase;
 
 import android.content.Intent;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -10,10 +12,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -33,6 +37,9 @@ import sunday.app.bairead.database.BaiReadApplication;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.BookModel;
 import sunday.app.bairead.download.BookChapterCache;
+import sunday.app.bairead.materialshowcaseview.MaterialShowcaseView;
+import sunday.app.bairead.materialshowcaseview.target.Target;
+import sunday.app.bairead.materialshowcaseview.target.ViewTarget;
 import sunday.app.bairead.utils.FileManager;
 import sunday.app.bairead.utils.NewChapterShow;
 import sunday.app.bairead.utils.PreferenceSetting;
@@ -155,6 +162,7 @@ public class MainActivity extends BaseActivity
         bookcasePresenter = new BookcasePresenter(this, this);
         bookcasePresenter.init();
 
+        showMaterialShowcaseView();
     }
 
     private void firstRunWork() {
@@ -244,6 +252,43 @@ public class MainActivity extends BaseActivity
             }
         });
 
+    }
+
+    /**
+     * 悬浮引导页
+     * */
+    public void showMaterialShowcaseView(){
+        new MaterialShowcaseView.Builder(this)
+                .setTarget(new ViewTarget(null) {
+                    @Override
+                    public Point getPoint() {
+                        //int[] location = new int[2];
+                        //int x = location[0] + toolbar.getWidth() / 2;
+                        //int y = location[1] + toolbar.getHeight() / 2;
+                        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                        int x = displayMetrics.widthPixels - 200;
+                        int y = 150;
+                        return new Point(x, y);
+                    }
+
+                    @Override
+                    public Rect getBounds() {
+                        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                        int x = displayMetrics.widthPixels - 100;
+                        int y = 150;
+                        return new Rect(
+                                x,
+                                y,
+                                x + 200,//imageView.getMeasuredWidth(),
+                                y + 200//imageView.getMeasuredHeight()
+                        );
+                    }
+                })
+                .setDismissText("去搜索喜欢看的小说吧")
+                //.setContentText("This is some amazing feature you should know about")
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .singleUse("case_search") // provide a unique ID used to ensure it is only shown once
+                .show();
     }
 
     public void showBookCaseToolBar() {
