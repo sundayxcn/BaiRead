@@ -200,7 +200,12 @@ public class MainActivity extends BaseActivity
             @Override
             public void onRefresh() {
                 if (isConnect()) {
-                    bookcasePresenter.checkNewChapter(booklistAdapter.getBookInfoList());
+                    if(booklistAdapter.getBookInfoList() == null ||booklistAdapter.getBookInfoList().size() == 0){
+                        swipeRefreshLayout.setRefreshing(false);
+                        showToast(R.string.book_case_no_book_tips);
+                    }else {
+                        bookcasePresenter.checkNewChapter(booklistAdapter.getBookInfoList());
+                    }
                 } else {
                     swipeRefreshLayout.setRefreshing(false);
                     showToastNetworkUnConnect();

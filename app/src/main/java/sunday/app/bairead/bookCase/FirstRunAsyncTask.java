@@ -12,6 +12,7 @@ import sunday.app.bairead.parse.ParseChapter;
 import sunday.app.bairead.parse.ParseDetail;
 import sunday.app.bairead.parse.ParseXml;
 import sunday.app.bairead.presenter.BookDetailPresenter;
+import sunday.app.bairead.utils.FileManager;
 
 /**
  * Created by Administrator on 2017/3/27.
@@ -35,18 +36,7 @@ public class FirstRunAsyncTask extends AsyncTask<Void, String, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-        FileFilter fileFilter = new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                if (pathname.isDirectory() && !pathname.getName().contains("cache")) {
-                    return true;
-                } else {
-                    return false;
-                }
-
-            }
-        };
-        File[] fileDirs = baseDir.listFiles(fileFilter);
+        File[] fileDirs = baseDir.listFiles(FileManager.fileFilter);
         int bookCount = fileDirs.length;
         int i = 1;
         for (File fileDir : fileDirs) {

@@ -69,6 +69,7 @@
     <string name="xlistview_footer_hint_ready">松开载入更多</string>
     <string name="xlistview_item_chapter_update_text">新</string>
     <string name="chapter_list_item_cache_text">缓</string>
+    <string name="book_case_no_book_tips">先去添加一本小说吧</string>
 
     <!--搜索界面-->
     <string name="search_result_null">这位小哥，为了节省流量，目前只支持精确搜索，请确定你没有写错书名</string>
