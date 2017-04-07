@@ -20,7 +20,6 @@ import sunday.app.bairead.view.BookTypeView;
 
 public class BookDetailActivity extends BaseActivity implements BookDetailPresenter.IBookDetailListener{
     private BookInfo bookInfo;
-
     private TextView nameTView;
     private TextView authorTView;
     private TextView sourceTView;

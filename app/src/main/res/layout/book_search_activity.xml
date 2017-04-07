@@ -39,7 +39,7 @@
             android:layout_weight="1"
             android:textCursorDrawable="@null"
             android:hint="@string/search_edit_text_hint"
-            android:background="@drawable/background_stroke_white"
+            android:background="@drawable/background_shape_stroke"
             android:imeOptions="actionSearch"
             android:textColor="@color/colorDark"
             android:textColorHint="@color/colorGray" />

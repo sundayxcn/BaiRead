@@ -20,7 +20,7 @@
         android:layout_height="@dimen/shape_icon_width"
         android:layout_gravity="right|center_vertical"
         android:text="@string/chapter_list_item_cache_text"
-        android:background="@drawable/background_icon"
+        android:background="@color/colorPrimary"
         android:visibility="gone" />
 
 </FrameLayout>

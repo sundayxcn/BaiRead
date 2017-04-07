@@ -38,7 +38,7 @@
     <style name="ShapeButton" parent="NormalButton">
         <item name="android:layout_marginLeft">8dp</item>
         <item name="android:layout_marginRight">8dp</item>
-        <item name="android:background">@drawable/background_button_shape</item>
+        <item name="android:background">@drawable/background_primer_ripper</item>
         <item name="android:layout_height">40dp</item>
         <item name="android:layout_weight">1</item>
     </style>
