@@ -13,6 +13,8 @@ import android.support.annotation.Nullable;
 
 import org.apache.http.util.TextUtils;
 
+import sunday.app.bairead.base.BaiReadApplication;
+
 /**
  * Created by sunday on 2016/12/6.
  */

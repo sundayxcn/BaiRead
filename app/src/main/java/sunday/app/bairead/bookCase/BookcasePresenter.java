@@ -8,7 +8,7 @@ import android.os.Looper;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import sunday.app.bairead.database.BaiReadApplication;
+import sunday.app.bairead.base.BaiReadApplication;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.BookModel;
 import sunday.app.bairead.download.BookDownLoad;

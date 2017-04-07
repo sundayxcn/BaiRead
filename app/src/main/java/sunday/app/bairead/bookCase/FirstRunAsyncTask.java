@@ -4,14 +4,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import java.io.File;
-import java.io.FileFilter;
 
 import sunday.app.bairead.database.BookChapter;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.parse.ParseChapter;
 import sunday.app.bairead.parse.ParseDetail;
 import sunday.app.bairead.parse.ParseXml;
-import sunday.app.bairead.presenter.BookDetailPresenter;
+import sunday.app.bairead.bookDetail.BookDetailPresenter;
 import sunday.app.bairead.utils.FileManager;
 
 /**

@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import sunday.app.bairead.R;
-import sunday.app.bairead.activity.BaseActivity;
+import sunday.app.bairead.base.BaseActivity;
 import sunday.app.bairead.utils.PreferenceSetting;
 import sunday.app.bairead.view.BookTextView;
 

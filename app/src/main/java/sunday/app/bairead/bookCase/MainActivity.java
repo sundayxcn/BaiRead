@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -29,16 +28,15 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import sunday.app.bairead.R;
-import sunday.app.bairead.activity.BaseActivity;
-import sunday.app.bairead.activity.BookSearchActivity;
-import sunday.app.bairead.activity.DisclaimerActivity;
+import sunday.app.bairead.base.BaseActivity;
+import sunday.app.bairead.bookSearch.BookSearchActivity;
+import sunday.app.bairead.base.DisclaimerActivity;
 import sunday.app.bairead.bookRead.BookChapterCacheNew;
-import sunday.app.bairead.database.BaiReadApplication;
+import sunday.app.bairead.base.BaiReadApplication;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.BookModel;
 import sunday.app.bairead.download.BookChapterCache;
 import sunday.app.bairead.materialshowcaseview.MaterialShowcaseView;
-import sunday.app.bairead.materialshowcaseview.target.Target;
 import sunday.app.bairead.materialshowcaseview.target.ViewTarget;
 import sunday.app.bairead.utils.FileManager;
 import sunday.app.bairead.utils.NewChapterShow;

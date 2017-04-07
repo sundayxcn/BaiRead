@@ -5,12 +5,10 @@ import android.os.Handler;
 
 import java.util.ArrayList;
 
-import sunday.app.bairead.database.BaiReadApplication;
-import sunday.app.bairead.database.BookChapter;
+import sunday.app.bairead.base.BaiReadApplication;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.BookMarkInfo;
 import sunday.app.bairead.database.BookModel;
-import sunday.app.bairead.download.BookChapterCache;
 import sunday.app.bairead.utils.PreferenceSetting;
 import sunday.app.bairead.utils.Temp;
 import sunday.app.bairead.utils.ThreadManager;

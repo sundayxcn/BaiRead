@@ -12,6 +12,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import sunday.app.bairead.base.BaiReadApplication;
 import sunday.app.bairead.utils.DeferredHandler;
 
 /**

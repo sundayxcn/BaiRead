@@ -1,9 +1,9 @@
-package sunday.app.bairead.presenter;
+package sunday.app.bairead.bookDetail;
 
 import android.content.Context;
 
 import sunday.app.bairead.bookCase.BookcasePresenter;
-import sunday.app.bairead.database.BaiReadApplication;
+import sunday.app.bairead.base.BaiReadApplication;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.BookModel;
 import sunday.app.bairead.download.BookChapterCache;

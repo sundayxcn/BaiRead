@@ -1,16 +1,15 @@
-package sunday.app.bairead.activity;
+package sunday.app.bairead.bookDetail;
 
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
+import sunday.app.bairead.base.BaseActivity;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.R;
 import sunday.app.bairead.utils.Temp;
-import sunday.app.bairead.presenter.BookDetailPresenter;
 import sunday.app.bairead.view.BookStatusView;
 import sunday.app.bairead.view.BookTypeView;
 

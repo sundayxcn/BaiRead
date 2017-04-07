@@ -4,16 +4,14 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import okhttp3.Response;
-import sunday.app.bairead.database.BaiReadApplication;
+import sunday.app.bairead.base.BaiReadApplication;
 import sunday.app.bairead.database.BookChapter;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.download.BookDownLoad;

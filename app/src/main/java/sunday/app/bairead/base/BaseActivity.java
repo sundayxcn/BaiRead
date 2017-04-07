@@ -1,4 +1,4 @@
-package sunday.app.bairead.activity;
+package sunday.app.bairead.base;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import sunday.app.bairead.R;
-import sunday.app.bairead.database.BaiReadApplication;
 import sunday.app.bairead.utils.NetworkTool;
 import sunday.app.bairead.view.ListDialog;
 

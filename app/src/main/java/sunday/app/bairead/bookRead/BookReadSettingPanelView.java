@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +21,7 @@ import sunday.app.bairead.database.BookChapter;
 import sunday.app.bairead.database.BookMarkInfo;
 import sunday.app.bairead.R;
 import sunday.app.bairead.utils.PreferenceSetting;
-import sunday.app.bairead.activity.BaseActivity;
+import sunday.app.bairead.base.BaseActivity;
 import sunday.app.bairead.view.BookTextView;
 
 

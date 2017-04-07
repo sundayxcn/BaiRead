@@ -21,7 +21,7 @@
 
     <application
 
-        android:name=".database.BaiReadApplication"
+        android:name=".base.BaiReadApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -46,14 +46,14 @@
             android:theme="@style/BaseAppTheme"
             />
 
-        <activity android:name=".activity.BookSearchActivity"
+        <activity android:name=".bookSearch.BookSearchActivity"
             android:theme="@style/BaseAppTheme"
             />
 
-        <activity android:name=".activity.BookDetailActivity"
+        <activity android:name=".bookDetail.BookDetailActivity"
             />
 
-        <activity android:name=".activity.DisclaimerActivity"
+        <activity android:name=".base.DisclaimerActivity"
             />
 
     </application>

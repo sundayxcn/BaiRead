@@ -1,9 +1,10 @@
-package sunday.app.bairead.activity;
+package sunday.app.bairead.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import sunday.app.bairead.R;
+import sunday.app.bairead.base.BaseActivity;
 
 /**
  * Created by Administrator on 2017/3/19.

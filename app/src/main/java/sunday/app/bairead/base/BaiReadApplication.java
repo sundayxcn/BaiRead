@@ -1,4 +1,4 @@
-package sunday.app.bairead.database;
+package sunday.app.bairead.base;
 
 import android.app.Activity;
 import android.app.Application;
@@ -14,6 +14,8 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 
+import sunday.app.bairead.database.BookContentProvider;
+import sunday.app.bairead.database.BookModel;
 import sunday.app.bairead.utils.FileManager;
 
 /**
