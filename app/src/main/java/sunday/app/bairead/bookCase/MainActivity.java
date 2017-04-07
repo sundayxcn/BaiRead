@@ -17,8 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
 
@@ -27,12 +29,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
+import butterknife.OnItemLongClick;
 import sunday.app.bairead.R;
+import sunday.app.bairead.base.BaiReadApplication;
 import sunday.app.bairead.base.BaseActivity;
-import sunday.app.bairead.bookSearch.BookSearchActivity;
 import sunday.app.bairead.base.DisclaimerActivity;
 import sunday.app.bairead.bookRead.BookChapterCacheNew;
-import sunday.app.bairead.base.BaiReadApplication;
+import sunday.app.bairead.bookSearch.BookSearchActivity;
 import sunday.app.bairead.database.BookInfo;
 import sunday.app.bairead.database.BookModel;
 import sunday.app.bairead.download.BookChapterCache;
@@ -54,71 +61,101 @@ public class MainActivity extends BaseActivity
 
     Handler handler = new Handler();
     ComparatorManager comparatorManager = new ComparatorManager();
+    @Bind(R.id.xlist_view)
+    ListView xlistView;
+    @Bind(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @Bind(R.id.book_case_tool_bar_top)
+    ImageView bookCaseToolBarTop;
+    @Bind(R.id.book_case_tool_bar_cache)
+    ImageView bookCaseToolBarCache;
+    @Bind(R.id.book_case_tool_bar_delete)
+    ImageView bookCaseToolBarDelete;
+    @Bind(R.id.book_case_tool_bar)
+    LinearLayout bookCaseToolBar;
+    @Bind(R.id.toolbar_title)
+    TextView toolbarTitle;
+
     private BookcasePresenter bookcasePresenter;
-    private ListView mListView;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private LinearLayout mBookCaseToolBar;
     private BookListAdapter booklistAdapter;
     private OperatorListener operatorListener = new OperatorListener();
     private int click;
-    private View.OnClickListener toolbarOnclick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.book_case_tool_bar_top:
-                    showConfirmDialog(R.string.top_book_tips, new DialogListenerIm() {
-                        @Override
-                        public void onConfirm() {
-                            super.onConfirm();
-                            ArrayList<Long> bookIdList = booklistAdapter.getCheckList();
-                            if (bookIdList != null) {
-                                topBook(bookIdList);
-                            }
-                            onBackPressed();
-                        }
-                    });
-                    break;
-                case R.id.book_case_tool_bar_cache:
-                    showConfirmDialog(R.string.cache_book_tips, new DialogListenerIm() {
-                        @Override
-                        public void onConfirm() {
-                            super.onConfirm();
-                            ArrayList<Long> bookIdList = booklistAdapter.getCheckList();
-                            BaiReadApplication application = (BaiReadApplication) getApplication();
-                            BookModel bookModel = application.getBookModel();
-                            for (long id : bookIdList) {
-                                BookInfo bookInfo = bookModel.getBookInfo(id);
-                                BookChapterCache.getInstance().downloadAllChpater(bookInfo);
-                            }
-                            onBackPressed();
-                        }
-                    });
-                    break;
-                case R.id.book_case_tool_bar_delete:
-                    showConfirmDialog(R.string.delete_book_tips, new DialogListenerIm() {
-                        @Override
-                        public void onConfirm() {
-                            super.onConfirm();
-                            ArrayList<Long> bookIdList = booklistAdapter.getCheckList();
-                            BaiReadApplication application = (BaiReadApplication) getApplication();
-                            BookModel bookModel = application.getBookModel();
-                            for (long id : bookIdList) {
-                                BookInfo bookInfo = bookModel.getBookInfo(id);
-                                booklistAdapter.getBookInfoList().remove(bookInfo);
-                                bookcasePresenter.deleteBook(bookInfo);
-                            }
-                            onBackPressed();
-                        }
-                    });
-                    break;
-                default:
-            }
 
+    @OnClick({R.id.book_case_tool_bar_top, R.id.book_case_tool_bar_cache, R.id.book_case_tool_bar_delete})
+    public void toolbarOnclick(View v) {
+        switch (v.getId()) {
+            case R.id.book_case_tool_bar_top:
+                showConfirmDialog(R.string.top_book_tips, new DialogListenerIm() {
+                    @Override
+                    public void onConfirm() {
+                        super.onConfirm();
+                        ArrayList<Long> bookIdList = booklistAdapter.getCheckList();
+                        if (bookIdList != null) {
+                            topBook(bookIdList);
+                        }
+                        onBackPressed();
+                    }
+                });
+                break;
+            case R.id.book_case_tool_bar_cache:
+                showConfirmDialog(R.string.cache_book_tips, new DialogListenerIm() {
+                    @Override
+                    public void onConfirm() {
+                        super.onConfirm();
+                        ArrayList<Long> bookIdList = booklistAdapter.getCheckList();
+                        BaiReadApplication application = (BaiReadApplication) getApplication();
+                        BookModel bookModel = application.getBookModel();
+                        for (long id : bookIdList) {
+                            BookInfo bookInfo = bookModel.getBookInfo(id);
+                            BookChapterCache.getInstance().downloadAllChpater(bookInfo);
+                        }
+                        onBackPressed();
+                    }
+                });
+                break;
+            case R.id.book_case_tool_bar_delete:
+                showConfirmDialog(R.string.delete_book_tips, new DialogListenerIm() {
+                    @Override
+                    public void onConfirm() {
+                        super.onConfirm();
+                        ArrayList<Long> bookIdList = booklistAdapter.getCheckList();
+                        BaiReadApplication application = (BaiReadApplication) getApplication();
+                        BookModel bookModel = application.getBookModel();
+                        for (long id : bookIdList) {
+                            BookInfo bookInfo = bookModel.getBookInfo(id);
+                            booklistAdapter.getBookInfoList().remove(bookInfo);
+                            bookcasePresenter.deleteBook(bookInfo);
+                        }
+                        onBackPressed();
+                    }
+                });
+                break;
+            default:
         }
-    };
+    }
+
+    @OnItemClick(R.id.xlist_view)
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (isToolBarShow()) {
+            BookListAdapter.ViewHolder viewHolder = (BookListAdapter.ViewHolder) view.getTag();
+            viewHolder.changeCheckBox();
+        } else {
+            BookInfo bookInfo = (BookInfo) booklistAdapter.getItem(position);
+            BookcasePresenter.readBook(getBaseContext(), bookInfo);
+        }
+    }
+
+    @OnItemLongClick(R.id.xlist_view)
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        if (!isToolBarShow()) {
+            BookInfo bookInfo = (BookInfo) booklistAdapter.getItem(position);
+            showCaseOperatorDialog(bookInfo);
+        }
+        return true;
+    }
 
 
-    private void createDir(){
+    private void createDir() {
 
         //缓存文件夹
         File file = getCacheDir();
@@ -128,7 +165,7 @@ public class MainActivity extends BaseActivity
 
         //搜索临时文件夹
         file = new File(FileManager.TEMP_DIR);
-        if(!file.exists()){
+        if (!file.exists()) {
             file.mkdirs();
         }
     }
@@ -138,6 +175,7 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         createDir();
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
 
@@ -199,17 +237,17 @@ public class MainActivity extends BaseActivity
     }
 
     private void setupView() {
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        int color = ContextCompat.getColor(this,R.color.colorRed);
+        //swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        int color = ContextCompat.getColor(this, R.color.colorRed);
         swipeRefreshLayout.setColorSchemeColors(color);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (isConnect()) {
-                    if(booklistAdapter.getBookInfoList() == null ||booklistAdapter.getBookInfoList().size() == 0){
+                    if (booklistAdapter.getBookInfoList() == null || booklistAdapter.getBookInfoList().size() == 0) {
                         swipeRefreshLayout.setRefreshing(false);
                         showToast(R.string.book_case_no_book_tips);
-                    }else {
+                    } else {
                         bookcasePresenter.checkNewChapter(booklistAdapter.getBookInfoList());
                     }
                 } else {
@@ -219,43 +257,36 @@ public class MainActivity extends BaseActivity
             }
         });
 
-        mBookCaseToolBar = (LinearLayout) findViewById(R.id.book_case_tool_bar);
-        int count = mBookCaseToolBar.getChildCount();
-        for (int i = 0; i < count; i++) {
-            View v = mBookCaseToolBar.getChildAt(i);
-            v.setOnClickListener(toolbarOnclick);
-        }
-
-        mListView = (ListView) findViewById(R.id.xlist_view);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (isToolBarShow()) {
-                    BookListAdapter.ViewHolder viewHolder = (BookListAdapter.ViewHolder) view.getTag();
-                    viewHolder.changeCheckBox();
-                } else {
-                    BookInfo bookInfo = (BookInfo) booklistAdapter.getItem(position);
-                    BookcasePresenter.readBook(getBaseContext(), bookInfo);
-                }
-            }
-        });
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!isToolBarShow()) {
-                    BookInfo bookInfo = (BookInfo) booklistAdapter.getItem(position);
-                    showCaseOperatorDialog(bookInfo);
-                }
-                return true;
-            }
-        });
+//        xlistView = (ListView) findViewById(R.id.xlist_view);
+//        xlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                if (isToolBarShow()) {
+//                    BookListAdapter.ViewHolder viewHolder = (BookListAdapter.ViewHolder) view.getTag();
+//                    viewHolder.changeCheckBox();
+//                } else {
+//                    BookInfo bookInfo = (BookInfo) booklistAdapter.getItem(position);
+//                    BookcasePresenter.readBook(getBaseContext(), bookInfo);
+//                }
+//            }
+//        });
+//        xlistView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                if (!isToolBarShow()) {
+//                    BookInfo bookInfo = (BookInfo) booklistAdapter.getItem(position);
+//                    showCaseOperatorDialog(bookInfo);
+//                }
+//                return true;
+//            }
+//        });
 
     }
 
     /**
      * 悬浮引导页
-     * */
-    public void showMaterialShowcaseView(){
+     */
+    public void showMaterialShowcaseView() {
         new MaterialShowcaseView.Builder(this)
                 .setTarget(new ViewTarget(null) {
                     @Override
@@ -290,18 +321,18 @@ public class MainActivity extends BaseActivity
     }
 
     public void showBookCaseToolBar() {
-        mBookCaseToolBar.setVisibility(View.VISIBLE);
+        bookCaseToolBar.setVisibility(View.VISIBLE);
         booklistAdapter.setEdit(true);
         booklistAdapter.notifyDataSetChanged();
 
     }
 
     public boolean isToolBarShow() {
-        return mBookCaseToolBar.getVisibility() == View.VISIBLE;
+        return bookCaseToolBar.getVisibility() == View.VISIBLE;
     }
 
     public void hideBookCaseToolBar() {
-        mBookCaseToolBar.setVisibility(View.GONE);
+        bookCaseToolBar.setVisibility(View.GONE);
         booklistAdapter.clear();
         booklistAdapter.setEdit(false);
         booklistAdapter.notifyDataSetChanged();
@@ -311,9 +342,9 @@ public class MainActivity extends BaseActivity
         String bookName = bookInfo.bookDetail.getName();
         operatorListener.setBookInfo(bookInfo);
         String[] operator;
-        if(bookInfo.bookDetail.topCase){
+        if (bookInfo.bookDetail.topCase) {
             operator = getResources().getStringArray(R.array.dialog_list_operator_top_cancel);
-        }else{
+        } else {
             operator = getResources().getStringArray(R.array.dialog_list_operator_top);
         }
         showListDialog(bookName, operator, operatorListener);
@@ -463,11 +494,11 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void loadBookFinish(ArrayList<BookInfo> bookList) {
-        if(bookList != null) {
+        if (bookList != null) {
             booklistAdapter = new BookListAdapter(this);
             booklistAdapter.setBookInfoList(bookList);
             reOrderList();
-            mListView.setAdapter(booklistAdapter);
+            xlistView.setAdapter(booklistAdapter);
         }
         hideProgressDialog();
     }
@@ -540,7 +571,7 @@ public class MainActivity extends BaseActivity
                     BookSearchActivity.goBookDetail(getBaseContext(), bookInfo);
                     break;
                 case OPERATOR_CACHE:
-                    showConfirmDialog(R.string.cache_one_book_tips,new DialogListenerIm(){
+                    showConfirmDialog(R.string.cache_one_book_tips, new DialogListenerIm() {
                         @Override
                         public void onConfirm() {
                             super.onConfirm();
@@ -550,7 +581,7 @@ public class MainActivity extends BaseActivity
 
                     break;
                 case OPERATOR_DELETE:
-                    showConfirmDialog(R.string.delete_one_book_tips,new DialogListenerIm(){
+                    showConfirmDialog(R.string.delete_one_book_tips, new DialogListenerIm() {
                         @Override
                         public void onConfirm() {
                             super.onConfirm();

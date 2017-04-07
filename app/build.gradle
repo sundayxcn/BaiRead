@@ -54,4 +54,5 @@ dependencies {
     compile 'com.umeng.analytics:analytics:latest.integration'
     //引导 浮层
     //compile 'com.github.deano2390:MaterialShowcaseView:1.1.0'
+    compile 'com.jakewharton:butterknife:7.0.1'
 }
