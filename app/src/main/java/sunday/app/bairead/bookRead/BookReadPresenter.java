@@ -6,9 +6,8 @@ import android.os.Handler;
 import java.util.ArrayList;
 
 import sunday.app.bairead.base.BaiReadApplication;
-import sunday.app.bairead.database.BookInfo;
-import sunday.app.bairead.database.BookMarkInfo;
-import sunday.app.bairead.database.BookModel;
+import sunday.app.bairead.data.setting.BookInfo;
+import sunday.app.bairead.data.setting.BookMarkInfo;
 import sunday.app.bairead.utils.PreferenceSetting;
 import sunday.app.bairead.utils.Temp;
 import sunday.app.bairead.utils.ThreadManager;
@@ -43,7 +42,7 @@ public class BookReadPresenter  {
             bookInfo = Temp.getInstance().getBookInfo();
             //Temp.getInstance().clearBookInfo();
         }else {
-            bookInfo = baiReadApplication.getBookModel().getBookInfo(bookId);
+            //bookInfo = baiReadApplication.getBookModel().getBookInfo(bookId);
         }
     }
 
@@ -55,7 +54,7 @@ public class BookReadPresenter  {
             @Override
             public void run() {
                 BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-                bookMarkList = baiReadApplication.getBookModel().loadBookMark(bookInfo.bookDetail.getId());
+               // bookMarkList = baiReadApplication.getBookModel().loadBookMark(bookInfo.bookDetail.getId());
                 for(BookMarkInfo info : bookMarkList){
                     info.text = BookChapterCacheNew.getInstance().getMarkText(info.chapterIndex);
                     info.title = BookChapterCacheNew.getInstance().getMarkTitle(info.chapterIndex);
@@ -115,13 +114,13 @@ public class BookReadPresenter  {
 
     public void updateDataBookIndex(){
         BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-        baiReadApplication.getBookModel().updateBookChapter(bookInfo.bookChapter);
+        //baiReadApplication.getBookModel().updateBookChapter(bookInfo.bookChapter);
     }
 
 
     public void updateDataBookPage(){
         BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-        baiReadApplication.getBookModel().updateBookChapter(bookInfo.bookChapter);
+        //baiReadApplication.getBookModel().updateBookChapter(bookInfo.bookChapter);
     }
 
 //    public String getBookName(){
@@ -169,47 +168,50 @@ public class BookReadPresenter  {
 
     public boolean addBookMark(){
 
-        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-        BookModel bookModel = baiReadApplication.getBookModel();
-        if(bookModel.isBookCase(bookInfo)) {
-            BookMarkInfo bookMarkInfo = new BookMarkInfo();
-            bookMarkInfo.setNameId(bookInfo.bookDetail.getId());
-            int chapterIndex = bookInfo.bookChapter.getChapterIndex();
-            bookMarkInfo.chapterIndex = chapterIndex;
-            bookMarkInfo.text = BookChapterCacheNew.getInstance().getMarkText(chapterIndex);
-            bookMarkInfo.title = BookChapterCacheNew.getInstance().getMarkTitle(chapterIndex);
-            bookMarkList.add(bookMarkInfo);
-            bookModel.addBookMark(bookMarkInfo);
-            return true;
-        }else{
-            return false;
-        }
+//        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
+//        //BookModel bookModel = baiReadApplication.getBookModel();
+//        if(bookModel.isBookCase(bookInfo)) {
+//            BookMarkInfo bookMarkInfo = new BookMarkInfo();
+//            bookMarkInfo.setNameId(bookInfo.bookDetail.getId());
+//            int chapterIndex = bookInfo.bookChapter.getChapterIndex();
+//            bookMarkInfo.chapterIndex = chapterIndex;
+//            bookMarkInfo.text = BookChapterCacheNew.getInstance().getMarkText(chapterIndex);
+//            bookMarkInfo.title = BookChapterCacheNew.getInstance().getMarkTitle(chapterIndex);
+//            bookMarkList.add(bookMarkInfo);
+//            bookModel.addBookMark(bookMarkInfo);
+//            return true;
+//        }else{
+//            return false;
+//        }
+        return false;
     }
 
     public boolean addBookCase(){
-        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-        return baiReadApplication.getBookModel().addBook(bookInfo);
+//        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
+//        return baiReadApplication.getBookModel().addBook(bookInfo);
+        return false;
     }
 
     public boolean cacheBook(){
-        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-        if(baiReadApplication.getBookModel().isBookCase(bookInfo)) {
-            BookChapterCacheNew.getInstance().downloadAllChpater(bookInfo);
-            return true;
-        }else{
-            return false;
-        }
+//        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
+//        if(baiReadApplication.getBookModel().isBookCase(bookInfo)) {
+//            BookChapterCacheNew.getInstance().downloadAllChpater(bookInfo);
+//            return true;
+//        }else{
+//            return false;
+//        }
+        return false;
     }
 
 
     public void deleteBookMark(){
-        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-        baiReadApplication.getBookModel().deleteBookAllMark(bookInfo.bookDetail.getId());
+//        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
+//        baiReadApplication.getBookModel().deleteBookAllMark(bookInfo.bookDetail.getId());
     }
 
     public void deleteBookMark(BookMarkInfo bookMarkInfo){
-        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-        baiReadApplication.getBookModel().deleteBookMark(bookMarkInfo);
+//        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
+//        baiReadApplication.getBookModel().deleteBookMark(bookMarkInfo);
     }
 
 }

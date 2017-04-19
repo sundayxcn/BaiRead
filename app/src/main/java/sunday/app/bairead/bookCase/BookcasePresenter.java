@@ -1,175 +1,151 @@
-package sunday.app.bairead.bookCase;
+package sunday.app.bairead.bookcase;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import sunday.app.bairead.base.BaiReadApplication;
-import sunday.app.bairead.database.BookInfo;
-import sunday.app.bairead.database.BookModel;
-import sunday.app.bairead.download.BookDownLoad;
-import sunday.app.bairead.utils.FileManager;
-import sunday.app.bairead.bookRead.BookReadActivity;
-import sunday.app.bairead.utils.ThreadManager;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import sunday.app.bairead.data.BookRepository;
+import sunday.app.bairead.data.setting.BookInfo;
+import sunday.app.bairead.download.BookChapterCache;
+import sunday.app.bairead.utils.PreferenceKey;
+import sunday.app.bairead.utils.PreferenceSetting;
 
 /**
- * Created by Administrator on 2017/3/5.
+ * Created by zhongfei.sun on 2017/4/11.
  */
 
-public class BookcasePresenter{
+public class BookcasePresenter implements BookcaseContract.Presenter {
 
-    private Context context;
-    private BookModel bookModel;
-    Handler handler = new Handler(Looper.getMainLooper());
+    private BookRepository mBookRepository;
+    private BookcaseContract.View mBookcaseView;
+    private PreferenceSetting mPreferenceSetting;
 
-    public interface IBookcasePresenterListener{
-        void loadBookStart();
-        void loadBookFinish(ArrayList<BookInfo> bookList);
-        void onCheckStart();
-        void onCheckNewChapter(BookInfo bookInfo);
-        void onCheckFinish();
+
+    public BookcasePresenter(@NonNull BookRepository bookRepository,
+                             @NonNull PreferenceSetting preferenceSetting,
+                             @NonNull BookcaseContract.View view){
+        mBookRepository = bookRepository;
+        mBookcaseView = view;
+        mPreferenceSetting = preferenceSetting;
+
+        mBookcaseView.setPresenter(this);
     }
 
-    private IBookcasePresenterListener bookcasePresenterListener;
-    public BookcasePresenter(Context c, IBookcasePresenterListener bookcasePresenter){
-        context = c;
-        BaiReadApplication application = (BaiReadApplication) context.getApplicationContext();
-        bookModel = application.getBookModel();
-        bookcasePresenterListener = bookcasePresenter;
-    }
 
-    public void init(){
-        bookcasePresenterListener.loadBookStart();
-        ThreadManager.getInstance().work(new Runnable() {
-            @Override
-            public void run() {
-                final ArrayList<BookInfo> bookInfoArrayList = bookModel.loadAllBook();
-                runOnMainThread(new Runnable() {
+    @Override
+    public void loadBooks(boolean refresh) {
+        mBookcaseView.showLoading();
+        mBookRepository.loadBooks(refresh).
+                subscribeOn(Schedulers.io()).
+                observeOn(AndroidSchedulers.mainThread()).
+                subscribe(new Action1<List<BookInfo>>() {
                     @Override
-                    public void run() {
-                        bookcasePresenterListener.loadBookFinish(bookInfoArrayList);
+                    public void call(List<BookInfo> list) {
+                        if (list.size() > 0) {
+                            orderBooks(list);
+                            mBookcaseView.showBooks(list);
+                        } else {
+                            mBookcaseView.showNoBooks();
+                        }
                     }
                 });
-
-            }
-        });
     }
 
-    private void checkFinish(){
-        if(atomicInteger.decrementAndGet() <= 0){
-            runOnMainThread(new Runnable() {
-                @Override
-                public void run() {
-                    bookcasePresenterListener.onCheckFinish();
-                }
-            });
+    /**
+     * 检查章节更新
+     * **/
+    @Override
+    public void updateBooks() {
+
+    }
+
+    @Override
+    public void updateBook(long id) {
+
+    }
+
+    @Override
+    public void orderBooks(List<BookInfo> list) {
+        int order = getOrderKey();
+        Comparator<BookInfo> comparator = ComparatorManager.getComparator(order);
+        Collections.sort(list,comparator);
+    }
+
+    private @PreferenceKey.KeyInt int getOrderKey(){
+        return mPreferenceSetting.getIntValue(PreferenceSetting.KEY_CASE_LIST_ORDER);
+    }
+
+
+    @Override
+    public void deleteBook(long id) {
+        BookInfo bookInfo = mBookRepository.getBook(id);
+        mBookRepository.deleteBook(bookInfo);
+    }
+
+    @Override
+    public void deleteBooks(List<Long> list) {
+        List<BookInfo> bookInfos = new ArrayList<>();
+        for(long id : list){
+            bookInfos.add(mBookRepository.getBook(id));
+        }
+        mBookRepository.deleteBooks(bookInfos);
+    }
+
+    @Override
+    public void cacheBook(long id) {
+        
+    }
+
+    @Override
+    public void cacheBooks(List<Long> list) {
+        for (long id : list) {
+            BookInfo bookInfo = mBookRepository.getBook(id);
+            BookChapterCache.getInstance().downloadAllChpater(bookInfo);
         }
     }
 
-    private synchronized void checkBookInit(int size){
-        atomicInteger = new AtomicInteger(size);
+    @Override
+    public void addBook(BookInfo bookInfo) {
+
     }
 
-    private AtomicInteger atomicInteger;
+    @Override
+    public void readBook(BookInfo bookInfo) {
 
-
-    public void runOnMainThread(Runnable runnable){
-        handler.post(runnable);
     }
 
-    public void checkNewChapter(ArrayList<BookInfo> list) {
-        final ArrayList<BookInfo> listAdapterList = list;
-        bookcasePresenterListener.onCheckStart();
-        checkBookInit(listAdapterList.size());
-        BookDownLoad bookDownload = new BookDownLoad();
-        for (final BookInfo bookInfo : list) {
-            bookDownload.updateBookInfoAsync(new BookDownLoad.DownloadListener<BookInfo>(){
-                @Override
-                public String getFileName() {
-                    String bookName = bookInfo.bookDetail.getName();
-                    BookDownLoad.createFileDir(bookName);
-                    return BookDownLoad.getFullChapterFileName(bookName);
-                }
+    @Override
+    public BookInfo getBook(long id) {
+        return mBookRepository.getBook(id);
+    }
 
-                @Override
-                public String getLink() {
-                    return bookInfo.bookChapter.getChapterLink();
-                }
-
-                @Override
-                public void onStart() {
-
-                }
-
-                @Override
-                public long getId() {
-                    return bookInfo.bookDetail.getId();
-                }
-
-                @Override
-                public void onResult(BookInfo newBookInfo) {
-                    if (!bookInfo.bookDetail.getChapterLatest().equals(newBookInfo.bookDetail.getChapterLatest())) {
-                        bookInfo.bookChapter.setChapterList(newBookInfo.bookChapter.getChapterList());
-                        bookInfo.bookDetail.setUpdateTime(newBookInfo.bookDetail.getUpdateTime());
-                        bookInfo.bookDetail.setChapterLatest(newBookInfo.bookChapter.getLastChapter().getTitle());
-                        bookModel.updateBook(bookInfo);
-                        runOnMainThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                bookcasePresenterListener.onCheckNewChapter(bookInfo);
-                            }
-                        });
-                    }
-                    checkFinish();
-                }
-
-
-                @Override
-                public void onError(int errorCode) {
-                    checkFinish();
-                }
-            });
+    @Override
+    public void topBooks(Map<Long,Boolean> map){
+        Set set = map.keySet();
+        Iterator iter = set.iterator();
+        while (iter.hasNext()) {
+            long key = (long) iter.next();
+            boolean check = map.get(key);
+            mBookRepository.getBook(key).bookDetail.setTopCase(check);
         }
+        //需要排序
+        loadBooks(false);
     }
 
 
-    public void updateBook(final BookInfo bookInfo){
-        ThreadManager.getInstance().work(new Runnable() {
-            @Override
-            public void run() {
-                bookModel.updateBook(bookInfo);
-            }
-        });
-
+    @Override
+    public void start() {
+        loadBooks(true);
     }
 
-    public void deleteBook(BookInfo bookInfo){
-
-        bookModel.deleteBook(bookInfo);
-        final String fileName = bookInfo.bookDetail.getName();
-        ThreadManager.getInstance().work(new Runnable() {
-            @Override
-            public void run() {
-                //删除本地缓存
-                FileManager.deleteFolder(FileManager.PATH + "/" + fileName);
-            }
-        });
-
-    }
-
-    public static void readBook(Context context,BookInfo bookInfo){
-        Intent intent = new Intent();
-        intent.setClass(context, BookReadActivity.class);
-        long bookId = bookInfo.bookDetail.getId();
-        intent.putExtra(BookReadActivity.EXTRAS_BOOK_ID, bookId);
-        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    }
 
 }

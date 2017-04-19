@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.download.BookDownLoad;
 import sunday.app.bairead.download.OKHttpListener;
 import sunday.app.bairead.download.OKhttpManager;

@@ -28,7 +28,7 @@
         android:allowBackup="false"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".bookCase.MainActivity"
+            android:name=".bookcase.BookcaseActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -40,7 +40,7 @@
         
         <provider
             android:authorities="sunday.app.bairead.setting"
-            android:name=".database.BookContentProvider"/>
+            android:name=".data.local.BookContentProvider"/>
 
         <activity android:name=".bookRead.BookReadActivity"
             android:theme="@style/BaseAppTheme"

@@ -1,6 +1,7 @@
 package sunday.app.bairead.utils;
 
-import sunday.app.bairead.database.BookInfo;
+
+import sunday.app.bairead.data.setting.BookInfo;
 
 /**
  * Created by sunday on 2017/3/7.

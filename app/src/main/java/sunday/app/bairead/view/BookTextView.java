@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import sunday.app.bairead.database.BookChapter;
-
 /**
  * Created by sunday on 2016/12/16.
  */

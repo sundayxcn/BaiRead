@@ -1,12 +1,10 @@
-package sunday.app.bairead.bookCase;
+package sunday.app.bairead.bookcase.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by sunday on 2017/3/21.

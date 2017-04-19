@@ -1,4 +1,4 @@
-package sunday.app.bairead.database;
+package sunday.app.bairead.data.local;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -24,22 +24,34 @@ public class BookContentProvider extends ContentProvider {
     private static final String DATABASE_NAME = "baiRead.db";
     private static final int DATABASE_VERSION = 1;
 
-    static final String AUTHORITY = "sunday.app.bairead.setting";
+    public static final String AUTHORITY = "sunday.app.bairead.setting";
 
-    static final String TABLE_BOOK_DETAIL = "bookDetail";
-    static final String TABLE_BOOK_CHAPTER = "bookChapter";
-    static final String TABLE_BOOK_MARK = "bookMark";
-    static final String PARAMETER_NOTIFY = "notify";
+    public static final String TABLE_BOOK_DETAIL = "bookDetail";
+    public  static final String TABLE_BOOK_CHAPTER = "bookChapter";
+    public static final String TABLE_BOOK_MARK = "bookMark";
+    public static final String PARAMETER_NOTIFY = "notify";
 
     private BookDBHelp bookDBHelp;
 
+    private static BookContentProvider INSTANCE = null;
+
     @Override
     public boolean onCreate() {
-        bookDBHelp = new BookDBHelp(getContext());
-        BaiReadApplication application = (BaiReadApplication) getContext().getApplicationContext();
-        application.setBookContentProvider(this);
+        if(INSTANCE == null) {
+            bookDBHelp = new BookDBHelp(getContext());
+            INSTANCE = this;
+//            BaiReadApplication application = (BaiReadApplication) getContext().getApplicationContext();
+//            application.setBookContentProvider(this);
+        }
         return true;
     }
+
+
+    public static BookContentProvider getInstance(){
+        return INSTANCE;
+    }
+
+
 
     @Nullable
     @Override

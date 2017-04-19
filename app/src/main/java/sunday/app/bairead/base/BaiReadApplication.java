@@ -11,21 +11,13 @@ import android.net.Network;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
-import java.io.File;
 import java.util.ArrayList;
-
-import sunday.app.bairead.database.BookContentProvider;
-import sunday.app.bairead.database.BookModel;
-import sunday.app.bairead.utils.FileManager;
 
 /**
  * Created by sunday on 2016/12/13.
  */
 
 public class BaiReadApplication extends Application {
-
-    private BookModel bookModel;
-    private BookContentProvider bookContentProvider;
 
     public interface INetworkListener{
         void networkChange(boolean connect,int type);
@@ -52,10 +44,6 @@ public class BaiReadApplication extends Application {
 //
 //        FeedbackAPI.init(this, ALIBAICHUAN_APP_ID);
 
-        bookModel = new BookModel(this);
-
-
-        
         registerReceiver();
 
         //createDir();
@@ -93,18 +81,6 @@ public class BaiReadApplication extends Application {
     public void onTerminate() {
         super.onTerminate();
         unregisterReceiver(connectionReceiver);
-    }
-
-    public void setBookContentProvider(BookContentProvider bookContentProvider) {
-        this.bookContentProvider = bookContentProvider;
-    }
-
-    public BookModel getBookModel() {
-        return bookModel;
-    }
-
-    public BookContentProvider getBookContentProvider() {
-        return bookContentProvider;
     }
 
     BroadcastReceiver connectionReceiver = new BroadcastReceiver() {

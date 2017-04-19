@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import okhttp3.Response;
-import sunday.app.bairead.database.BookChapter;
-import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.data.setting.BookChapter;
+import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.parse.ParseChapter;
 import sunday.app.bairead.parse.ParseChapterText;
 import sunday.app.bairead.parse.ParseXml;
@@ -102,18 +102,18 @@ public class BookChapterCache {
 
     }
 
-    public void setBookInfo(BookInfo bookinfo, ChapterListener chapterListener) {
-        this.bookinfo = bookinfo;
-        this.chapterListener = chapterListener;
-
-        if (bookinfo.bookDetail.getId() == 0) {
-            setOnline(true);
-        } else {
-            fullDir = FileManager.PATH + "/" + bookinfo.bookDetail.getName() + "/" + DIR;
-            FileManager.createDir(fullDir);
-        }
-
-    }
+//    public void setBookInfo(BookInfo bookinfo, ChapterListener chapterListener) {
+//        this.bookinfo = bookinfo;
+//        this.chapterListener = chapterListener;
+//
+//        if (bookinfo.bookDetail.getId() == 0) {
+//            setOnline(true);
+//        } else {
+//            fullDir = FileManager.PATH + "/" + bookinfo.bookDetail.getName() + "/" + DIR;
+//            FileManager.getInstance().createDir(fullDir);
+//        }
+//
+//    }
 
 
     /**

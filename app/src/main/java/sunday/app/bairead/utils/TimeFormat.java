@@ -79,10 +79,10 @@ public class TimeFormat {
                 string = day / 30 + "月前";
             }else if(day >= 1){
                 string = day +"天前";
-            }else if(hour < 1){
-                string  = "刚刚";
-            }else{
+            }else if(hour >= 1){
                 string  = hour +"小时";
+            }else{
+                string  = "刚刚";
             }
         } catch (ParseException e) {
             e.printStackTrace();

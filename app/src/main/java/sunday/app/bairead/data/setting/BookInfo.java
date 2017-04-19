@@ -1,6 +1,4 @@
-package sunday.app.bairead.database;
-
-import java.util.Objects;
+package sunday.app.bairead.data.setting;
 
 /**
  * Created by sunday on 2016/12/13.
@@ -36,18 +34,18 @@ public class BookInfo{
 }
 
 
- class BookBase{
-     /**
-      * 书籍唯一ID
-      */
-     protected long id;
+class BookBase{
+    /**
+     * 书籍唯一ID
+     */
+    protected long id;
 
-     public long getId() {
-         return id;
-     }
+    public long getId() {
+        return id;
+    }
 
-     public void setId(long nameId) {
-         id = nameId;
-     }
+    public void setId(long nameId) {
+        id = nameId;
+    }
 
 }

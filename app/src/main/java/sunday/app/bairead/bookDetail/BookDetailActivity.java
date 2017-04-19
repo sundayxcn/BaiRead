@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import sunday.app.bairead.base.BaseActivity;
-import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.R;
 import sunday.app.bairead.utils.Temp;
 import sunday.app.bairead.view.BookStatusView;

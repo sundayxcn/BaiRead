@@ -1,4 +1,4 @@
-package sunday.app.bairead.database;
+package sunday.app.bairead.data.setting;
 
 import sunday.app.bairead.parse.ParseXml;
 

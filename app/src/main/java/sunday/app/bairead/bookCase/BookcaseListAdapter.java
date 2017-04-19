@@ -1,4 +1,4 @@
-package sunday.app.bairead.bookCase;
+package sunday.app.bairead.bookcase;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,19 +8,20 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import sunday.app.bairead.R;
-import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.bookcase.view.TopCaseView;
+import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.utils.NewChapterShow;
 import sunday.app.bairead.utils.TimeFormat;
 
@@ -28,30 +29,28 @@ import sunday.app.bairead.utils.TimeFormat;
  * Created by Administrator on 2017/3/27.
  */
 
-public class BookListAdapter extends BaseAdapter {
+public class BookcaseListAdapter extends BaseAdapter {
 
     private Context context;
 
-    private ArrayList<BookInfo> bookInfos;
+    private List<BookInfo> bookInfos;
 
     //存储操作过的checkbox
     private HashMap<Long, Boolean> checkMap = new HashMap<>();
     private ArrayList<ViewHolder> viewHolders = new ArrayList<>();
     //当前书架的状态
     private boolean isEdit;
-    private OnCheckedChangeListener onCheckedChangeListener = new OnCheckedChangeListener();
 
-
-    public BookListAdapter(Context context) {
+    public BookcaseListAdapter(Context context) {
         this.context = context;
     }
 
     //返回选中的checkbox
-    public ArrayList<BookInfo> getBookInfoList() {
+    public List<BookInfo> getBookInfoList() {
         return bookInfos;
     }
 
-    public void setBookInfoList(ArrayList<BookInfo> list) {
+    public void setBookInfoList(List<BookInfo> list) {
         bookInfos = list;
     }
 
@@ -114,8 +113,7 @@ public class BookListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.xlist_item, null);
-            ViewHolder viewHolder = new ViewHolder(convertView);
-            onCheckedChangeListener.setBookListAdapter(this);
+            ViewHolder viewHolder = new ViewHolder(this,convertView);
             viewHolders.add(viewHolder);
             convertView.setTag(viewHolder);
         }
@@ -127,30 +125,7 @@ public class BookListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private class OnCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
-
-        private BookListAdapter booklistAdapter;
-
-        public void setBookListAdapter(BookListAdapter booklistAdapter) {
-            this.booklistAdapter = booklistAdapter;
-        }
-
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            try {
-                RelativeLayout parent = (RelativeLayout) buttonView.getParent();
-                ViewHolder viewHolder = (ViewHolder) parent.getTag();
-                if (booklistAdapter != null) {
-                    setCheck(viewHolder.getBookId(), isChecked);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    class ViewHolder {
+    static class ViewHolder {
         @Bind(R.id.xlist_item_check_box)
         CheckBox checkBox;
         @Bind(R.id.xlist_item_cover_image)
@@ -170,7 +145,10 @@ public class BookListAdapter extends BaseAdapter {
 
         private long bookId;
 
-        ViewHolder(View view) {
+        private BookcaseListAdapter bookcaseListAdapter;
+
+        ViewHolder(BookcaseListAdapter bookcaseListAdapter,View view) {
+            this.bookcaseListAdapter = bookcaseListAdapter;
             ButterKnife.bind(this, view);
         }
 
@@ -181,13 +159,7 @@ public class BookListAdapter extends BaseAdapter {
 
         @OnCheckedChanged(R.id.xlist_item_check_box)
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            try {
-                RelativeLayout parent = (RelativeLayout) buttonView.getParent();
-                ViewHolder viewHolder = (ViewHolder) parent.getTag();
-                setCheck(viewHolder.getBookId(), isChecked);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                bookcaseListAdapter.setCheck(bookId, isChecked);
         }
 
         public void setValue(BookInfo bookInfo, boolean isEdit, boolean isCheck) {

@@ -12,7 +12,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import sunday.app.bairead.R;
-import sunday.app.bairead.utils.NetworkTool;
+import sunday.app.bairead.utils.NetworkUtils;
 import sunday.app.bairead.view.ListDialog;
 
 /**
@@ -124,7 +124,7 @@ public class BaseActivity extends AppCompatActivity implements BaiReadApplicatio
 
 
     public boolean isConnect(){
-        return NetworkTool.isNetworkConnect(this);
+        return NetworkUtils.isNetworkConnect(this);
     }
 
     public void showToastNetworkUnConnect(){

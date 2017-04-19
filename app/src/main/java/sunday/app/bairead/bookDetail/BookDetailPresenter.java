@@ -2,10 +2,9 @@ package sunday.app.bairead.bookDetail;
 
 import android.content.Context;
 
-import sunday.app.bairead.bookCase.BookcasePresenter;
 import sunday.app.bairead.base.BaiReadApplication;
-import sunday.app.bairead.database.BookInfo;
-import sunday.app.bairead.database.BookModel;
+import sunday.app.bairead.data.BookRepository;
+import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.download.BookChapterCache;
 
 /**
@@ -26,19 +25,21 @@ public class BookDetailPresenter {
     }
 
     public static void readBook(Context context,BookInfo bookInfo){
-        BookcasePresenter.readBook(context,bookInfo);
+        //BookcasePresenter.readBook(context,bookInfo);
     }
 
     public static void addToBookCase(Context context,BookInfo bookInfo){
-        BaiReadApplication application  = (BaiReadApplication) context.getApplicationContext();
-        BookModel bookModel = application.getBookModel();
-        bookModel.addBook(bookInfo);
+//        BaiReadApplication application  = (BaiReadApplication) context.getApplicationContext();
+//        BookModel bookModel = application.getBookModel();
+//        bookModel.addBook(bookInfo);
+        BookRepository.getInstance(context).addBook(bookInfo);
     }
 
     public static boolean isBookCase(Context context,BookInfo bookInfo){
         BaiReadApplication application  = (BaiReadApplication) context.getApplicationContext();
-        BookModel bookModel = application.getBookModel();
-        return bookModel.isBookCase(bookInfo);
+//        BookModel bookModel = application.getBookModel();
+//        return bookModel.isBookCase(bookInfo);
+        return false;
     }
 
 

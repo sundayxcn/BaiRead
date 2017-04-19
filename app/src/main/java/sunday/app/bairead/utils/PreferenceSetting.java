@@ -35,20 +35,17 @@ public class PreferenceSetting {
 
     public static final String KEY_CASE_LIST_ORDER = "bookCaseOrder";
 
-    public static final int KEY_VALUE_CASE_LIST_ORDER_DEFAULT = 0;
 
-    public static final int KEY_VALUE_CASE_LIST_ORDER_UPDATE_TIME = KEY_VALUE_CASE_LIST_ORDER_DEFAULT + 1;
+    public static PreferenceSetting INSTANCE = null;
 
-    public static final int KEY_VALUE_CASE_LIST_ORDER_AUTHOR = KEY_VALUE_CASE_LIST_ORDER_UPDATE_TIME + 1;
-
-    public static final int KEY_VALUE_CASE_LIST_ORDER_CHAPTER_COUNT = KEY_VALUE_CASE_LIST_ORDER_AUTHOR + 1;
-
-
-    public static SharedPreferences sharedPreferences;
-
+    private SharedPreferences sharedPreferences;
     public static PreferenceSetting getInstance(Context context){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return new PreferenceSetting(sharedPreferences);
+        if(INSTANCE == null){
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            INSTANCE =  new PreferenceSetting(sharedPreferences);
+        }
+
+        return INSTANCE;
     }
 
     PreferenceSetting(SharedPreferences sharedPrefer){

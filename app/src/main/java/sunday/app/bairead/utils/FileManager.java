@@ -1,5 +1,6 @@
 package sunday.app.bairead.utils;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
@@ -33,31 +34,29 @@ public class FileManager {
     public static final String GB2312 = "gb2312";
     //public static final String SEARCH_FILE = FileManager.PATH + "/" + "searchResult.html";
 
-//    private static FileManager mFileManager;
+    private static FileManager INSTANCE = null;
 
-//    private FileManager() {
-//        createDir();
-//    }
-//
-//    public static FileManager getInstance() {
-//        if (mFileManager == null) {
-//            mFileManager = new FileManager();
-//        }
-//
-//        //boolean s = createDir();
-//
-//        return mFileManager;
-//    }
-//
-//
-       public static String createDir(String dirPath) {
+    private FileManager(Context context) {
+        String cacheDirPath = context.getCacheDir().getAbsolutePath();
+        createDir(PATH);
+        createDir(TEMP_DIR);
+        createDir(cacheDirPath);
+    }
+
+    public static FileManager getInstance(Context context) {
+        if (INSTANCE == null) {
+            INSTANCE = new FileManager(context);
+        }
+        return INSTANCE;
+    }
+
+    public String createDir(String dirPath) {
         File file = new File(dirPath);
         if (!file.exists()) {
             file.mkdirs();
         }
         return dirPath;
     }
-
 
 //    public void writeBookSearch(String fileName, byte[] bytes){
 //        String fileDirPath = PATH + "/" + DIR + "/" + fileName;
@@ -260,7 +259,7 @@ public class FileManager {
         }
     }
 
-    public static void deleteAllCahce(){
+    public void deleteAllCahce(){
         File file = new File(PATH);
         file.delete();
     }
@@ -284,7 +283,7 @@ public class FileManager {
         }
     };
 
-    public static File[] checkBookCache(){
+    public File[] checkBookCache(){
 
         final File baseDir = new File(FileManager.PATH);
         if (baseDir.exists()){

@@ -6,7 +6,8 @@ import org.jsoup.select.Elements;
 
 import java.util.HashMap;
 
-import sunday.app.bairead.database.BookDetail;
+import sunday.app.bairead.data.setting.BookDetail;
+
 
 /**
  * Created by sunday on 2017/1/16.

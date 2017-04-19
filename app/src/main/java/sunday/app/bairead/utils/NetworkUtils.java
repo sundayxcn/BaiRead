@@ -9,7 +9,7 @@ import android.net.NetworkInfo;
  * Created by sunday on 2016/12/7.
  */
 
-public class NetworkTool {
+public class NetworkUtils {
 
     public static boolean isNetworkConnect(Context context){
         return isMobileConnected(context) || isWifiConnected(context);

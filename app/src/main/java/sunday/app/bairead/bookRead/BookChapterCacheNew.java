@@ -12,8 +12,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import okhttp3.Response;
 import sunday.app.bairead.base.BaiReadApplication;
-import sunday.app.bairead.database.BookChapter;
-import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.data.setting.BookChapter;
+import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.download.BookDownLoad;
 import sunday.app.bairead.download.OKhttpManager;
 import sunday.app.bairead.parse.ParseChapter;
@@ -83,7 +83,7 @@ public class BookChapterCacheNew {
             bookInfo = Temp.getInstance().getBookInfo();
             //Temp.getInstance().clearBookInfo();
         }else {
-            bookInfo = baiReadApplication.getBookModel().getBookInfo(bookId);
+            //bookInfo = baiReadApplication.getBookModel().getBookInfo(bookId);
         }
         NewChapterShow.getInstance().removeNewChapter(bookId);
         this.bookChapterCacheListener = listener;
@@ -91,7 +91,7 @@ public class BookChapterCacheNew {
             online = true;
         } else {
             fullDir = FileManager.PATH + "/" + bookInfo.bookDetail.getName() + "/" + DIR;
-            FileManager.createDir(fullDir);
+            //FileManager.createDir(fullDir);
         }
         chapterArrayList = bookInfo.bookChapter.getChapterList();
         //首次进入

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 import sunday.app.bairead.base.BaseActivity;
 import sunday.app.bairead.bookDetail.BookDetailActivity;
-import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.R;
 import sunday.app.bairead.utils.Temp;
 import sunday.app.bairead.view.MaterialProgressView;

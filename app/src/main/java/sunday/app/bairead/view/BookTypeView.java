@@ -6,7 +6,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import sunday.app.bairead.database.BookDetail;
+import sunday.app.bairead.data.setting.BookDetail;
 
 /**
  * Created by sunday on 2017/3/17.

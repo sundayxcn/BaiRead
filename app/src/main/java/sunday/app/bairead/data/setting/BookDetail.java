@@ -1,10 +1,10 @@
-package sunday.app.bairead.database;
+package sunday.app.bairead.data.setting;
 
 import android.content.ContentValues;
 
 import java.util.HashMap;
 
-public class BookDetail extends BookBase{
+public class BookDetail extends BookBase {
 
 
 

@@ -1,12 +1,13 @@
-package sunday.app.bairead.bookCase;
+package sunday.app.bairead.bookcase;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 import java.io.File;
 
-import sunday.app.bairead.database.BookChapter;
-import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.data.setting.BookChapter;
+import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.parse.ParseChapter;
 import sunday.app.bairead.parse.ParseDetail;
 import sunday.app.bairead.parse.ParseXml;
@@ -20,11 +21,11 @@ import sunday.app.bairead.utils.FileManager;
 public class FirstRunAsyncTask extends AsyncTask<Void, String, Void> {
 
     private File baseDir;
-    private Context context;
+    private BookcaseContract.Presenter mPresenter;
 
-    public FirstRunAsyncTask(File fileDir,Context context) {
+    public FirstRunAsyncTask(@NonNull File fileDir,@NonNull BookcaseContract.Presenter presenter) {
         baseDir = fileDir;
-        this.context = context;
+        mPresenter = presenter;
     }
 
     @Override
@@ -46,7 +47,7 @@ public class FirstRunAsyncTask extends AsyncTask<Void, String, Void> {
                 bookInfo.bookDetail = ParseXml.createParse(ParseDetail.class).from(fileName).parse();
                 bookInfo.bookChapter = ParseXml.createParse(ParseChapter.class).from(fileName).parse();
                 if(bookInfo.bookDetail != null) {
-                    BookDetailPresenter.addToBookCase(context, bookInfo);
+                    mPresenter.addBook(bookInfo);
                     StringBuffer stringBuffer = new StringBuffer("加载第");
                     stringBuffer
                             .append(i)

@@ -5,9 +5,8 @@ import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import sunday.app.bairead.bookRead.*;
-import sunday.app.bairead.database.BookChapter;
-import sunday.app.bairead.database.BookInfo;
+import sunday.app.bairead.data.setting.BookChapter;
+import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.parse.ParseChapter;
 import sunday.app.bairead.parse.ParseChapterText;
 import sunday.app.bairead.parse.ParseDetail;
@@ -86,7 +85,8 @@ public class BookDownLoad {
 
 
     public  static String createFileDir(String bookName){
-        return FileManager.createDir(FileManager.PATH +"/"+bookName);
+        //return FileManager.createDir(FileManager.PATH +"/"+bookName);
+        return null;
     }
 
     public static String getFullChapterFileName(String bookName){

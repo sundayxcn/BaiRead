@@ -10,13 +10,13 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="5dp"
         android:focusable="false"
-        android:id="@+id/xlist_item_check_box"
+        android:id="@+id/item_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <ImageView
-        android:layout_toRightOf="@id/xlist_item_check_box"
-        android:id="@+id/xlist_item_cover_image"
+        android:layout_toRightOf="@id/item_check_box"
+        android:id="@+id/item_cover_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -25,7 +25,7 @@
         android:src="@drawable/default_book_detail_cover_image" />
 
     <sunday.app.bairead.bookcase.view.TopCaseView
-        android:id="@+id/xlist_item_top_case"
+        android:id="@+id/item_top_case"
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:visibility="gone"
@@ -36,46 +36,46 @@
         android:layout_width="wrap_content"
         android:layout_height="80dp"
         android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@id/xlist_item_cover_image"
+        android:layout_toRightOf="@id/item_cover_image"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/xlist_item_name"
+            android:id="@+id/item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorDark"
             android:textSize="16dp" />
 
         <TextView
-            android:id="@+id/xlist_item_chapter_latest"
+            android:id="@+id/item_chapter_latest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/xlist_item_name"
+            android:layout_below="@id/item_name"
             android:ellipsize="end"
             android:lines="1"
             android:textSize="14dp" />
 
         <TextView
-            android:id="@+id/xlist_item_update_time"
+            android:id="@+id/item_update_time"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/xlist_item_chapter_latest"
+            android:layout_below="@id/item_chapter_latest"
              />
 
         <TextView
-            android:id="@+id/xlist_item_chapter_index"
+            android:id="@+id/item_chapter_index"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/xlist_item_chapter_latest"
-            android:layout_toRightOf="@id/xlist_item_update_time"
+            android:layout_below="@id/item_chapter_latest"
+            android:layout_toRightOf="@id/item_update_time"
              />
 
     </RelativeLayout>
 
 
     <TextView
-        android:id="@+id/xlist_item_chapter_update"
+        android:id="@+id/item_chapter_update"
         android:layout_width="7dp"
         android:layout_height="7dp"
         android:layout_alignParentRight="true"

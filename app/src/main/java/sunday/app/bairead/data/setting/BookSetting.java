@@ -1,7 +1,9 @@
-package sunday.app.bairead.database;
+package sunday.app.bairead.data.setting;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
+
+import sunday.app.bairead.data.local.BookContentProvider;
 
 /**
  * Created by sunday on 2016/12/13.

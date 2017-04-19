@@ -1,4 +1,4 @@
-package sunday.app.bairead.database;
+package sunday.app.bairead.data.setting;
 
 import android.content.ContentValues;
 
