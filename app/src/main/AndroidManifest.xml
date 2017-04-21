@@ -43,8 +43,8 @@
             android:name=".data.local.BookContentProvider"/>
 
         <activity android:name=".bookRead.BookReadActivity"
-            android:theme="@style/BaseAppTheme"
-            />
+            android:theme="@style/BaseAppTheme">
+        </activity>
 
         <activity android:name=".bookSearch.BookSearchActivity"
             android:theme="@style/BaseAppTheme"

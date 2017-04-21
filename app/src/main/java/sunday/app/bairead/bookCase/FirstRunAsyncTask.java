@@ -11,7 +11,6 @@ import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.parse.ParseChapter;
 import sunday.app.bairead.parse.ParseDetail;
 import sunday.app.bairead.parse.ParseXml;
-import sunday.app.bairead.bookDetail.BookDetailPresenter;
 import sunday.app.bairead.utils.FileManager;
 
 /**

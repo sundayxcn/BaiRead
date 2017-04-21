@@ -5,9 +5,13 @@ import android.content.Context;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 import sunday.app.bairead.data.local.BookLocalData;
 import sunday.app.bairead.data.remote.BookRemoteData;
 import sunday.app.bairead.data.setting.BookInfo;
+import sunday.app.bairead.data.setting.BookMarkInfo;
 
 /**
  * Created by zhongfei.sun on 2017/4/11.
@@ -42,6 +46,17 @@ public class BookRepository implements BookDataSource{
     public Observable<List<BookInfo>> loadBooks(boolean refresh) {
         if(refresh){
             mBookRemoteData.clear();
+            mBookLocalData.loadBooks(refresh).
+                    subscribeOn(Schedulers.io()).
+                    observeOn(Schedulers.io()).
+                    flatMap(new Func1<List<BookInfo>, Observable<BookInfo>>() {
+                        @Override
+                        public Observable<BookInfo> call(List<BookInfo> bookInfos) {
+                            return Observable.from(bookInfos);
+                        }
+                    }).subscribe(bookInfo -> {
+                        mBookRemoteData.addBook(bookInfo);
+                    });
             return mBookLocalData.loadBooks(refresh);
         }else{
             return mBookRemoteData.loadBooks(refresh);
@@ -76,6 +91,21 @@ public class BookRepository implements BookDataSource{
     @Override
     public BookInfo getBook(long id) {
         return mBookRemoteData.getBook(id);
+    }
+
+    @Override
+    public Observable<List<BookMarkInfo>> loadBookMarks() {
+        return null;
+    }
+
+    @Override
+    public void addBookMark(BookMarkInfo bookMarkInfo) {
+
+    }
+
+    @Override
+    public void deleteBookMark(BookMarkInfo bookMarkInfo) {
+
     }
 
     @Override

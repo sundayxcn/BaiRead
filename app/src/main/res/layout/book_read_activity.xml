@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<sunday.app.bairead.bookRead.view.BookReadView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/book_read_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/read_bg_0">
@@ -14,7 +15,7 @@
         android:ellipsize="marquee"
         android:textSize="@dimen/read_title_text_size" />
 
-    <sunday.app.bairead.view.BookTextView
+    <sunday.app.bairead.bookRead.view.BookTextView
         android:paddingTop="5dp"
         android:layout_below="@id/book_read_activity_book_title"
         android:id="@+id/book_read_activity_book_text"
@@ -38,11 +39,11 @@
         layout="@layout/book_read_setting_panel"/>
 
 
-    <ViewStub
-        android:id="@+id/book_read_activity_guide_layout_viewstub"
-        android:layout="@layout/guide_read_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <!--<ViewStub-->
+        <!--android:id="@+id/book_read_activity_guide_layout_viewstub"-->
+        <!--android:layout="@layout/guide_read_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
 
 
-</RelativeLayout>
+</sunday.app.bairead.bookRead.view.BookReadView>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<sunday.app.bairead.bookRead.BookReadSettingTextSizePanel xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:background="#ffffffff"
     android:layout_height="wrap_content">
@@ -16,4 +16,4 @@
         android:id="@+id/book_read_setting_size_margin"
         layout="@layout/book_read_setting_size_line"/>
 
-</sunday.app.bairead.bookRead.BookReadSettingTextSizePanel>
+</LinearLayout>

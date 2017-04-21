@@ -17,6 +17,8 @@ import sunday.app.bairead.data.BookDataSource;
 import sunday.app.bairead.data.setting.BookChapter;
 import sunday.app.bairead.data.setting.BookDetail;
 import sunday.app.bairead.data.setting.BookInfo;
+import sunday.app.bairead.data.setting.BookMarkInfo;
+import sunday.app.bairead.utils.ThreadManager;
 
 /**
  * Created by zhongfei.sun on 2017/4/11.
@@ -152,6 +154,24 @@ public class BookLocalData implements BookDataSource {
 
     @Override
     public void addBook(final BookInfo bookInfo) {
+
+        ThreadManager.getInstance().work(() -> {
+            final ContentValues detailValues = new ContentValues();
+            final ContentValues chapterValues = new ContentValues();
+            final ContentResolver cr = mContext.getContentResolver();
+            final long id = BookContentProvider.getInstance().generateNewId();
+            detailValues.put(BookSetting.Detail._ID,id);
+            bookInfo.bookDetail.setId(id);
+            bookInfo.bookDetail.onAddToDatabase(detailValues);
+            Uri uri = cr.insert(BookSetting.Detail.CONTENT_URI,detailValues);
+
+            chapterValues.put(BookSetting.Chapter.ID,id);
+            bookInfo.bookChapter.setId(id);
+            bookInfo.bookChapter.onAddToDatabase(chapterValues);
+            Uri uri2 = cr.insert(BookSetting.Chapter.CONTENT_URI,chapterValues);
+
+        });
+
 //        Flowable.create(new FlowableOnSubscribe<Uri>() {
 //            @Override
 //            public void subscribe(FlowableEmitter<Uri> e) throws Exception {
@@ -242,6 +262,21 @@ public class BookLocalData implements BookDataSource {
     @Override
     public BookInfo getBook(long id) {
         return null;
+    }
+
+    @Override
+    public Observable<List<BookMarkInfo>> loadBookMarks() {
+        return null;
+    }
+
+    @Override
+    public void addBookMark(BookMarkInfo bookMarkInfo) {
+
+    }
+
+    @Override
+    public void deleteBookMark(BookMarkInfo bookMarkInfo) {
+
     }
 
     @Override

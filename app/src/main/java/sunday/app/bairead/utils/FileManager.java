@@ -50,12 +50,17 @@ public class FileManager {
         return INSTANCE;
     }
 
-    public String createDir(String dirPath) {
+    public static String createDir(String dirPath) {
         File file = new File(dirPath);
         if (!file.exists()) {
             file.mkdirs();
         }
         return dirPath;
+    }
+
+
+    public static String createFileDir(String bookName){
+        return FileManager.createDir(FileManager.PATH +"/"+bookName);
     }
 
 //    public void writeBookSearch(String fileName, byte[] bytes){

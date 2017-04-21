@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<sunday.app.bairead.bookRead.ChapterPanel xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
@@ -11,27 +11,25 @@
         android:background="@color/colorPrimary">
 
         <TextView
-            android:id="@+id/book_read_setting_panel_chapter_list_title"
+            android:id="@+id/book_read_setting_panel_list_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@color/colorWhite" />
 
         <Button
-            android:id="@+id/book_read_setting_panel_chapter_list_order_button"
+            android:id="@+id/book_read_setting_panel_list_button"
             style="@style/NormalButton"
-            android:layout_alignParentRight="true"
-             />
+            android:layout_alignParentRight="true" />
     </RelativeLayout>
 
 
     <ListView
-        android:id="@+id/book_read_setting_panel_chapter_list"
+        android:id="@+id/book_read_setting_panel_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/default_padding_left"
-        android:fastScrollEnabled="true"
-         />
+        android:fastScrollEnabled="true" />
 
 
-</sunday.app.bairead.bookRead.ChapterPanel>
+</LinearLayout>

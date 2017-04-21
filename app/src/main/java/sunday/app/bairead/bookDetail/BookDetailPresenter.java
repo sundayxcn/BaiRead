@@ -5,7 +5,6 @@ import android.content.Context;
 import sunday.app.bairead.base.BaiReadApplication;
 import sunday.app.bairead.data.BookRepository;
 import sunday.app.bairead.data.setting.BookInfo;
-import sunday.app.bairead.download.BookChapterCache;
 
 /**
  * Created by sunday on 2017/3/7.
@@ -44,6 +43,6 @@ public class BookDetailPresenter {
 
 
     public static void cacheBook(BookInfo bookInfo){
-        BookChapterCache.getInstance().downloadAllChpater(bookInfo);
+        //BookChapterCache.getInstance().downloadAllChpater(bookInfo);
     }
 }

@@ -84,10 +84,7 @@ public class BookDownLoad {
     }
 
 
-    public  static String createFileDir(String bookName){
-        //return FileManager.createDir(FileManager.PATH +"/"+bookName);
-        return null;
-    }
+
 
     public static String getFullChapterFileName(String bookName){
         return FileManager.PATH + "/" + bookName + "/" + BookChapter.FileName;
@@ -139,7 +136,7 @@ public class BookDownLoad {
 
     public BookInfo updateBookInfo(BookInfo bookInfo,String fileName){
         String bookName = bookInfo.bookDetail.getName();
-        createFileDir(bookName);
+        FileManager.createFileDir(bookName);
         Response response = OKhttpManager.getInstance().connectUrl(bookInfo.bookChapter.getChapterLink());
         BookInfo newBookInfo = null;
         if(response != null && response.body() != null){

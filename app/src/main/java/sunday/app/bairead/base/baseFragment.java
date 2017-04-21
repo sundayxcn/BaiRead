@@ -41,12 +41,7 @@ public class BaseFragment extends Fragment {
                 R.string.confirm,
                 R.string.cancel,
                 onConfirmListener,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mConfirmDialog.dismiss();
-                    }
-                });
+                (dialog, which) -> mConfirmDialog.dismiss());
     }
 
     public void showConfirmDialog(int resId,
@@ -88,12 +83,7 @@ public class BaseFragment extends Fragment {
                 confirm,
                 cancel,
                 onConfirmListener,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mConfirmDialog.dismiss();
-                    }
-                });
+                (dialog, which) -> mConfirmDialog.dismiss());
     }
 
     public void showToast(@StringRes int resId){

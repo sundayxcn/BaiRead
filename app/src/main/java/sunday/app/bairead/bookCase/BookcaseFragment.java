@@ -1,6 +1,8 @@
 package sunday.app.bairead.bookcase;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -8,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,8 +29,10 @@ import butterknife.OnItemClick;
 import butterknife.OnItemLongClick;
 import sunday.app.bairead.R;
 import sunday.app.bairead.base.BaseFragment;
+import sunday.app.bairead.bookRead.BookReadContract;
 import sunday.app.bairead.bookSearch.BookSearchActivity;
 import sunday.app.bairead.data.setting.BookInfo;
+import sunday.app.bairead.utils.ActivityUtils;
 import sunday.app.bairead.utils.FileManager;
 import sunday.app.bairead.utils.NetworkUtils;
 import sunday.app.bairead.utils.PreferenceSetting;
@@ -77,19 +82,31 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
         ButterKnife.bind(this, root);
         int color = ContextCompat.getColor(getActivity(), R.color.colorRed);
         swipeRefreshLayout.setColorSchemeColors(color);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (NetworkUtils.isNetworkConnect(getActivity())) {
-                    if (bookcaseListAdapter.getBookInfoList() == null || bookcaseListAdapter.getBookInfoList().size() == 0) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        showToast(R.string.book_case_no_book_tips);
-                    } else {
-                        mPresenter.updateBooks();
-                    }
-                } else {
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            if (NetworkUtils.isNetworkConnect(getActivity())) {
+                if (bookcaseListAdapter.getBookInfoList() == null || bookcaseListAdapter.getBookInfoList().size() == 0) {
                     swipeRefreshLayout.setRefreshing(false);
-                    showToast(R.string.network_connect_failed);
+                    showToast(R.string.book_case_no_book_tips);
+                } else {
+                    mPresenter.updateBooks();
+                }
+            } else {
+                swipeRefreshLayout.setRefreshing(false);
+                showToast(R.string.network_connect_failed);
+            }
+        });
+        bookcaseListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem == 0) {
+                    swipeRefreshLayout.setEnabled(true);
+                }else {
+                    swipeRefreshLayout.setEnabled(false);
                 }
             }
         });
@@ -172,19 +189,9 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
             if (id == R.id.book_case_tool_bar_top) {
                 //mPresenter.topBooks(bookIdList);
             } else if (id == R.id.book_case_tool_bar_cache) {
-                showConfirmDialog(R.string.cache_book_tips, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mPresenter.cacheBooks(bookIdList);
-                            }
-                        });
+                showConfirmDialog(R.string.cache_book_tips, (dialog, which) -> mPresenter.cacheBooks(bookIdList));
             } else if (id == R.id.book_case_tool_bar_delete) {
-                showConfirmDialog(R.string.delete_book_tips, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mPresenter.deleteBooks(bookIdList);
-                    }
-                });
+                showConfirmDialog(R.string.delete_book_tips, (dialog, which) -> mPresenter.deleteBooks(bookIdList));
             }
         }
     }
@@ -194,6 +201,8 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
         return bookCaseToolBar.getVisibility() == View.VISIBLE;
     }
 
+
+
     @OnItemClick(R.id.bookcase_list_view)
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (isToolBarShow()) {
@@ -201,7 +210,8 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
             viewHolder.changeCheckBox();
         } else {
             BookInfo bookInfo = (BookInfo) bookcaseListAdapter.getItem(position);
-            mPresenter.readBook(bookInfo);
+            //mPresenter.readBook(bookInfo);
+            ActivityUtils.readBook(getActivity(),bookInfo.bookDetail.getId());
         }
     }
 
@@ -259,19 +269,10 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
                     BookSearchActivity.goBookDetail(getActivity(), bookInfo);
                     break;
                 case OPERATOR_CACHE:
-                    showConfirmDialog(R.string.cache_one_book_tips, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    mPresenter.cacheBook(bookInfo.bookDetail.getId());
-                                }
-                            });
+                    showConfirmDialog(R.string.cache_one_book_tips, (dialog, which) -> mPresenter.cacheBook(bookInfo.bookDetail.getId()));
                     break;
                 case OPERATOR_DELETE:
-                    showConfirmDialog(R.string.delete_one_book_tips, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mPresenter.deleteBook(bookInfo.bookDetail.getId());
-                        }});
+                    showConfirmDialog(R.string.delete_one_book_tips, (dialog, which) -> mPresenter.deleteBook(bookInfo.bookDetail.getId()));
                     break;
                 case OPERATOR_ALL:
                     showBookCaseToolBar();

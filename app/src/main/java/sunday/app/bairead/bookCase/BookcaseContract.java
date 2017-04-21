@@ -15,8 +15,6 @@ public interface BookcaseContract {
 
     interface View extends BaseView<Presenter>{
 
-        void showLoading();
-
         void showLoadingError();
 
         void showBooks(List<BookInfo> list);

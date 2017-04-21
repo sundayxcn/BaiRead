@@ -2,216 +2,190 @@ package sunday.app.bairead.bookRead;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+import sunday.app.bairead.R;
 import sunday.app.bairead.base.BaiReadApplication;
+import sunday.app.bairead.bookRead.adapter.MarkAdapter;
+import sunday.app.bairead.bookRead.cache.BookChapterCacheNew;
+import sunday.app.bairead.bookRead.cache.BookReadSize;
+import sunday.app.bairead.bookRead.cache.BookReadText;
+import sunday.app.bairead.data.BookRepository;
+import sunday.app.bairead.data.setting.BookChapter;
 import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.data.setting.BookMarkInfo;
 import sunday.app.bairead.utils.PreferenceSetting;
 import sunday.app.bairead.utils.Temp;
 import sunday.app.bairead.utils.ThreadManager;
-import sunday.app.bairead.view.BookTextView;
+import sunday.app.bairead.bookRead.view.BookTextView;
 
 /**
  * Created by sunday on 2017/3/6.
  */
 
-public class BookReadPresenter  {
+public class BookReadPresenter implements BookReadContract.Presenter, BookReadContract.IBookChapterCacheListener {
 
-    public interface IBookReadPresenterListener{
-        void onReadSizeChange(BookTextView.ReadSize readSize);
+    private BookRepository mBookRepository;
+    private BookInfo mBookInfo;
+    private BookReadContract.View mBookReadView;
+    private BookReadContract.ChapterCache mChapterCache;
+    private PreferenceSetting mPreferenceSetting;
+
+    public BookReadPresenter(@NonNull BookRepository bookRepository,
+                             @NonNull BookReadContract.ChapterCache chapterCache,
+                             @NonNull PreferenceSetting preferenceSetting,
+                             @NonNull BookInfo bookInfo,
+                             @NonNull BookReadContract.View view
+    ) {
+        mBookRepository = bookRepository;
+        mChapterCache = chapterCache;
+        mBookInfo = bookInfo;
+        mPreferenceSetting = preferenceSetting;
+        mBookReadView = view;
+        mBookReadView.setPresenter(this);
     }
 
-    private Context context;
-    private Handler handler = new Handler();
+    @Override
+    public void start() {
+        mChapterCache.start(mBookInfo);
+    }
 
 
-    private BookInfo bookInfo;
+    @Override
+    public void updateBookChapterIndex() {
+        mBookRepository.updateBook(mBookInfo);
+    }
 
-    private ArrayList<BookMarkInfo> bookMarkList;
+    @Override
+    public void updateBookChapterPage() {
+        mBookRepository.updateBook(mBookInfo);
+    }
 
-    private IBookReadPresenterListener bookReadPresenterListener;
+    @Override
+    public void addBookMark() {
+        if (!isBookcase()) {
+            mBookReadView.showToast(R.string.case_add_tips);
+        } else {
+            mBookRepository.addBookMark(createBookMarkInfo(mBookInfo));
+            mBookReadView.showToast(R.string.mark_success);
+        }
 
-    public BookReadPresenter(Context c,IBookReadPresenterListener bookReadPresenterListener,long bookId){
-        context = c;
-        this.bookReadPresenterListener = bookReadPresenterListener;
-        BaiReadApplication baiReadApplication = (BaiReadApplication)c.getApplicationContext();
-        //没有设置ID，表示没有加入书架，就是在线阅读，不用缓存
-        if(bookId == 0){
-            bookInfo = Temp.getInstance().getBookInfo();
-            //Temp.getInstance().clearBookInfo();
-        }else {
-            //bookInfo = baiReadApplication.getBookModel().getBookInfo(bookId);
+    }
+
+    private boolean isBookcase() {
+        long bookId = mBookInfo.bookDetail.getId();
+        BookInfo bookInfo = mBookRepository.getBook(bookId);
+        return bookInfo != null;
+    }
+
+    @Override
+    public void addBook() {
+        if (!isBookcase()) {
+            mBookReadView.showToast(R.string.case_add_tips);
+        } else {
+            mBookRepository.addBook(mBookInfo);
+            mBookReadView.showToast(R.string.case_add_success);
         }
     }
 
-    public void init(){
-//        BookChapterCache bookChapterCache = BookChapterCache.getInstance();
-//        bookChapterCache.setBookInfo(bookInfo,this);
-//        bookChapterCache.initChapterRead();
-        ThreadManager.getInstance().work(new Runnable() {
-            @Override
-            public void run() {
-                BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-               // bookMarkList = baiReadApplication.getBookModel().loadBookMark(bookInfo.bookDetail.getId());
-                for(BookMarkInfo info : bookMarkList){
-                    info.text = BookChapterCacheNew.getInstance().getMarkText(info.chapterIndex);
-                    info.title = BookChapterCacheNew.getInstance().getMarkTitle(info.chapterIndex);
-                }
-            }
-        });
+    @Override
+    public void downBook() {
+        if (!isBookcase()) {
+            mBookReadView.showToast(R.string.case_add_tips);
+        } else {
+            mBookReadView.showToast(R.string.cache_book);
+        }
     }
 
 
-    private void runMainUiThread(Runnable runnable){
-        handler.post(runnable);
-    }
-
-    public static BookTextView.ReadSize getReadSize(Context context){
-        int textSize = PreferenceSetting.getInstance(context).getIntValue(PreferenceSetting.KEY_TEXT_SIZE,50);
-        int lineSize = PreferenceSetting.getInstance(context).getIntValue(PreferenceSetting.KEY_LINE_SIZE,45);
-        int marginSize = PreferenceSetting.getInstance(context).getIntValue(PreferenceSetting.KEY_MARGIN_SIZE,0);
-        return new BookTextView.ReadSize(textSize,lineSize,marginSize);
-    }
-
-    public void setReadSize(BookTextView.ReadSize readSize){
-        PreferenceSetting.getInstance(context).putIntValue(PreferenceSetting.KEY_TEXT_SIZE,readSize.textSize);
-        PreferenceSetting.getInstance(context).putIntValue(PreferenceSetting.KEY_LINE_SIZE,readSize.lineSize);
-        PreferenceSetting.getInstance(context).putIntValue(PreferenceSetting.KEY_MARGIN_SIZE,readSize.marginSize);
-        bookReadPresenterListener.onReadSizeChange(readSize);
-    }
-
-    public int getChapterPage(){
-        return bookInfo.bookChapter.getChapterPage();
+    private BookMarkInfo createBookMarkInfo(BookInfo bookInfo) {
+        BookMarkInfo bookMarkInfo = new BookMarkInfo();
+        bookMarkInfo.setNameId(bookInfo.bookDetail.getId());
+        int chapterIndex = bookInfo.bookChapter.getChapterIndex();
+        bookMarkInfo.chapterIndex = chapterIndex;
+        bookMarkInfo.text = BookChapterCacheNew.getInstance().getMarkText(chapterIndex);
+        bookMarkInfo.title = BookChapterCacheNew.getInstance().getMarkTitle(chapterIndex);
+        return bookMarkInfo;
     }
 
 
-     /**
-     * 正序返回true
-     * @return
-     * */
-    public boolean getChapterOrder(){
-        int order = PreferenceSetting.getInstance(context).getIntValue(PreferenceSetting.KEY_CHAPTER_ORDER,0);
-        return order == 0;
+    @Override
+    public void loadBookMark(ListView listView) {
+        mBookRepository.loadBookMarks().
+                subscribeOn(Schedulers.io()).
+                observeOn(AndroidSchedulers.mainThread()).
+                subscribe(bookMarkInfos -> {
+                    listView.setAdapter(new MarkAdapter(listView.getContext(), bookMarkInfos));
+                });
     }
 
-    public void setChapterOrder(boolean order){
-        int o = order ? 0 : 1;
-        PreferenceSetting.getInstance(context).putIntValue(PreferenceSetting.KEY_CHAPTER_ORDER,o);
+    @Override
+    public void deleteBookMark(BookMarkInfo bookMarkInfo) {
+        mBookRepository.deleteBookMark(bookMarkInfo);
     }
 
-
-//    public void ChapterNext(){
-//        BookChapterCache.getInstance().nextChapter(context);
-//        updateDataBookIndex();
-//    }
-//
-//    public void ChapterPrev(){
-//        BookChapterCache.getInstance().prevChapter(context);
-//        updateDataBookIndex();
-//    }
-
-    public void updateDataBookIndex(){
-        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-        //baiReadApplication.getBookModel().updateBookChapter(bookInfo.bookChapter);
+    @Override
+    public void clearBookMark() {
     }
 
 
-    public void updateDataBookPage(){
-        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-        //baiReadApplication.getBookModel().updateBookChapter(bookInfo.bookChapter);
+    @Override
+    public BookInfo getBookInfo() {
+        return mBookInfo;
     }
 
-//    public String getBookName(){
-//        //String name = bookInfo.bookDetail.getName();
-//        return bookInfo.bookDetail.getName();
-//    }
-//    public ArrayList<BookChapter.Chapter> getChapterList(){
-//        return bookInfo.bookChapter.getChapterList();
-//    }
-
-//    /**
-//     * 如果存在本地html文件就表示已经下载缓存了
-//     * @param chapterIndex 章节序号
-//     * @return
-//     * */
-//    public boolean isChapterCache(int chapterIndex){
-//        return false;
-//    }
-
-//    /**
-//     * 指定章节重新缓存
-//     * @param chapterIndex 章节序号
-//     * */
-//    public void setChapterIndex(int chapterIndex){
-//        bookReadPresenterListener.onLoadStart();
-//        BookChapterCache.getInstance().setChapter(chapterIndex);
-//        updateDataBookIndex();
-//    }
-
-    /**
-     * 记录章节阅读页面
-     * @param chapterPage 章节页面
-     * */
-    public void setChapterPage(int chapterPage){
-        bookInfo.bookChapter.setChapterPage(chapterPage);
-        //每次写page太频繁，只有退出阅读的时候才记录
-        //updateDataBookPage();
+    @Override
+    public void setChapterIndex(int index) {
     }
 
-
-    public ArrayList<BookMarkInfo> getBookMarkList(){
-        return bookMarkList;
+    @Override
+    public void chapterNext() {
+        int chapterIndex = mBookInfo.bookChapter.getChapterIndex() + 1;
+        if (chapterIndex >= mBookInfo.bookChapter.getChapterCount()) {
+            mBookReadView.showToast(R.string.last_chapter);
+        } else {
+            mChapterCache.prevChapter(chapterIndex);
+        }
     }
 
-
-    public boolean addBookMark(){
-
-//        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-//        //BookModel bookModel = baiReadApplication.getBookModel();
-//        if(bookModel.isBookCase(bookInfo)) {
-//            BookMarkInfo bookMarkInfo = new BookMarkInfo();
-//            bookMarkInfo.setNameId(bookInfo.bookDetail.getId());
-//            int chapterIndex = bookInfo.bookChapter.getChapterIndex();
-//            bookMarkInfo.chapterIndex = chapterIndex;
-//            bookMarkInfo.text = BookChapterCacheNew.getInstance().getMarkText(chapterIndex);
-//            bookMarkInfo.title = BookChapterCacheNew.getInstance().getMarkTitle(chapterIndex);
-//            bookMarkList.add(bookMarkInfo);
-//            bookModel.addBookMark(bookMarkInfo);
-//            return true;
-//        }else{
-//            return false;
-//        }
-        return false;
+    @Override
+    public void chapterPrev() {
+        int chapterIndex = mBookInfo.bookChapter.getChapterIndex() - 1;
+        if (chapterIndex < 0) {
+            mBookReadView.showToast(R.string.first_chapter);
+        } else {
+            mChapterCache.nextChapter(chapterIndex);
+        }
     }
 
-    public boolean addBookCase(){
-//        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-//        return baiReadApplication.getBookModel().addBook(bookInfo);
-        return false;
+    @Override
+    public void updateStart() {
+        mBookReadView.showLoading();
     }
 
-    public boolean cacheBook(){
-//        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-//        if(baiReadApplication.getBookModel().isBookCase(bookInfo)) {
-//            BookChapterCacheNew.getInstance().downloadAllChpater(bookInfo);
-//            return true;
-//        }else{
-//            return false;
-//        }
-        return false;
+    @Override
+    public void updateFinish() {
+        mBookReadView.hideLoading();
     }
 
-
-    public void deleteBookMark(){
-//        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-//        baiReadApplication.getBookModel().deleteBookAllMark(bookInfo.bookDetail.getId());
+    @Override
+    public void updateReadTextSuccess(BookReadText readText) {
+        mBookReadView.showChapter(readText);
     }
 
-    public void deleteBookMark(BookMarkInfo bookMarkInfo){
-//        BaiReadApplication baiReadApplication = (BaiReadApplication)context.getApplicationContext();
-//        baiReadApplication.getBookModel().deleteBookMark(bookMarkInfo);
+    @Override
+    public void updateReadTextFailed(int errorCode) {
+        //mBookReadView.showToast();
     }
-
 }

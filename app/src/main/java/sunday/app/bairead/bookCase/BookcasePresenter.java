@@ -1,7 +1,7 @@
 package sunday.app.bairead.bookcase;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,11 +11,11 @@ import java.util.Map;
 import java.util.Set;
 
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import sunday.app.bairead.bookRead.cache.BookChapterCacheNew;
 import sunday.app.bairead.data.BookRepository;
 import sunday.app.bairead.data.setting.BookInfo;
-import sunday.app.bairead.download.BookChapterCache;
+import sunday.app.bairead.utils.ActivityUtils;
 import sunday.app.bairead.utils.PreferenceKey;
 import sunday.app.bairead.utils.PreferenceSetting;
 
@@ -47,15 +47,12 @@ public class BookcasePresenter implements BookcaseContract.Presenter {
         mBookRepository.loadBooks(refresh).
                 subscribeOn(Schedulers.io()).
                 observeOn(AndroidSchedulers.mainThread()).
-                subscribe(new Action1<List<BookInfo>>() {
-                    @Override
-                    public void call(List<BookInfo> list) {
-                        if (list.size() > 0) {
-                            orderBooks(list);
-                            mBookcaseView.showBooks(list);
-                        } else {
-                            mBookcaseView.showNoBooks();
-                        }
+                subscribe(list -> {
+                    if (list.size() > 0) {
+                        orderBooks(list);
+                        mBookcaseView.showBooks(list);
+                    } else {
+                        mBookcaseView.showNoBooks();
                     }
                 });
     }
@@ -109,18 +106,18 @@ public class BookcasePresenter implements BookcaseContract.Presenter {
     public void cacheBooks(List<Long> list) {
         for (long id : list) {
             BookInfo bookInfo = mBookRepository.getBook(id);
-            BookChapterCache.getInstance().downloadAllChpater(bookInfo);
+            BookChapterCacheNew.getInstance().downloadAllChpater(bookInfo);
         }
     }
 
     @Override
     public void addBook(BookInfo bookInfo) {
-
+        mBookRepository.addBook(bookInfo);
     }
 
     @Override
     public void readBook(BookInfo bookInfo) {
-
+        //ActivityUtils.readBook(get);
     }
 
     @Override

@@ -11,6 +11,7 @@ import rx.Observable;
 import rx.Subscriber;
 import sunday.app.bairead.data.BookDataSource;
 import sunday.app.bairead.data.setting.BookInfo;
+import sunday.app.bairead.data.setting.BookMarkInfo;
 
 /**
  * Created by zhongfei.sun on 2017/4/11.
@@ -72,6 +73,21 @@ public class BookRemoteData implements BookDataSource {
             }
         }
         return null;
+    }
+
+    @Override
+    public Observable<List<BookMarkInfo>> loadBookMarks() {
+        return null;
+    }
+
+    @Override
+    public void addBookMark(BookMarkInfo bookMarkInfo) {
+
+    }
+
+    @Override
+    public void deleteBookMark(BookMarkInfo bookMarkInfo) {
+
     }
 
     @Override

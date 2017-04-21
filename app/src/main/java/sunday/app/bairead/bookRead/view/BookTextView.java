@@ -1,14 +1,18 @@
-package sunday.app.bairead.view;
+package sunday.app.bairead.bookRead.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.support.annotation.NonNull;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import sunday.app.bairead.bookRead.cache.BookReadSize;
+import sunday.app.bairead.bookRead.cache.BookReadText;
 
 /**
  * Created by sunday on 2016/12/16.
@@ -28,7 +32,7 @@ public class BookTextView extends TextView {
     //分段、分行、分页
     private ArrayList<PageText> pageTextList = new ArrayList<>();
     private String text;
-    private ReadSize readSize;
+    private BookReadSize readSize;
 
     public BookTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -143,7 +147,7 @@ public class BookTextView extends TextView {
 
     }
 
-    public void setOnChangeListener(IChapterChangeListener listener) {
+    public void setOnChangeListener(@NonNull IChapterChangeListener listener) {
         chapterChangeListener = listener;
     }
 
@@ -175,7 +179,7 @@ public class BookTextView extends TextView {
 
     }
 
-    public void setReadSize(ReadSize readSize) {
+    public void setReadSize(BookReadSize readSize) {
         this.readSize = readSize;
         createPageTextList();
         postInvalidate();
@@ -189,21 +193,7 @@ public class BookTextView extends TextView {
         void onPageChange(int page,int pageCount);
     }
 
-    public static class ReadSize {
-        public static final int TYPE_TEXT = 0;
-        public static final int TYPE_LINE = TYPE_TEXT + 1;
-        public static final int TYPE_MAEGIN = TYPE_LINE + 1;
 
-        public int textSize;
-        public int lineSize;
-        public int marginSize;
-
-        public ReadSize(int textSize, int lineSize, int marginSize) {
-            this.textSize = textSize;
-            this.lineSize = lineSize;
-            this.marginSize = marginSize;
-        }
-    }
 
     class PageText {
         public int mHeight = 80;
