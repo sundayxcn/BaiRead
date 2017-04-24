@@ -33,10 +33,10 @@
         android:gravity="center_vertical"
         android:layout_height="20dp" />
 
-    <include
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/book_read_setting_panel"/>
+    <!--<include-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--layout="@layout/book_read_setting_panel"/>-->
 
 
     <!--<ViewStub-->

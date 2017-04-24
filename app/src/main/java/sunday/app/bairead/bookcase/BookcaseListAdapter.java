@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import sunday.app.bairead.R;
@@ -126,21 +126,21 @@ public class BookcaseListAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
-        @Bind(R.id.xlist_item_check_box)
+        @BindView(R.id.xlist_item_check_box)
         CheckBox checkBox;
-        @Bind(R.id.xlist_item_cover_image)
+        @BindView(R.id.xlist_item_cover_image)
         ImageView coverImageView;
-        @Bind(R.id.xlist_item_top_case)
+        @BindView(R.id.xlist_item_top_case)
         TopCaseView topCaseView;
-        @Bind(R.id.xlist_item_name)
+        @BindView(R.id.xlist_item_name)
         TextView nameTView;
-        @Bind(R.id.xlist_item_chapter_latest)
+        @BindView(R.id.xlist_item_chapter_latest)
         TextView chapterLatestTView;
-        @Bind(R.id.xlist_item_update_time)
+        @BindView(R.id.xlist_item_update_time)
         TextView updateTimeTView;
-        @Bind(R.id.xlist_item_chapter_index)
+        @BindView(R.id.xlist_item_chapter_index)
         TextView chapterIndexTView;
-        @Bind(R.id.xlist_item_chapter_update)
+        @BindView(R.id.xlist_item_chapter_update)
         TextView chapterUpdate;
 
         private long bookId;

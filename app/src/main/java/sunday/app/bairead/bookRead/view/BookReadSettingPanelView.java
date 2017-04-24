@@ -2,6 +2,7 @@ package sunday.app.bairead.bookRead.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +26,11 @@ import sunday.app.bairead.utils.PreferenceSetting;
  * Created by sunday on 2017/2/23.
  */
 
-public class BookReadSettingPanelView extends RelativeLayout {
+public class BookReadSettingPanelView extends RelativeLayout implements BookReadContract.ViewSetting {
 
     RelativeLayout settingTopPanel;
     LinearLayout settingBottomPanel;
+    private BookReadSize mBookReadSize;
     private LinearLayout mBookSizeSetting;
     private BookReadContract.Presenter mPresenter;
     private OnClickListener buttonOnClickListener = new OnClickListener() {
@@ -36,22 +38,10 @@ public class BookReadSettingPanelView extends RelativeLayout {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.book_read_setting_panel_chapter_menu:
-
-                    BookReadChapterFragment bookReadChapterFragment = new BookReadChapterFragment();
-                    bookReadChapterFragment.setPresenter(mPresenter);
-                    bookReadChapterFragment.setPreferenceSetting(PreferenceSetting.getInstance(getContext().getApplicationContext()));
-                    ActivityUtils.addFragmentToActivity(
-                            ((BookReadActivity) getContext()).getFragmentManager(),
-                            bookReadChapterFragment,
-                            R.id.book_read_parent);
+                    mPresenter.goToChapterMenu();
                     break;
                 case R.id.book_read_setting_panel_book_mark:
-                    BookReadMarkFragment bookReadMarkFragment = new BookReadMarkFragment();
-                    bookReadMarkFragment.setPresenter(mPresenter);
-                    ActivityUtils.addFragmentToActivity(
-                            ((BookReadActivity) getContext()).getFragmentManager(),
-                            bookReadMarkFragment,
-                            R.id.book_read_parent);
+                    mPresenter.goToMarkMenu();
                     break;
                 case R.id.book_read_setting_panel_text_font:
                     showBookTextSizePanel();
@@ -72,8 +62,8 @@ public class BookReadSettingPanelView extends RelativeLayout {
             }
         }
     };
-    private BookReadSize mBookReadSize;
-    private IReadSizeListener mReadSizeListener;
+
+
     private OnClickListener sizeOnReduceClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -91,7 +81,8 @@ public class BookReadSettingPanelView extends RelativeLayout {
                     mBookReadSize.marginSize -= 6;
                 }
             }
-            mReadSizeListener.onReadSize(mBookReadSize);
+            //mReadSizeListener.onReadSize(mBookReadSize);
+            mPresenter.updateTextSize(mBookReadSize);
         }
     };
     private OnClickListener sizeOnAddClickListener = new OnClickListener() {
@@ -105,7 +96,8 @@ public class BookReadSettingPanelView extends RelativeLayout {
             } else if (key.equals(PreferenceSetting.KEY_MARGIN_SIZE)) {
                 mBookReadSize.marginSize += 6;
             }
-            mReadSizeListener.onReadSize(mBookReadSize);
+            //mReadSizeListener.onReadSize(mBookReadSize);
+            mPresenter.updateTextSize(mBookReadSize);
         }
     };
 
@@ -134,12 +126,14 @@ public class BookReadSettingPanelView extends RelativeLayout {
         mPresenter = presenter;
     }
 
-    public void setBookReadSize(BookReadSize bookReadSize) {
-        mBookReadSize = bookReadSize;
+    @Override
+    public void showLoading() {
+
     }
 
-    public void setOnReadSizeChange(@NonNull IReadSizeListener readSizeListener) {
-        mReadSizeListener = readSizeListener;
+    @Override
+    public void showToast(@NonNull @StringRes int resId) {
+
     }
 
     private void setOnClick(ViewGroup viewGroup, OnClickListener onClickListener) {
@@ -202,9 +196,9 @@ public class BookReadSettingPanelView extends RelativeLayout {
         return getVisibility() == VISIBLE;
     }
 
-
-    interface IReadSizeListener {
-        void onReadSize(BookReadSize bookReadSize);
+    @Override
+    public void initTextSize(BookReadSize bookReadSize) {
+        mBookReadSize = bookReadSize;
     }
 
     static class PreferView {

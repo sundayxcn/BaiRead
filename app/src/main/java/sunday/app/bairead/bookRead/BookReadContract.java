@@ -23,19 +23,43 @@ public interface BookReadContract {
     String READ_ACTION = "sunday.app.bairead.readBook";
     String READ_EXTRA_ID = "bookId";
 
-    interface ViewMenu extends BaseView<Presenter> {
+    interface ViewSub extends BaseView<Presenter> {
+    }
 
-        void setChapterIndex();
+    interface ViewRead extends ViewSub {
+
+        void showChapter(BookReadText bookReadText);
+
+        void textSizeChange(BookReadSize bookReadSize);
+
+        void showSetting(ViewSetting view);
+
+        void hideSetting(ViewSetting view);
+
+    }
+
+    interface ViewSetting extends ViewSub {
+        void initTextSize(BookReadSize bookReadSize);
+    }
+
+    interface ViewMenu extends ViewSub {
 
     }
 
     interface View extends BaseView<Presenter> {
-
         void showChapter(BookReadText bookReadText);
 
-        void hideLoading();
-    }
+        void textSizeChange(BookReadSize bookReadSize);
 
+        void showSetting();
+
+        void hideSetting();
+
+        void showChapterMenu();
+
+        void showMarkMenu();
+
+    }
 
 
     interface Presenter extends BasePresenter {
@@ -45,10 +69,6 @@ public interface BookReadContract {
         void chapterNext();
 
         void chapterPrev();
-
-        void updateBookChapterIndex();
-
-        void updateBookChapterPage();
 
         void addBookMark();
 
@@ -62,14 +82,28 @@ public interface BookReadContract {
 
         void downBook();
 
-        BookInfo getBookInfo();
+        void updateTextSize(BookReadSize bookReadSize);
 
+        void updateBookChapterIndex();
+
+        void updateBookChapterPage();
+
+        void goToChapterMenu();
+
+        void goToMarkMenu();
+
+        void showSetting();
+
+        BookInfo getBookInfo();
     }
 
-    interface IBookChapterCacheListener{
+    interface IBookChapterCacheListener {
         void updateStart();
+
         void updateFinish();
+
         void updateReadTextSuccess(BookReadText readText);
+
         void updateReadTextFailed(int errorCode);
     }
 

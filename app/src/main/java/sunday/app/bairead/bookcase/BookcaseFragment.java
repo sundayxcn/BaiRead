@@ -22,11 +22,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 import butterknife.OnItemLongClick;
+import butterknife.Unbinder;
 import sunday.app.bairead.R;
 import sunday.app.bairead.base.BaseFragment;
 import sunday.app.bairead.bookRead.BookReadContract;
@@ -51,20 +53,22 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
     public static final int OPERATOR_DELETE = OPERATOR_CACHE + 1;
     public static final int OPERATOR_ALL = OPERATOR_DELETE + 1;
 
-    @Bind(R.id.book_case_tool_bar_top)
+    @BindView(R.id.book_case_tool_bar_top)
     ImageView bookCaseToolBarTop;
-    @Bind(R.id.book_case_tool_bar_cache)
+    @BindView(R.id.book_case_tool_bar_cache)
     ImageView bookCaseToolBarCache;
-    @Bind(R.id.book_case_tool_bar_delete)
+    @BindView(R.id.book_case_tool_bar_delete)
     ImageView bookCaseToolBarDelete;
-    @Bind(R.id.book_case_tool_bar)
+    @BindView(R.id.book_case_tool_bar)
     LinearLayout bookCaseToolBar;
-    @Bind(R.id.bookcase_list_view)
+    @BindView(R.id.bookcase_list_view)
     ListView bookcaseListView;
-    @Bind(R.id.swipe_refresh_layout)
+    @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
     private BookcaseContract.Presenter mPresenter;
     private BookcaseListAdapter bookcaseListAdapter;
+    private Unbinder unbinder;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +83,7 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.bookcase_fragment, container, false);
-        ButterKnife.bind(this, root);
+        unbinder = ButterKnife.bind(this, root);
         int color = ContextCompat.getColor(getActivity(), R.color.colorRed);
         swipeRefreshLayout.setColorSchemeColors(color);
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -177,7 +181,7 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
 

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
+
 android {
     signingConfigs {
         config {
@@ -10,7 +10,7 @@ android {
         }
     }
     compileSdkVersion 23
-    buildToolsVersion "24.0.0"
+    buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "sunday.app.bairead"
         minSdkVersion 21
@@ -24,6 +24,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+//    compileOptions {
+//        targetCompatibility 1.8
+//        sourceCompatibility 1.8
+//    }
+//    compileOptions {
+//        targetCompatibility 1.8
+//        sourceCompatibility 1.8
+//    }
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
@@ -58,11 +66,12 @@ dependencies {
     compile 'com.umeng.analytics:analytics:latest.integration'
     //引导 浮层
     //compile 'com.github.deano2390:MaterialShowcaseView:1.1.0'
-    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.jakewharton:butterknife:8.1.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.1.0'
 //    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 //    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
     compile 'io.reactivex:rxjava:1.2.5'
     compile 'io.reactivex:rxandroid:1.2.1'
 //java8 stream特性支持
-    compile 'com.annimon:stream:1.0.1'
+    //compile 'com.annimon:stream:1.0.1'
 }

@@ -13,10 +13,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
+import butterknife.Unbinder;
 import sunday.app.bairead.R;
 import sunday.app.bairead.base.BaseFragment;
 import sunday.app.bairead.bookRead.adapter.ChapterAdapter;
@@ -31,22 +32,22 @@ import sunday.app.bairead.utils.PreferenceSetting;
 
 public class BookReadChapterFragment extends BaseFragment implements BookReadContract.ViewMenu {
 
-    @Bind(R.id.book_read_setting_panel_list_title)
+    @BindView(R.id.book_read_setting_panel_list_title)
     TextView mListTitle;
-    @Bind(R.id.book_read_setting_panel_list_button)
+    @BindView(R.id.book_read_setting_panel_list_button)
     Button mListButton;
-    @Bind(R.id.book_read_setting_panel_list)
+    @BindView(R.id.book_read_setting_panel_list)
     ListView mList;
 
     private PreferenceSetting mPreferenceSetting;
     private BookReadContract.Presenter mPresenter;
     private ReadAdapter mReadAdapter;
-
+    private Unbinder unbinder;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.book_read_fragment, container, false);
-        ButterKnife.bind(this, root);
+        unbinder = ButterKnife.bind(this, root);
         init();
         return root;
     }
@@ -95,16 +96,16 @@ public class BookReadChapterFragment extends BaseFragment implements BookReadCon
 
     }
 
-    @Override
-    public void setChapterIndex() {
-        int chapterIndex = 0;
-        mPresenter.setChapterIndex(chapterIndex);
-    }
+//    @Override
+//    public void setChapterIndex() {
+//        int chapterIndex = 0;
+//        mPresenter.setChapterIndex(chapterIndex);
+//    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @OnItemClick(R.id.book_read_setting_panel_list)
@@ -131,4 +132,5 @@ public class BookReadChapterFragment extends BaseFragment implements BookReadCon
     protected boolean onBackPressed() {
         return super.onBackPressed();
     }
+
 }

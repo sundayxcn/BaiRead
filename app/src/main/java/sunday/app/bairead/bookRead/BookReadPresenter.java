@@ -1,34 +1,19 @@
 package sunday.app.bairead.bookRead;
 
-import android.content.Context;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import rx.Observable;
-import rx.Observer;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import sunday.app.bairead.R;
-import sunday.app.bairead.base.BaiReadApplication;
 import sunday.app.bairead.bookRead.adapter.MarkAdapter;
 import sunday.app.bairead.bookRead.cache.BookChapterCacheNew;
 import sunday.app.bairead.bookRead.cache.BookReadSize;
 import sunday.app.bairead.bookRead.cache.BookReadText;
 import sunday.app.bairead.data.BookRepository;
-import sunday.app.bairead.data.setting.BookChapter;
 import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.data.setting.BookMarkInfo;
 import sunday.app.bairead.utils.PreferenceSetting;
-import sunday.app.bairead.utils.Temp;
-import sunday.app.bairead.utils.ThreadManager;
-import sunday.app.bairead.bookRead.view.BookTextView;
 
 /**
  * Created by sunday on 2017/3/6.
@@ -59,6 +44,7 @@ public class BookReadPresenter implements BookReadContract.Presenter, BookReadCo
     @Override
     public void start() {
         mChapterCache.start(mBookInfo);
+        mBookReadView.textSizeChange(getBookReadSize());
     }
 
 
@@ -70,6 +56,21 @@ public class BookReadPresenter implements BookReadContract.Presenter, BookReadCo
     @Override
     public void updateBookChapterPage() {
         mBookRepository.updateBook(mBookInfo);
+    }
+
+    @Override
+    public void goToChapterMenu() {
+        mBookReadView.showChapterMenu();
+    }
+
+    @Override
+    public void goToMarkMenu() {
+        mBookReadView.showMarkMenu();
+    }
+
+    @Override
+    public void showSetting() {
+        mBookReadView.showSetting();
     }
 
     @Override
@@ -108,6 +109,11 @@ public class BookReadPresenter implements BookReadContract.Presenter, BookReadCo
         }
     }
 
+    public void updateTextSize(BookReadSize bookReadSize) {
+        mPreferenceSetting.putIntValue(PreferenceSetting.KEY_TEXT_SIZE, bookReadSize.textSize);
+        mPreferenceSetting.putIntValue(PreferenceSetting.KEY_LINE_SIZE, bookReadSize.lineSize);
+        mPreferenceSetting.putIntValue(PreferenceSetting.KEY_MARGIN_SIZE, bookReadSize.marginSize);
+    }
 
     private BookMarkInfo createBookMarkInfo(BookInfo bookInfo) {
         BookMarkInfo bookMarkInfo = new BookMarkInfo();
@@ -145,6 +151,13 @@ public class BookReadPresenter implements BookReadContract.Presenter, BookReadCo
         return mBookInfo;
     }
 
+    public BookReadSize getBookReadSize() {
+        int textSize = mPreferenceSetting.getIntValue(PreferenceSetting.KEY_TEXT_SIZE, 45);
+        int lineSize = mPreferenceSetting.getIntValue(PreferenceSetting.KEY_LINE_SIZE, 45);
+        int marginSize = mPreferenceSetting.getIntValue(PreferenceSetting.KEY_MARGIN_SIZE, 20);
+        return new BookReadSize(textSize,lineSize,marginSize);
+    }
+
     @Override
     public void setChapterIndex(int index) {
     }
@@ -176,7 +189,7 @@ public class BookReadPresenter implements BookReadContract.Presenter, BookReadCo
 
     @Override
     public void updateFinish() {
-        mBookReadView.hideLoading();
+        //mBookReadView.hideLoading();
     }
 
     @Override
