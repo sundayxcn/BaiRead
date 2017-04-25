@@ -45,6 +45,7 @@ public class BookReadView extends RelativeLayout implements BookReadContract.Vie
         super.onFinishInflate();
         mBookTitle = (TextView) findViewById(R.id.book_read_activity_book_title);
         mBookText = (BookTextView) findViewById(R.id.book_read_activity_book_text);
+        mBookText.setOnChangeListener(this);
         mBookPage = (TextView) findViewById(R.id.book_read_activity_book_page);
         //mSettingPanelView = (BookReadSettingPanelView) findViewById(R.id.book_read_setting_panel);
     }
@@ -129,6 +130,11 @@ public class BookReadView extends RelativeLayout implements BookReadContract.Vie
 
     @Override
     public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
 
     }
 

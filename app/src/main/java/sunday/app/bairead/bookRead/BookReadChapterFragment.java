@@ -43,6 +43,7 @@ public class BookReadChapterFragment extends BaseFragment implements BookReadCon
     private BookReadContract.Presenter mPresenter;
     private ReadAdapter mReadAdapter;
     private Unbinder unbinder;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,15 +54,19 @@ public class BookReadChapterFragment extends BaseFragment implements BookReadCon
     }
 
 
-    public void init(){
+    public void init() {
         String title = mPresenter.getBookInfo().bookDetail.getName();
         mListTitle.setText(title);
         mListButton.setText(getButtonText());
-        ArrayList<BookChapter.Chapter> list = mPresenter.getBookInfo().bookChapter.getChapterList();
-        if(!isOrderDefault()){
+        ArrayList<BookChapter.Chapter> list = (ArrayList<BookChapter.Chapter>) mPresenter.
+                getBookInfo().
+                bookChapter.
+                getChapterList().
+                clone();
+        if (!isOrderDefault()) {
             Collections.reverse(list);
         }
-        mReadAdapter = new ChapterAdapter(getActivity(),list);
+        mReadAdapter = new ChapterAdapter(getActivity(), list);
         mList.setAdapter(mReadAdapter);
 
     }
@@ -72,27 +77,32 @@ public class BookReadChapterFragment extends BaseFragment implements BookReadCon
         mPresenter = presenter;
     }
 
-    public void setPreferenceSetting(PreferenceSetting preferenceSetting){
+    public void setPreferenceSetting(PreferenceSetting preferenceSetting) {
         mPreferenceSetting = preferenceSetting;
     }
 
-    public String getButtonText(){
-        if(isOrderDefault()){
+    public String getButtonText() {
+        if (isOrderDefault()) {
             return getResources().getString(R.string.order_default);
-        }else{
+        } else {
             return getResources().getString(R.string.order_revert);
         }
     }
 
 
-    public boolean isOrderDefault(){
-        int order = mPreferenceSetting.getIntValue(PreferenceSetting.KEY_CHAPTER_ORDER,PreferenceKey.CHAPTER_ORDER_DEFAULT);
+    public boolean isOrderDefault() {
+        int order = mPreferenceSetting.getIntValue(PreferenceSetting.KEY_CHAPTER_ORDER, PreferenceKey.CHAPTER_ORDER_DEFAULT);
         return order == PreferenceKey.CHAPTER_ORDER_DEFAULT;
     }
 
 
     @Override
     public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
 
     }
 
@@ -111,16 +121,17 @@ public class BookReadChapterFragment extends BaseFragment implements BookReadCon
     @OnItemClick(R.id.book_read_setting_panel_list)
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         int chapterIndex = isOrderDefault() ? position : mReadAdapter.getCount() - position - 1;
+        getFragmentManager().popBackStack();
         mPresenter.setChapterIndex(chapterIndex);
     }
 
     @OnClick(R.id.book_read_setting_panel_list_button)
-    public void onClick(View view){
-        int order = mPreferenceSetting.getIntValue(PreferenceSetting.KEY_CHAPTER_ORDER,PreferenceKey.CHAPTER_ORDER_DEFAULT);
-        if(order == PreferenceKey.CHAPTER_ORDER_DEFAULT){
-            mPreferenceSetting.putIntValue(PreferenceSetting.KEY_CHAPTER_ORDER,PreferenceKey.CHAPTER_ORDER_REVERSE);
-        }else{
-            mPreferenceSetting.putIntValue(PreferenceSetting.KEY_CHAPTER_ORDER,PreferenceKey.CHAPTER_ORDER_DEFAULT);
+    public void onClick(View view) {
+        int order = mPreferenceSetting.getIntValue(PreferenceSetting.KEY_CHAPTER_ORDER, PreferenceKey.CHAPTER_ORDER_DEFAULT);
+        if (order == PreferenceKey.CHAPTER_ORDER_DEFAULT) {
+            mPreferenceSetting.putIntValue(PreferenceSetting.KEY_CHAPTER_ORDER, PreferenceKey.CHAPTER_ORDER_REVERSE);
+        } else {
+            mPreferenceSetting.putIntValue(PreferenceSetting.KEY_CHAPTER_ORDER, PreferenceKey.CHAPTER_ORDER_DEFAULT);
         }
         Collections.reverse(mReadAdapter.getList());
         mReadAdapter.notifyDataSetChanged();

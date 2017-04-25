@@ -66,6 +66,11 @@ public class BookReadMarkFragment extends BaseFragment implements BookReadContra
 
     }
 
+    @Override
+    public void hideLoading() {
+
+    }
+
 
     @Override
     public void onDestroyView() {

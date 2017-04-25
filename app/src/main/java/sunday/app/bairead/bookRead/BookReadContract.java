@@ -113,6 +113,14 @@ public interface BookReadContract {
 
         void nextChapter(int index);
 
+        void setIndex(int index);
+
+        //BookReadText getBookReadText(int index);
+
+        void cacheAllChapter();
+
         void setBookChapterCacheListener(IBookChapterCacheListener bookChapterCacheListener);
+
+
     }
 }

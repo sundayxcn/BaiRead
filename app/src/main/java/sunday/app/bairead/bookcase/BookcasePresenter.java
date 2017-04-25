@@ -2,6 +2,8 @@ package sunday.app.bairead.bookcase;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,13 +11,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import sunday.app.bairead.bookRead.cache.BookChapterCacheNew;
 import sunday.app.bairead.data.BookRepository;
 import sunday.app.bairead.data.setting.BookInfo;
+import sunday.app.bairead.download.BookDown;
+import sunday.app.bairead.download.BookDownLoad;
 import sunday.app.bairead.utils.ActivityUtils;
+import sunday.app.bairead.utils.FileManager;
 import sunday.app.bairead.utils.PreferenceKey;
 import sunday.app.bairead.utils.PreferenceSetting;
 
@@ -57,11 +64,42 @@ public class BookcasePresenter implements BookcaseContract.Presenter {
                 });
     }
 
+
+    private void checkFinish(){
+        Log.e("sunday","atomicInteger.decrementAndGet() = "+atomicInteger.decrementAndGet());
+        if(atomicInteger.decrementAndGet() <= 0){
+            mBookcaseView.hideLoading();
+        }
+    }
+
+    private synchronized void checkBookInit(int size){
+        atomicInteger = new AtomicInteger(size);
+    }
+
+    private AtomicInteger atomicInteger;
+
+
     /**
      * 检查章节更新
      * **/
     @Override
-    public void updateBooks() {
+    public void updateBooks(List<BookInfo> list) {
+        checkBookInit(list.size());
+        for(final BookInfo bookInfo : list){
+            BookDown.getInstance().updateNewChapter(bookInfo).
+                    subscribeOn(Schedulers.newThread()).
+                    observeOn(AndroidSchedulers.mainThread()).
+                    subscribe(bookInfo1 -> {
+                        if(!bookInfo1.bookDetail.getChapterLatest().equals(bookInfo.bookDetail.getChapterLatest())){
+                            bookInfo.bookChapter.setChapterList(bookInfo1.bookChapter.getChapterList());
+                            bookInfo.bookDetail.setUpdateTime(bookInfo1.bookDetail.getUpdateTime());
+                            bookInfo.bookDetail.setChapterLatest(bookInfo1.bookChapter.getLastChapter().getTitle());
+                            mBookRepository.updateBook(bookInfo);
+                            mBookcaseView.refresh(bookInfo);
+                        }
+                        checkFinish();
+                    });
+        }
 
     }
 

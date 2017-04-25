@@ -132,6 +132,11 @@ public class BookReadSettingPanelView extends RelativeLayout implements BookRead
     }
 
     @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
     public void showToast(@NonNull @StringRes int resId) {
 
     }

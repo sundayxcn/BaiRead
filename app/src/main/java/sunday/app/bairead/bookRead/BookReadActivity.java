@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import sunday.app.bairead.R;
 import sunday.app.bairead.base.BaseActivity;
 import sunday.app.bairead.bookRead.cache.BookChapterCacheNew;
@@ -40,7 +37,6 @@ public class BookReadActivity extends BaseActivity implements BookReadContract.V
         Intent intent = getIntent();
         long bookId = intent.getLongExtra(BookReadContract.READ_EXTRA_ID, 0);
         BookInfo bookInfo = BookRepository.getInstance(getApplicationContext()).getBook(bookId);
-
         mPreferenceSetting = PreferenceSetting.getInstance(getApplicationContext());
         mBookReadPresenter = new BookReadPresenter(BookRepository.getInstance(getApplicationContext()),
                 BookChapterCacheNew.getInstance(),
@@ -117,6 +113,11 @@ public class BookReadActivity extends BaseActivity implements BookReadContract.V
 
     @Override
     public void showLoading() {
+        showProgressDialog();
+    }
 
+    @Override
+    public void hideLoading() {
+        hideProgressDialog();
     }
 }

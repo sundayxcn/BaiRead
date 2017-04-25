@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.utils.ActivityUtils;
 import sunday.app.bairead.utils.FileManager;
 import sunday.app.bairead.utils.NetworkUtils;
+import sunday.app.bairead.utils.NewChapterShow;
 import sunday.app.bairead.utils.PreferenceSetting;
 import sunday.app.bairead.view.ListDialog;
 
@@ -92,7 +94,7 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
                     swipeRefreshLayout.setRefreshing(false);
                     showToast(R.string.book_case_no_book_tips);
                 } else {
-                    mPresenter.updateBooks();
+                    mPresenter.updateBooks(bookcaseListAdapter.getBookInfoList());
                 }
             } else {
                 swipeRefreshLayout.setRefreshing(false);
@@ -174,6 +176,19 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
     }
 
     @Override
+    public void hideLoading() {
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void refresh(BookInfo bookInfo) {
+        long id = bookInfo.bookDetail.getId();
+        int chapterIndex = bookInfo.bookChapter.getChapterCount() - 1;
+        NewChapterShow.getInstance().addNewChapter(id, chapterIndex);
+        bookcaseListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void setPresenter(BookcaseContract.Presenter presenter) {
         mPresenter = presenter;
     }
@@ -215,6 +230,7 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
         } else {
             BookInfo bookInfo = (BookInfo) bookcaseListAdapter.getItem(position);
             //mPresenter.readBook(bookInfo);
+            NewChapterShow.getInstance().removeNewChapter(bookInfo.bookDetail.getId());
             ActivityUtils.readBook(getActivity(),bookInfo.bookDetail.getId());
         }
     }

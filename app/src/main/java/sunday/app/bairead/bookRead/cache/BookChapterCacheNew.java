@@ -13,6 +13,7 @@ import okhttp3.Response;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import sunday.app.bairead.bookRead.BookReadContract;
 import sunday.app.bairead.data.setting.BookChapter;
@@ -64,12 +65,8 @@ public class BookChapterCacheNew implements BookReadContract.ChapterCache {
         //首次进入
         if (chapterArrayList == null || chapterArrayList.size() == 0) {
 
-            Observable.create(new Observable.OnSubscribe<BookChapter>() {
-                @Override
-                public void call(Subscriber<? super BookChapter> subscriber) {
-                    subscriber.onNext(getChapter(bookInfo));
-                }
-            }).subscribeOn(Schedulers.io()).
+            Observable.create((Observable.OnSubscribe<BookChapter>) subscriber -> subscriber.onNext(getChapter(bookInfo))).
+                    subscribeOn(Schedulers.io()).
                     observeOn(AndroidSchedulers.mainThread())
                     .subscribe(bookChapter -> {
                         if (bookChapter == null) {
@@ -138,6 +135,17 @@ public class BookChapterCacheNew implements BookReadContract.ChapterCache {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void setIndex(int index) {
+        updateChapterIndex(index);
+        initChapter();
+    }
+
+    @Override
+    public void cacheAllChapter() {
+
     }
 
     @Override

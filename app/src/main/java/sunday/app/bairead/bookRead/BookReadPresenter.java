@@ -113,6 +113,7 @@ public class BookReadPresenter implements BookReadContract.Presenter, BookReadCo
         mPreferenceSetting.putIntValue(PreferenceSetting.KEY_TEXT_SIZE, bookReadSize.textSize);
         mPreferenceSetting.putIntValue(PreferenceSetting.KEY_LINE_SIZE, bookReadSize.lineSize);
         mPreferenceSetting.putIntValue(PreferenceSetting.KEY_MARGIN_SIZE, bookReadSize.marginSize);
+        mBookReadView.textSizeChange(bookReadSize);
     }
 
     private BookMarkInfo createBookMarkInfo(BookInfo bookInfo) {
@@ -131,9 +132,7 @@ public class BookReadPresenter implements BookReadContract.Presenter, BookReadCo
         mBookRepository.loadBookMarks().
                 subscribeOn(Schedulers.io()).
                 observeOn(AndroidSchedulers.mainThread()).
-                subscribe(bookMarkInfos -> {
-                    listView.setAdapter(new MarkAdapter(listView.getContext(), bookMarkInfos));
-                });
+                subscribe(bookMarkInfos -> listView.setAdapter(new MarkAdapter(listView.getContext(), bookMarkInfos)));
     }
 
     @Override
@@ -160,6 +159,7 @@ public class BookReadPresenter implements BookReadContract.Presenter, BookReadCo
 
     @Override
     public void setChapterIndex(int index) {
+        mChapterCache.setIndex(index);
     }
 
     @Override
@@ -168,7 +168,7 @@ public class BookReadPresenter implements BookReadContract.Presenter, BookReadCo
         if (chapterIndex >= mBookInfo.bookChapter.getChapterCount()) {
             mBookReadView.showToast(R.string.last_chapter);
         } else {
-            mChapterCache.prevChapter(chapterIndex);
+            mChapterCache.nextChapter(chapterIndex);
         }
     }
 
@@ -189,7 +189,7 @@ public class BookReadPresenter implements BookReadContract.Presenter, BookReadCo
 
     @Override
     public void updateFinish() {
-        //mBookReadView.hideLoading();
+        mBookReadView.hideLoading();
     }
 
     @Override

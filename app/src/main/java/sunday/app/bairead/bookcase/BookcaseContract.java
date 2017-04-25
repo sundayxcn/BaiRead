@@ -1,5 +1,6 @@
 package sunday.app.bairead.bookcase;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,13 +23,15 @@ public interface BookcaseContract {
         void showNoBooks();
 
         void showUpdateBook(List<BookInfo> list);
+
+        void refresh(BookInfo bookInfo);
     }
 
     interface Presenter extends BookOperatorPresenter{
 
         void loadBooks(boolean refresh);
 
-        void updateBooks();
+        void updateBooks(List<BookInfo> list);
 
         void updateBook(long id);
 
