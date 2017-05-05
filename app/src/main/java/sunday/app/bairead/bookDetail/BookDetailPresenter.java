@@ -5,44 +5,34 @@ import android.content.Context;
 import sunday.app.bairead.base.BaiReadApplication;
 import sunday.app.bairead.data.BookRepository;
 import sunday.app.bairead.data.setting.BookInfo;
+import sunday.app.bairead.utils.ActivityUtils;
 
 /**
  * Created by sunday on 2017/3/7.
  */
 
-public class BookDetailPresenter {
+public class BookDetailPresenter implements BookDetailContract.Presenter{
 
-    private Context context;
-    public interface IBookDetailListener{
+    private BookDetailContract.View mView;
 
-    }
-
-    private  IBookDetailListener bookDetailListener;
-    public BookDetailPresenter(Context c,IBookDetailListener bookDetailListener){
-        context = c;
-        this.bookDetailListener = bookDetailListener;
+    public BookDetailPresenter(BookDetailContract.View view){
+        mView = view;
     }
 
     public static void readBook(Context context,BookInfo bookInfo){
-        //BookcasePresenter.readBook(context,bookInfo);
+        ActivityUtils.readBook(context,bookInfo.bookDetail.getId());
     }
 
     public static void addToBookCase(Context context,BookInfo bookInfo){
-//        BaiReadApplication application  = (BaiReadApplication) context.getApplicationContext();
-//        BookModel bookModel = application.getBookModel();
-//        bookModel.addBook(bookInfo);
         BookRepository.getInstance(context).addBook(bookInfo);
     }
 
-    public static boolean isBookCase(Context context,BookInfo bookInfo){
-        BaiReadApplication application  = (BaiReadApplication) context.getApplicationContext();
-//        BookModel bookModel = application.getBookModel();
-//        return bookModel.isBookCase(bookInfo);
-        return false;
-    }
-
-
     public static void cacheBook(BookInfo bookInfo){
         //BookChapterCache.getInstance().downloadAllChpater(bookInfo);
+    }
+
+    @Override
+    public void start() {
+
     }
 }

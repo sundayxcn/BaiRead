@@ -1,3 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
-<sunday.app.bairead.view.BookStatusView
+<sunday.app.bairead.bookDetail.view.BookStatusView
     style="@style/shapeIcon" />

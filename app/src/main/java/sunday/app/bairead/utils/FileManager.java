@@ -1,8 +1,6 @@
 package sunday.app.bairead.utils;
 
-import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 
 import org.apache.http.util.EncodingUtils;
 
@@ -20,12 +18,11 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import sunday.app.bairead.download.IBookSave;
 
 /**
  * eidt Created by sunday on 2016/6/27.
  */
-public class FileManager implements IBookSave{
+public class FileManager{
     public static final String DIR = "BaiRead";
     //release版本用此地址
     //public static String PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath()+"/"+DIR;
@@ -307,7 +304,6 @@ public class FileManager implements IBookSave{
         }
     }
 
-    @Override
     public void saveByte(String fileName, byte[] bytes) throws IOException {
         FileOutputStream fileOutputStream = new FileOutputStream(fileName);
         fileOutputStream.write(bytes);

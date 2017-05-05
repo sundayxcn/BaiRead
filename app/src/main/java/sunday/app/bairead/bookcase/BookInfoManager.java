@@ -44,7 +44,7 @@ public class BookInfoManager implements BookcaseContract.IBookInfoManager {
             INSTANCE = new BookInfoManager(
                     new ParseBookDetail(),
                     new ParseBookChapter(),
-                    new BookDownService(FileManager.getInstance()));
+                    new BookDownService());
         }
         return INSTANCE;
     }
@@ -83,7 +83,6 @@ public class BookInfoManager implements BookcaseContract.IBookInfoManager {
             }
         });
     }
-
 
     public boolean isChapterExists(String bookName,Chapter chapter) {
         String fileName = FileManager.PATH +

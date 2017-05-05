@@ -1,9 +1,11 @@
-package sunday.app.bairead.view;
+package sunday.app.bairead.bookDetail.view;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
+
+import sunday.app.bairead.view.MyTextView;
 
 /**
  * Created by sunday on 2017/3/17.

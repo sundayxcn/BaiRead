@@ -31,7 +31,7 @@ public abstract class ParseBase<T> {
     }
 
     public ParseBase<T> from(String fileName) throws IOException{
-        return from(fileName,UTF8);
+        return from(fileName,GB2312);
     }
 
     public abstract T parse();

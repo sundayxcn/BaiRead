@@ -44,7 +44,7 @@ public class BookReadActivity extends BaseActivity implements BookReadContract.V
         long bookId = intent.getLongExtra(BookReadContract.READ_EXTRA_ID, 0);
         BookInfo bookInfo = BookRepository.getInstance(getApplicationContext()).getBook(bookId);
         mPreferenceSetting = PreferenceSetting.getInstance(getApplicationContext());
-        mBookChapterCache = new BookSimpleCache(new BookDownService(FileManager.getInstance()),
+        mBookChapterCache = new BookSimpleCache(new BookDownService(),
                 new ParseBookChapter(),
                 new ParseChapterText());
         mBookReadPresenter = new BookReadPresenter(BookRepository.getInstance(getApplicationContext()),

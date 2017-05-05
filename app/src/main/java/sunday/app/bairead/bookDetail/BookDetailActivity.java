@@ -7,18 +7,19 @@ import android.view.View;
 import android.widget.TextView;
 
 import sunday.app.bairead.base.BaseActivity;
+import sunday.app.bairead.data.BookRepository;
 import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.R;
 import sunday.app.bairead.utils.Temp;
-import sunday.app.bairead.view.BookStatusView;
-import sunday.app.bairead.view.BookTypeView;
+import sunday.app.bairead.bookDetail.view.BookStatusView;
+import sunday.app.bairead.bookDetail.view.BookTypeView;
 
 /**
  * Created by sunday on 2017/3/7.
  */
 
-public class BookDetailActivity extends BaseActivity implements BookDetailPresenter.IBookDetailListener{
-    private BookInfo bookInfo;
+public class BookDetailActivity extends BaseActivity implements BookDetailContract.View{
+
     private TextView nameTView;
     private TextView authorTView;
     private TextView sourceTView;
@@ -33,15 +34,18 @@ public class BookDetailActivity extends BaseActivity implements BookDetailPresen
     private TextView mButtonCahceView;
 
 
+    private BookDetailContract.Presenter mPresenter;
+    private BookInfo mBookInfo;
     //private BookDetailPresenter bookDetailPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.book_detail_activity);
-        bookInfo = Temp.getInstance().getBookInfo();
+        mBookInfo = Temp.getInstance().getBookInfo();
         //Temp.getInstance().clearBookInfo();
         //bookDetailPresenter = new BookDetailPresenter(this,this);
+        mPresenter = new BookDetailPresenter(this);
         setTitle("图书简介");
         setupView();
         initView();
@@ -74,14 +78,14 @@ public class BookDetailActivity extends BaseActivity implements BookDetailPresen
             int id = v.getId();
             switch (id) {
                 case R.id.book_detail_activity_button_read:
-                    BookDetailPresenter.readBook(getApplicationContext(),bookInfo);
+                    BookDetailPresenter.readBook(getApplicationContext(),mBookInfo);
                     break;
                 case R.id.book_detail_activity_button_case:
-                    BookDetailPresenter.addToBookCase(getApplicationContext(),bookInfo);
+                    BookDetailPresenter.addToBookCase(getApplicationContext(),mBookInfo);
                     mButtonCaseView.setEnabled(false);
                     break;
                 case R.id.book_detail_activity_button_cache:
-                    BookDetailPresenter.cacheBook(bookInfo);
+                    BookDetailPresenter.cacheBook(mBookInfo);
                     break;
                 //case R.id.book_detail_activity_author:
                 default:
@@ -91,19 +95,34 @@ public class BookDetailActivity extends BaseActivity implements BookDetailPresen
     };
 
     private void initView(){
-        nameTView.setText(bookInfo.bookDetail.getName());
-        authorTView.setText(bookInfo.bookDetail.getAuthor());
-        chapterLatestTView.setText(bookInfo.bookDetail.getChapterLatest());
-        chapterTimeTView.setText(bookInfo.bookDetail.getUpdateTime());
-        mDescriptionTView.setText(bookInfo.bookDetail.getDescription());
-
-        if(BookDetailPresenter.isBookCase(getApplicationContext(),bookInfo)) {
+        nameTView.setText(mBookInfo.bookDetail.getName());
+        authorTView.setText(mBookInfo.bookDetail.getAuthor());
+        chapterLatestTView.setText(mBookInfo.bookDetail.getChapterLatest());
+        chapterTimeTView.setText(mBookInfo.bookDetail.getUpdateTime());
+        mDescriptionTView.setText(mBookInfo.bookDetail.getDescription());
+        long id = mBookInfo.bookDetail.getId();
+        if(BookRepository.getInstance(this).getBook(id) != null) {
             mButtonCaseView.setEnabled(false);
         }
 
-        int type = bookInfo.bookDetail.getType();
+        int type = mBookInfo.bookDetail.getType();
         bookTypeView.setType(type);
-        boolean status = bookInfo.bookDetail.isStatus();
+        boolean status = mBookInfo.bookDetail.isStatus();
         bookStatusView.setStatus(status);
+    }
+
+    @Override
+    public void setPresenter(BookDetailContract.Presenter presenter) {
+
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
     }
 }

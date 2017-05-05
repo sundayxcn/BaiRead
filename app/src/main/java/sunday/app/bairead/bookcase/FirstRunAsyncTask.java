@@ -10,6 +10,7 @@ import sunday.app.bairead.data.setting.BookChapter;
 import sunday.app.bairead.data.setting.BookDetail;
 import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.parse.ParseBase;
+import sunday.app.bairead.parse.ParseBookChapter;
 import sunday.app.bairead.parse.ParseBookDetail;
 import sunday.app.bairead.utils.FileManager;
 
@@ -22,12 +23,13 @@ public class FirstRunAsyncTask extends AsyncTask<Void, String, Void> {
     private File baseDir;
     private BookcaseContract.Presenter mPresenter;
     private ParseBase<BookDetail> mDetailParse;
-
+    private ParseBase<BookChapter> mChapterParse;
 
     public FirstRunAsyncTask(@NonNull File fileDir,@NonNull BookcaseContract.Presenter presenter) {
         baseDir = fileDir;
         mPresenter = presenter;
         mDetailParse = new ParseBookDetail();
+        mChapterParse = new ParseBookChapter();
     }
 
     @Override
@@ -48,6 +50,7 @@ public class FirstRunAsyncTask extends AsyncTask<Void, String, Void> {
                 if (file.exists()) {
                     BookInfo bookInfo = new BookInfo();
                     bookInfo.bookDetail = mDetailParse.from(fileName).parse();
+                    bookInfo.bookChapter = mChapterParse.from(fileName).parse();
                     if (bookInfo.bookDetail != null) {
                         mPresenter.addBook(bookInfo);
                         StringBuffer stringBuffer = new StringBuffer("加载第");
