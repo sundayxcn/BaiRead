@@ -9,13 +9,14 @@ import java.util.Comparator;
 
 import sunday.app.bairead.data.setting.BookChapter;
 import sunday.app.bairead.data.setting.BookDetail;
+import sunday.app.bairead.data.setting.Chapter;
 
 
 /**
  * Created by sunday on 2017/1/16.
  */
 
-public class ParseChapter extends ParseXml {
+public class ParseBookChapter extends ParseBase<BookChapter> {
     @Override
     public BookChapter parse() {
 
@@ -24,13 +25,13 @@ public class ParseChapter extends ParseXml {
         final String linkHead = getChapterLink(document);
         Elements elements =  document.select("dd");
         try {
-        ArrayList<BookChapter.Chapter> list = new ArrayList<>();
+        ArrayList<Chapter> list = new ArrayList<>();
         for(Element element : elements){
             String linkHref = element.select("a[href]").attr("href");
             String chapterTitle = element.select("a[href]").get(0).text();
             String[] cs = linkHref.split("/|\\.");
             String s = cs[cs.length-2];
-            list.add(new BookChapter.Chapter(linkHead,Long.valueOf(s),chapterTitle));
+            list.add(new Chapter(linkHead,Long.valueOf(s),chapterTitle));
         }
         sortAndRemoveDuplicate(list);
 
@@ -69,10 +70,10 @@ public class ParseChapter extends ParseXml {
         return null;
     }
 
-    private void sortAndRemoveDuplicate(ArrayList<BookChapter.Chapter> list){
-        Collections.sort(list, new Comparator<BookChapter.Chapter>() {
+    private void sortAndRemoveDuplicate(ArrayList<Chapter> list){
+        Collections.sort(list, new Comparator<Chapter>() {
             @Override
-            public int compare(BookChapter.Chapter o1, BookChapter.Chapter o2) {
+            public int compare(Chapter o1, Chapter o2) {
                 if(o1.getNum() < o2.getNum()){
                     return -1;
                 }else{

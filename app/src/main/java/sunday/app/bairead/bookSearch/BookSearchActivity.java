@@ -199,7 +199,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
                     mBookTextEditText.clearFocus();
                     bookSearchPresenter.addSearchHistory(getBaseContext(), name);
                     //bookSearchPresenter.searchBook(BookSearchActivity.this,name);
-                    bookSearchPresenter.searchBookDebug(name);
+                    //bookSearchPresenter.searchBookDebug(name);
                 }
             }
         });
@@ -226,7 +226,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
                 String name = (String) historyAdapter.getItem(position);
                 mBookTextEditText.setText(name);
                 mBookTextEditText.clearFocus();
-                bookSearchPresenter.searchBookDebug(name);
+                //bookSearchPresenter.searchBookDebug(name);
             }
         });
 

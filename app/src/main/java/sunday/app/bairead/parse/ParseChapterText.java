@@ -6,14 +6,21 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
+
 /**
  * Created by sunday on 2017/1/17.
  */
 
-public class ParseChapterText extends ParseXml {
+public class ParseChapterText extends ParseBase<String> {
 
     public static final String TYPE_CONTENT_READ = "content_read";
     public static final String TYPE_BOOK_READ = "content";
+
+
+    public ParseBase<String> from(String fileName) throws IOException {
+        return from(fileName,GB2312);
+    }
 
     @Override
     public String parse() {

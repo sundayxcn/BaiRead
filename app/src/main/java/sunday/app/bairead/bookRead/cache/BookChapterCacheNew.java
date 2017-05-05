@@ -11,18 +11,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import okhttp3.Response;
 import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 import sunday.app.bairead.bookRead.BookReadContract;
 import sunday.app.bairead.data.setting.BookChapter;
 import sunday.app.bairead.data.setting.BookInfo;
-import sunday.app.bairead.download.BookDownLoad;
+import sunday.app.bairead.data.setting.Chapter;
 import sunday.app.bairead.download.OKhttpManager;
-import sunday.app.bairead.parse.ParseChapter;
-import sunday.app.bairead.parse.ParseChapterText;
-import sunday.app.bairead.parse.ParseXml;
 import sunday.app.bairead.utils.FileManager;
 import sunday.app.bairead.utils.ThreadManager;
 
@@ -30,20 +23,19 @@ import sunday.app.bairead.utils.ThreadManager;
  * Created by zhongfei.sun on 2017/3/28.
  */
 
-public class BookChapterCacheNew implements BookReadContract.ChapterCache {
+public class BookChapterCacheNew implements IBookChapterCache {
 
     public static final String DIR = "chapterCache";
     public static final int CACHE_COUNT = 6;
     static final String TEMP_TEXT_NAME = FileManager.PATH + "/" + "temp" + "/" + "tempChapterText.html";
-    BookReadContract.IBookChapterCacheListener bookChapterCacheListener;
     Product product;
     /**
      * 生产者 - 内存缓存
      */
     boolean isProductRun;
     LinkedBlockingQueue<Integer> linkedBlockingQueue = new LinkedBlockingQueue(CACHE_COUNT);
-    private BookInfo bookInfo;
-    private ArrayList<BookChapter.Chapter> chapterArrayList;
+    private BookInfo mBookInfo;
+    private ArrayList<Chapter> chapterArrayList;
     private boolean online;
     private String fullDir;
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -54,28 +46,43 @@ public class BookChapterCacheNew implements BookReadContract.ChapterCache {
 
     @Override
     public void start(BookInfo bookInfo) {
-        this.bookInfo = bookInfo;
-        if (bookInfo.bookDetail.getId() == 0) {
+        mBookInfo = bookInfo;
+        if (mBookInfo.bookDetail.getId() == 0) {
             online = true;
         } else {
-            fullDir = FileManager.PATH + "/" + bookInfo.bookDetail.getName() + "/" + DIR;
+            fullDir = FileManager.PATH + "/" + mBookInfo.bookDetail.getName() + "/" + DIR;
             //FileManager.createDir(fullDir);
         }
-        chapterArrayList = bookInfo.bookChapter.getChapterList();
+        chapterArrayList = mBookInfo.bookChapter.getChapterList();
         //首次进入
         if (chapterArrayList == null || chapterArrayList.size() == 0) {
-
-            Observable.create((Observable.OnSubscribe<BookChapter>) subscriber -> subscriber.onNext(getChapter(bookInfo))).
-                    subscribeOn(Schedulers.io()).
-                    observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(bookChapter -> {
-                        if (bookChapter == null) {
-
-                        } else {
-                            chapterArrayList = bookChapter.getChapterList();
-                            initChapter();
-                        }
-                    });
+//            BookDown.getInstance().loadBookInfo(mBookInfo).
+//                    subscribeOn(Schedulers.io()).
+//                    observeOn(AndroidSchedulers.mainThread()).
+//                    filter(new Func1<BookInfo, Boolean>() {
+//                        @Override
+//                        public Boolean call(BookInfo bookInfo) {
+//                            return bookInfo.bookChapter != null;
+//                        }
+//                    }).subscribe(new Action1<BookInfo>() {
+//                        @Override
+//                        public void call(BookInfo bookInfo) {
+//                            bookInfo.bookChapter.setId(mBookInfo.bookDetail.getId());
+//                            bookInfo.bookChapter.setChapterIndex(mBookInfo.bookChapter.getChapterIndex());
+//                            bookInfo.bookChapter.setChapterPage(mBookInfo.bookChapter.getChapterPage());
+//                        }
+//                    });
+//            Observable.create((Observable.OnSubscribe<BookChapter>) subscriber -> subscriber.onNext(getChapter(bookInfo))).
+//                    subscribeOn(Schedulers.io()).
+//                    observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(bookChapter -> {
+//                        if (bookChapter == null) {
+//
+//                        } else {
+//                            chapterArrayList = bookChapter.getChapterList();
+//                            initChapter();
+//                        }
+//                    });
         } else {
             initChapter();
         }
@@ -91,11 +98,11 @@ public class BookChapterCacheNew implements BookReadContract.ChapterCache {
     }
 
     public String getBookName() {
-        return bookInfo.bookDetail.getName();
+        return mBookInfo.bookDetail.getName();
     }
 
     private void initChapter() {
-        int index = bookInfo.bookChapter.getChapterIndex();
+        int index = mBookInfo.bookChapter.getChapterIndex();
         loadReadText(index);
         if (product == null || !product.isAlive()) {
             product = new Product();
@@ -111,22 +118,15 @@ public class BookChapterCacheNew implements BookReadContract.ChapterCache {
         linkedBlockingQueue.clear();
         isProductRun = false;
         product = null;
-        //BookChapterCacheHolder.sInstance = null;
-        //try{
-        //product.interrupt();
-        //}catch (InterruptedIOException e){
-        //    e.printStackTrace();
-        //}
-        bookChapterCacheListener = null;
     }
 
     public void prevChapter(int index) {
-        updateChapterIndex(index);
+        //updateChapterIndex(index);
         loadReadText(index);
     }
 
     public void nextChapter(int index) {
-        updateChapterIndex(index);
+        //updateChapterIndex(index);
         loadReadText(index);
         try {
             if (linkedBlockingQueue.size() > 0) {
@@ -139,46 +139,45 @@ public class BookChapterCacheNew implements BookReadContract.ChapterCache {
 
     @Override
     public void setIndex(int index) {
-        updateChapterIndex(index);
+        //updateChapterIndex(index);
         initChapter();
     }
 
     @Override
-    public void cacheAllChapter() {
+    public void remove(int index) {
 
     }
 
     @Override
-    public void setBookChapterCacheListener(BookReadContract.IBookChapterCacheListener bookChapterCacheListener) {
-        this.bookChapterCacheListener = bookChapterCacheListener;
+    public Observable<Chapter> downloadChapter(int index) {
+        return null;
     }
 
-    public ArrayList<BookChapter.Chapter> getChapterArrayList() {
+    public ArrayList<Chapter> getChapterArrayList() {
         return chapterArrayList;
     }
 
     public int getChapterIndex() {
-        return bookInfo.bookChapter.getChapterIndex();
+        return mBookInfo.bookChapter.getChapterIndex();
     }
 
-    /**
-     * 从章节列表和书签列表调用
-     */
-    public void setChapterIndex(int index) {
-        updateChapterIndex(index);
-        initChapter();
-    }
+//    /**
+//     * 从章节列表和书签列表调用
+//     */
+//    public void setChapterIndex(int index) {
+//        //updateChapterIndex(index);
+//        initChapter();
+//    }
 
-    public void updateChapterIndex(int index) {
-        bookInfo.bookChapter.setChapterIndex(index);
-    }
+//    public void updateChapterIndex(int index) {
+//        bookInfo.bookChapter.setChapterIndex(index);
+//    }
 
     public void loadReadText(int chapterIndex) {
-        BookChapter.Chapter chapter = chapterArrayList.get(chapterIndex);
+        Chapter chapter = chapterArrayList.get(chapterIndex);
         if (chapter.getText() == null) {
             updateChapterText(chapterIndex);
         } else {
-            runSuccessRunnable(chapterIndex);
         }
     }
 
@@ -202,20 +201,21 @@ public class BookChapterCacheNew implements BookReadContract.ChapterCache {
     }
 
     private BookChapter getChapterByOnline(BookInfo bookInfo, String fileName) {
-        BookDownLoad bookDownLoad = new BookDownLoad();
-        BookInfo newBookInfo = bookDownLoad.updateBookInfo(bookInfo, fileName);
-        if (newBookInfo != null) {
-            return newBookInfo.bookChapter;
-        } else {
+//        BookDownLoad bookDownLoad = new BookDownLoad();
+//        BookInfo newBookInfo = bookDownLoad.updateBookInfo(bookInfo, fileName);
+//        if (newBookInfo != null) {
+//            return newBookInfo.bookChapter;
+//        } else {
             return null;
-        }
+//        }
+
     }
 
     private BookChapter getChapterByCurrent(BookInfo bookInfo) {
-        String fileName = BookDownLoad.getFullChapterFileName(bookInfo.bookDetail.getName());
+        String fileName = null;//getFullChapterFileName(bookInfo.bookDetail.getName());
         File file = new File(fileName);
         if (file.exists()) {
-            return ParseXml.createParse(ParseChapter.class).from(fileName).parse();
+            return getChapterByOnline(bookInfo, fileName);//ParseXml.createParse(ParseBookChapter.class).from(fileName).parse();
         } else {
             return getChapterByOnline(bookInfo, fileName);
         }
@@ -231,61 +231,40 @@ public class BookChapterCacheNew implements BookReadContract.ChapterCache {
     }
 
     private void updateChapterTextByOnline(final int chapterIndex) {
-        BookDownLoad.getInstance().updateBookChapterTextAsync(new BookDownLoad.DownloadListener<String>() {
-            @Override
-            public String getFileName() {
-                return online ? TEMP_TEXT_NAME : getChapterTextFileName(chapterIndex);
-            }
-
-            @Override
-            public String getLink() {
-                return chapterArrayList.get(chapterIndex).getLink();
-            }
-
-            @Override
-            public long getId() {
-                return bookInfo.bookDetail.getId();
-            }
-
-            @Override
-            public void onStart() {
-                runStartRunnable(chapterIndex);
-            }
-
-            @Override
-            public void onError(int errorCode) {
-                runFailedRunnable(chapterIndex, errorCode);
-            }
-
-            @Override
-            public void onResult(String result) {
-                chapterArrayList.get(chapterIndex).setText(result);
-                runSuccessRunnable(chapterIndex);
-                runFinishRunnable(chapterIndex);
-            }
-        });
+//        BookDown.getInstance().loadBookChapterText(mBookInfo,chapterIndex,isOnline()).
+//                subscribeOn(Schedulers.io()).
+//                observeOn(AndroidSchedulers.mainThread()).
+//                subscribe(s -> {
+//                    if(s != null) {
+//                        chapterArrayList.get(chapterIndex).setText(s);
+//                        runFailedRunnable(chapterIndex,0);
+//                    }else{
+//                        runSuccessRunnable(chapterIndex);
+//                    }
+//                }
+//                    );
     }
 
     private void updateChapterTextByCurrent(int chapterIndex) {
         String fileName = getChapterTextFileName(chapterIndex);
         File file = new File(fileName);
         if (file.exists()) {
-            String text = ParseXml.createParse(ParseChapterText.class).from(fileName).parse();
+            //String text = ParseXml.createParse(ParseChapterText.class).from(fileName).parse();
             //有一种情况是下载到一半网络中断造成文件异常。所以此处异常处理
-            if (text == null) {
-                FileManager.deleteFile(fileName);
-                updateChapterTextByOnline(chapterIndex);
-            } else {
-                chapterArrayList.get(chapterIndex).setText(text);
-                runSuccessRunnable(chapterIndex);
-                runFinishRunnable(chapterIndex);
-            }
+//            if (text == null) {
+//                FileManager.deleteFile(fileName);
+//                updateChapterTextByOnline(chapterIndex);
+//            } else {
+//                chapterArrayList.get(chapterIndex).setText(text);
+//                runSuccessRunnable(chapterIndex);
+//                runFinishRunnable(chapterIndex);
+//            }
         } else {
             updateChapterTextByOnline(chapterIndex);
         }
     }
 
-    private String getChapterText(int chapterIndex) {
+    public String getChapterText(int chapterIndex) {
         if (isOnline()) {
             return getChapterTextByOnline(chapterIndex, null);
         } else {
@@ -294,15 +273,15 @@ public class BookChapterCacheNew implements BookReadContract.ChapterCache {
     }
 
     private String getChapterTextByOnline(int chapterIndex, String fileName) {
-        String url = bookInfo.bookChapter.getChapter(chapterIndex).getLink();
-        return BookDownLoad.getInstance().updateBookChapterText(url, fileName);
+        String url = mBookInfo.bookChapter.getChapter(chapterIndex).getLink();
+        return null;//BookDownLoad.getInstance().updateBookChapterText(url, fileName);
     }
 
     private String getChapterTextByCurrent(int chapterIndex) {
         String fileName = getChapterTextFileName(chapterIndex);
         String text;
         if (new File(fileName).exists()) {
-            text = ParseXml.createParse(ParseChapterText.class).from(fileName).parse();
+            text = null;//ParseXml.createParse(ParseChapterText.class).from(fileName).parse();
         } else {
             text = getChapterTextByOnline(chapterIndex, fileName);
         }
@@ -313,7 +292,7 @@ public class BookChapterCacheNew implements BookReadContract.ChapterCache {
         return fullDir + "/" + chapterArrayList.get(index).getNum() + ".html";
     }
 
-    public boolean isChapterExists(BookChapter.Chapter chapter) {
+    public boolean isChapterExists(Chapter chapter) {
         String fileName = fullDir + "/" + chapter.getNum() + ".html";
         File file = new File(fileName);
         return file.exists();
@@ -323,55 +302,9 @@ public class BookChapterCacheNew implements BookReadContract.ChapterCache {
         handler.post(runnable);
     }
 
-    private void runStartRunnable(final int chapterIndex) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (chapterIndex == bookInfo.bookChapter.getChapterIndex()) {
-                    bookChapterCacheListener.updateStart();
-                }
-            }
-        });
-    }
-
-    private void runFinishRunnable(final int chapterIndex) {
-        //finishRunnable.setChapterIndex(chapterIndex);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (chapterIndex == bookInfo.bookChapter.getChapterIndex()) {
-                    bookChapterCacheListener.updateFinish();
-                }
-            }
-        });
-    }
-
-    private void runSuccessRunnable(final int chapterIndex) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (chapterIndex == bookInfo.bookChapter.getChapterIndex()) {
-                    BookChapter.Chapter chapter = chapterArrayList.get(chapterIndex);
-                    BookReadText readText = new BookReadText(chapter);
-                    bookChapterCacheListener.updateReadTextSuccess(readText);
-                }
-            }
-        });
-    }
-
-    private void runFailedRunnable(final int chapterIndex, final int errorCode) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (chapterIndex == bookInfo.bookChapter.getChapterIndex()) {
-                    bookChapterCacheListener.updateReadTextFailed(errorCode);
-                }
-            }
-        });
-    }
 
     public String getMarkTitle(int chapterIndex) {
-        return bookInfo.bookChapter.getChapter(chapterIndex).getTitle();
+        return mBookInfo.bookChapter.getChapter(chapterIndex).getTitle();
     }
 
     public String getMarkText(int chapterIndex) {
@@ -387,13 +320,13 @@ public class BookChapterCacheNew implements BookReadContract.ChapterCache {
         ThreadManager.getInstance().work(new Runnable() {
             @Override
             public void run() {
-                ArrayList<BookChapter.Chapter> list = bookInfo.bookChapter.getChapterList();
+                ArrayList<Chapter> list = bookInfo.bookChapter.getChapterList();
                 //首次进入书架，并没有读取章节
                 if (list == null) {
                     bookInfo.bookChapter = getChapter(bookInfo);
                     list = bookInfo.bookChapter.getChapterList();
                 }
-                for (BookChapter.Chapter chapter : list) {
+                for (Chapter chapter : list) {
                     final String fileName = fullDir + "/" + chapter.getNum() + ".html";
                     if (!isChapterExists(chapter)) {
                         final String url = chapter.getLink();
@@ -429,7 +362,7 @@ public class BookChapterCacheNew implements BookReadContract.ChapterCache {
                     Log.e("sunday", "product Chapter size=" + CACHE_COUNT);
                 } else {
                     String text = getChapterText(index);
-                    BookChapter.Chapter chapter = chapterArrayList.get(index);
+                    Chapter chapter = chapterArrayList.get(index);
                     chapter.setText(text);
                     try {
                         linkedBlockingQueue.put(index);

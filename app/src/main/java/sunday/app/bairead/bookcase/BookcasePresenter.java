@@ -1,6 +1,5 @@
 package sunday.app.bairead.bookcase;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -13,16 +12,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import sunday.app.bairead.R;
 import sunday.app.bairead.bookRead.cache.BookChapterCacheNew;
 import sunday.app.bairead.data.BookRepository;
 import sunday.app.bairead.data.setting.BookInfo;
-import sunday.app.bairead.download.BookDown;
-import sunday.app.bairead.download.BookDownLoad;
-import sunday.app.bairead.utils.ActivityUtils;
-import sunday.app.bairead.utils.FileManager;
 import sunday.app.bairead.utils.PreferenceKey;
 import sunday.app.bairead.utils.PreferenceSetting;
 
@@ -86,18 +82,36 @@ public class BookcasePresenter implements BookcaseContract.Presenter {
     public void updateBooks(List<BookInfo> list) {
         checkBookInit(list.size());
         for(final BookInfo bookInfo : list){
-            BookDown.getInstance().updateNewChapter(bookInfo).
+            BookInfoManager.getInstance().
+                    updateNewChapter(bookInfo).
                     subscribeOn(Schedulers.newThread()).
                     observeOn(AndroidSchedulers.mainThread()).
-                    subscribe(bookInfo1 -> {
-                        if(!bookInfo1.bookDetail.getChapterLatest().equals(bookInfo.bookDetail.getChapterLatest())){
-                            bookInfo.bookChapter.setChapterList(bookInfo1.bookChapter.getChapterList());
-                            bookInfo.bookDetail.setUpdateTime(bookInfo1.bookDetail.getUpdateTime());
-                            bookInfo.bookDetail.setChapterLatest(bookInfo1.bookChapter.getLastChapter().getTitle());
-                            mBookRepository.updateBook(bookInfo);
-                            mBookcaseView.refresh(bookInfo);
+                    subscribe(new Observer<BookInfo>() {
+                        @Override
+                        public void onCompleted() {
+
                         }
-                        checkFinish();
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            if(e instanceof NullPointerException){
+                                if(e.getMessage().contains("okhttp3.ResponseBody")){
+                                    mBookcaseView.showToast(R.string.network_exception);
+                                }
+                            }
+                            mBookcaseView.hideLoading();
+                        }
+
+                        @Override
+                        public void onNext(BookInfo newBookInfo) {
+                                if(!newBookInfo.bookDetail.getChapterLatest().equals(bookInfo.bookDetail.getChapterLatest())){
+                                    bookInfo.update(newBookInfo);
+                                    mBookRepository.updateBook(bookInfo);
+                                    mBookcaseView.refresh(bookInfo);
+                                }
+                                checkFinish();
+                        }
                     });
         }
 

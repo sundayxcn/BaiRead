@@ -23,6 +23,7 @@ import sunday.app.bairead.base.BaseFragment;
 import sunday.app.bairead.bookRead.adapter.ChapterAdapter;
 import sunday.app.bairead.bookRead.adapter.ReadAdapter;
 import sunday.app.bairead.data.setting.BookChapter;
+import sunday.app.bairead.data.setting.Chapter;
 import sunday.app.bairead.utils.PreferenceKey;
 import sunday.app.bairead.utils.PreferenceSetting;
 
@@ -58,7 +59,7 @@ public class BookReadChapterFragment extends BaseFragment implements BookReadCon
         String title = mPresenter.getBookInfo().bookDetail.getName();
         mListTitle.setText(title);
         mListButton.setText(getButtonText());
-        ArrayList<BookChapter.Chapter> list = (ArrayList<BookChapter.Chapter>) mPresenter.
+        ArrayList<Chapter> list = (ArrayList<Chapter>) mPresenter.
                 getBookInfo().
                 bookChapter.
                 getChapterList().
@@ -66,7 +67,7 @@ public class BookReadChapterFragment extends BaseFragment implements BookReadCon
         if (!isOrderDefault()) {
             Collections.reverse(list);
         }
-        mReadAdapter = new ChapterAdapter(getActivity(), list);
+        mReadAdapter = new ChapterAdapter(getActivity(), list,title);
         mList.setAdapter(mReadAdapter);
 
     }

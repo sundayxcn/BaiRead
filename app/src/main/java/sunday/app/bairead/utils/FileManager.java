@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,15 +20,18 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import sunday.app.bairead.download.IBookSave;
+
 /**
  * eidt Created by sunday on 2016/6/27.
  */
-public class FileManager {
+public class FileManager implements IBookSave{
     public static final String DIR = "BaiRead";
     //release版本用此地址
     //public static String PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath()+"/"+DIR;
     public static final String PATH = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+DIR;
     public static final String TEMP_DIR = PATH + "/" + "temp";
+    public static final String CHAPTER_DIR = "chapterCache";
     public static final String TEMP_BAIDU_SEARCH_FILE =  TEMP_DIR + "/" + "baiduSearchResult.html";
     public static final String TAG = "snuday";
     public static final String UTF8 = "UTF-8";
@@ -36,16 +40,16 @@ public class FileManager {
 
     private static FileManager INSTANCE = null;
 
-    private FileManager(Context context) {
-        String cacheDirPath = context.getCacheDir().getAbsolutePath();
+    private FileManager() {
+        //String cacheDirPath = context.getCacheDir().getAbsolutePath();
         createDir(PATH);
         createDir(TEMP_DIR);
-        createDir(cacheDirPath);
+        //createDir(cacheDirPath);
     }
 
-    public static FileManager getInstance(Context context) {
+    public static FileManager getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new FileManager(context);
+            INSTANCE = new FileManager();
         }
         return INSTANCE;
     }
@@ -59,9 +63,14 @@ public class FileManager {
     }
 
 
-    public static String createFileDir(String bookName){
-        return FileManager.createDir(FileManager.PATH +"/"+bookName);
+//    public static String createFileDir(String bookName){
+//        return FileManager.createDir(FileManager.PATH +"/"+bookName);
+//    }
+
+    public static String createBookCacheDir(String bookName){
+        return FileManager.createDir(FileManager.PATH +"/"+bookName + "/" + CHAPTER_DIR);
     }
+
 
 //    public void writeBookSearch(String fileName, byte[] bytes){
 //        String fileDirPath = PATH + "/" + DIR + "/" + fileName;
@@ -141,10 +150,10 @@ public class FileManager {
     }
 
 
-    public static void writeByte(String fileName, byte[] bytes) throws IOException {
-            FileOutputStream fileOutputStream = new FileOutputStream(fileName);
-            fileOutputStream.write(bytes);
-            fileOutputStream.close();
+    public static void writeByte(String fileName, byte[] bytes) throws IOException,FileNotFoundException {
+        FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+        fileOutputStream.write(bytes);
+        fileOutputStream.close();
     }
 
     /**
@@ -298,4 +307,10 @@ public class FileManager {
         }
     }
 
+    @Override
+    public void saveByte(String fileName, byte[] bytes) throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+        fileOutputStream.write(bytes);
+        fileOutputStream.close();
+    }
 }

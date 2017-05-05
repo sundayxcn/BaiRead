@@ -44,14 +44,11 @@ public class BookLocalData implements BookDataSource {
 
     @Override
     public Observable<List<BookInfo>> loadBooks(boolean refresh) {
-        return Observable.create(new Observable.OnSubscribe<List<BookInfo>>() {
-            @Override
-            public void call(Subscriber<? super List<BookInfo>> subscriber) {
-                List<BookInfo> bookList = new ArrayList<>();
-                loadBookDetails(bookList);
-                loadBookChapters(bookList);
-                subscriber.onNext(bookList);
-            }
+        return Observable.create(subscriber -> {
+            List<BookInfo> bookList = new ArrayList<>();
+            loadBookDetails(bookList);
+            loadBookChapters(bookList);
+            subscriber.onNext(bookList);
         });
     }
 
@@ -206,29 +203,35 @@ public class BookLocalData implements BookDataSource {
 
     @Override
     public void updateBook(BookInfo bookInfo) {
-        final ContentResolver cr = mContext.getContentResolver();
-        Uri uri = sunday.app.bairead.data.local.BookSetting.Detail.CONTENT_URI;
-        ContentValues values = new ContentValues();
-        String latest = bookInfo.bookDetail.getChapterLatest();
-        String updateTime = bookInfo.bookDetail.getUpdateTime();
-        boolean topCase = bookInfo.bookDetail.isTopCase();
-        values.put(sunday.app.bairead.data.local.BookSetting.Detail.CHAPTER_LATEST,latest);
-        values.put(sunday.app.bairead.data.local.BookSetting.Detail.UPDATE_TIME,updateTime);
-        values.put(sunday.app.bairead.data.local.BookSetting.Detail.TOP_CASE,topCase ? 1: 0);
-        String where = sunday.app.bairead.data.local.BookSetting.Detail._ID +" = ?" ;
-        cr.update(uri,values,where,new String[]{String.valueOf(bookInfo.bookDetail.getId())});
+        ThreadManager.getInstance().work(new Runnable() {
+            @Override
+            public void run() {
+                final ContentResolver cr = mContext.getContentResolver();
+                Uri uri = sunday.app.bairead.data.local.BookSetting.Detail.CONTENT_URI;
+                ContentValues values = new ContentValues();
+                String latest = bookInfo.bookDetail.getChapterLatest();
+                String updateTime = bookInfo.bookDetail.getUpdateTime();
+                boolean topCase = bookInfo.bookDetail.isTopCase();
+                values.put(BookSetting.Detail.CHAPTER_LATEST,latest);
+                values.put(BookSetting.Detail.UPDATE_TIME,updateTime);
+                values.put(BookSetting.Detail.TOP_CASE,topCase ? 1: 0);
+                String where = BookSetting.Detail._ID +" = ?" ;
+                cr.update(uri,values,where,new String[]{String.valueOf(bookInfo.bookDetail.getId())});
 
-        //final ContentResolver cr = mContext.getContentResolver();
-        uri = sunday.app.bairead.data.local.BookSetting.Chapter.CONTENT_URI;
-        values = new ContentValues();
-        int chapterCount = bookInfo.bookChapter.getChapterCount();
-        int chapterIndex = bookInfo.bookChapter.getChapterIndex();
-        int chaperPage = bookInfo.bookChapter.getChapterPage();
-        values.put(sunday.app.bairead.data.local.BookSetting.Chapter.COUNT,chapterCount);
-        values.put(sunday.app.bairead.data.local.BookSetting.Chapter.INDEX,chapterIndex);
-        values.put(sunday.app.bairead.data.local.BookSetting.Chapter.PAGE,chaperPage);
-        where = sunday.app.bairead.data.local.BookSetting.Chapter.ID +" = ?" ;
-        cr.update(uri,values,where,new String[]{String.valueOf(bookInfo.bookDetail.getId())});
+                //final ContentResolver cr = mContext.getContentResolver();
+                uri = sunday.app.bairead.data.local.BookSetting.Chapter.CONTENT_URI;
+                values = new ContentValues();
+                int chapterCount = bookInfo.bookChapter.getChapterCount();
+                int chapterIndex = bookInfo.bookChapter.getChapterIndex();
+                int chaperPage = bookInfo.bookChapter.getChapterPage();
+                values.put(BookSetting.Chapter.COUNT,chapterCount);
+                values.put(BookSetting.Chapter.INDEX,chapterIndex);
+                values.put(BookSetting.Chapter.PAGE,chaperPage);
+                where = BookSetting.Chapter.ID +" = ?" ;
+                cr.update(uri,values,where,new String[]{String.valueOf(bookInfo.bookDetail.getId())});
+            }
+        });
+
     }
 
     @Override

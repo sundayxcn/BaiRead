@@ -3,6 +3,7 @@ package sunday.app.bairead.bookRead;
 import android.support.annotation.NonNull;
 import android.widget.ListView;
 
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import sunday.app.bairead.R;
@@ -11,30 +12,34 @@ import sunday.app.bairead.bookRead.cache.BookChapterCacheNew;
 import sunday.app.bairead.bookRead.cache.BookReadSize;
 import sunday.app.bairead.bookRead.cache.BookReadText;
 import sunday.app.bairead.data.BookRepository;
+import sunday.app.bairead.data.setting.BookChapter;
 import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.data.setting.BookMarkInfo;
+import sunday.app.bairead.data.setting.Chapter;
+import sunday.app.bairead.bookcase.BookInfoManager;
+import sunday.app.bairead.bookRead.cache.IBookChapterCache;
 import sunday.app.bairead.utils.PreferenceSetting;
 
 /**
  * Created by sunday on 2017/3/6.
  */
 
-public class BookReadPresenter implements BookReadContract.Presenter, BookReadContract.IBookChapterCacheListener {
+public class BookReadPresenter implements BookReadContract.Presenter{
 
     private BookRepository mBookRepository;
     private BookInfo mBookInfo;
     private BookReadContract.View mBookReadView;
-    private BookReadContract.ChapterCache mChapterCache;
+    private IBookChapterCache mBookChapterCache;
     private PreferenceSetting mPreferenceSetting;
 
     public BookReadPresenter(@NonNull BookRepository bookRepository,
-                             @NonNull BookReadContract.ChapterCache chapterCache,
+                             @NonNull IBookChapterCache bookChapterCache,
                              @NonNull PreferenceSetting preferenceSetting,
                              @NonNull BookInfo bookInfo,
                              @NonNull BookReadContract.View view
     ) {
         mBookRepository = bookRepository;
-        mChapterCache = chapterCache;
+        mBookChapterCache = bookChapterCache;
         mBookInfo = bookInfo;
         mPreferenceSetting = preferenceSetting;
         mBookReadView = view;
@@ -43,13 +48,39 @@ public class BookReadPresenter implements BookReadContract.Presenter, BookReadCo
 
     @Override
     public void start() {
-        mChapterCache.start(mBookInfo);
         mBookReadView.textSizeChange(getBookReadSize());
+        if(mBookInfo.bookChapter.getChapterList() == null){
+            mBookReadView.showLoading();
+            BookInfoManager.getInstance().
+                    loadChapter(mBookInfo).
+                    subscribeOn(Schedulers.io()).
+                    observeOn(AndroidSchedulers.mainThread()).
+                    subscribe(new Subscriber<BookChapter>() {
+                @Override
+                public void onCompleted() {
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    mBookReadView.showToast(0);
+                }
+
+                @Override
+                public void onNext(BookChapter bookChapter) {
+                    mBookChapterCache.start(mBookInfo);
+                    loadChapter(mBookInfo.bookChapter.getChapterIndex());
+                }
+            });
+        }else{
+            mBookChapterCache.start(mBookInfo);
+            loadChapter(mBookInfo.bookChapter.getChapterIndex());
+        }
     }
 
 
     @Override
-    public void updateBookChapterIndex() {
+    public void updateBookChapterIndex(int index) {
+        mBookInfo.bookChapter.setChapterIndex(index);
         mBookRepository.updateBook(mBookInfo);
     }
 
@@ -159,7 +190,8 @@ public class BookReadPresenter implements BookReadContract.Presenter, BookReadCo
 
     @Override
     public void setChapterIndex(int index) {
-        mChapterCache.setIndex(index);
+        mBookChapterCache.setIndex(index);
+        loadChapter(index);
     }
 
     @Override
@@ -168,7 +200,7 @@ public class BookReadPresenter implements BookReadContract.Presenter, BookReadCo
         if (chapterIndex >= mBookInfo.bookChapter.getChapterCount()) {
             mBookReadView.showToast(R.string.last_chapter);
         } else {
-            mChapterCache.nextChapter(chapterIndex);
+            loadChapter(chapterIndex);
         }
     }
 
@@ -178,27 +210,40 @@ public class BookReadPresenter implements BookReadContract.Presenter, BookReadCo
         if (chapterIndex < 0) {
             mBookReadView.showToast(R.string.first_chapter);
         } else {
-            mChapterCache.nextChapter(chapterIndex);
+            loadChapter(chapterIndex);
         }
     }
 
-    @Override
-    public void updateStart() {
-        mBookReadView.showLoading();
+    private void loadChapter(int index){
+        updateBookChapterIndex(index);
+        Chapter chapter = mBookInfo.bookChapter.getChapter(index);
+        if(chapter.getText() != null){
+            mBookReadView.showChapter(new BookReadText(chapter));
+            mBookChapterCache.remove(index);
+        }else{
+            mBookReadView.showLoading();
+            mBookChapterCache.downloadChapter(index).
+                    subscribeOn(Schedulers.io()).
+                    observeOn(AndroidSchedulers.mainThread()).
+                    subscribe(new Subscriber<Chapter>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onNext(Chapter chapter) {
+                    mBookReadView.hideLoading();
+                    mBookReadView.showChapter(new BookReadText(chapter));
+                }
+            });
+        }
+
     }
 
-    @Override
-    public void updateFinish() {
-        mBookReadView.hideLoading();
-    }
-
-    @Override
-    public void updateReadTextSuccess(BookReadText readText) {
-        mBookReadView.showChapter(readText);
-    }
-
-    @Override
-    public void updateReadTextFailed(int errorCode) {
-        //mBookReadView.showToast();
-    }
 }

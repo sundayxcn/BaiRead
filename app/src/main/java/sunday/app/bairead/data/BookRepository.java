@@ -46,18 +46,12 @@ public class BookRepository implements BookDataSource{
     public Observable<List<BookInfo>> loadBooks(boolean refresh) {
         if(refresh){
             mBookRemoteData.clear();
-            mBookLocalData.loadBooks(refresh).
-                    subscribeOn(Schedulers.io()).
-                    observeOn(Schedulers.io()).
-                    flatMap(new Func1<List<BookInfo>, Observable<BookInfo>>() {
-                        @Override
-                        public Observable<BookInfo> call(List<BookInfo> bookInfos) {
-                            return Observable.from(bookInfos);
-                        }
-                    }).subscribe(bookInfo -> {
-                        mBookRemoteData.addBook(bookInfo);
-                    });
-            return mBookLocalData.loadBooks(refresh);
+            return mBookLocalData.loadBooks(refresh).filter(bookInfos -> {
+                for(BookInfo bookInfo : bookInfos){
+                    mBookRemoteData.addBook(bookInfo);
+                }
+                return true;
+            });
         }else{
             return mBookRemoteData.loadBooks(refresh);
         }

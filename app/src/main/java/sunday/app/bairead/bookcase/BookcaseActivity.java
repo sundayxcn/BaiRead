@@ -125,7 +125,7 @@ public class BookcaseActivity extends BaseActivity
                 @Override
                 public void onConfirmAsync() {
                     super.onConfirmAsync();
-                    FileManager.getInstance(BookcaseActivity.this).deleteAllCahce();
+                    FileManager.getInstance().deleteAllCahce();
                 }
             });
         } else if (id == R.id.nav_restore_config) {

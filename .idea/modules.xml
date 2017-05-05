@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BaiRead.iml" filepath="$PROJECT_DIR$/BaiRead.iml" />
-      <module fileurl="file://$PROJECT_DIR$/BaiReadNew.iml" filepath="$PROJECT_DIR$/BaiReadNew.iml" />
+      <module fileurl="file://D:\Android\workspace\BaiRead\BaiReadNew.iml" filepath="D:\Android\workspace\BaiRead\BaiReadNew.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

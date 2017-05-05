@@ -89,7 +89,7 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
         int color = ContextCompat.getColor(getActivity(), R.color.colorRed);
         swipeRefreshLayout.setColorSchemeColors(color);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            if (NetworkUtils.isNetworkConnect(getActivity())) {
+            if (true){//NetworkUtils.isNetworkConnect(getActivity())) {
                 if (bookcaseListAdapter.getBookInfoList() == null || bookcaseListAdapter.getBookInfoList().size() == 0) {
                     swipeRefreshLayout.setRefreshing(false);
                     showToast(R.string.book_case_no_book_tips);
@@ -329,7 +329,7 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
     }
 
     void inflateBook() {
-        File[] files = FileManager.getInstance(getActivity()).checkBookCache();
+        File[] files = FileManager.getInstance().checkBookCache();
         final int bookCount = files.length;
         if (bookCount > 0) {
             showConfirmDialog(

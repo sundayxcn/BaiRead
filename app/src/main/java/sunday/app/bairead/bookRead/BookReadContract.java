@@ -84,7 +84,7 @@ public interface BookReadContract {
 
         void updateTextSize(BookReadSize bookReadSize);
 
-        void updateBookChapterIndex();
+        void updateBookChapterIndex(int index);
 
         void updateBookChapterPage();
 
@@ -95,32 +95,5 @@ public interface BookReadContract {
         void showSetting();
 
         BookInfo getBookInfo();
-    }
-
-    interface IBookChapterCacheListener {
-        void updateStart();
-
-        void updateFinish();
-
-        void updateReadTextSuccess(BookReadText readText);
-
-        void updateReadTextFailed(int errorCode);
-    }
-
-    interface ChapterCache extends BaseCache {
-
-        void prevChapter(int index);
-
-        void nextChapter(int index);
-
-        void setIndex(int index);
-
-        //BookReadText getBookReadText(int index);
-
-        void cacheAllChapter();
-
-        void setBookChapterCacheListener(IBookChapterCacheListener bookChapterCacheListener);
-
-
     }
 }

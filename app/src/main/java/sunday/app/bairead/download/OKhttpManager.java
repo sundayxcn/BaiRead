@@ -2,9 +2,11 @@ package sunday.app.bairead.download;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
 import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -32,7 +34,12 @@ public class OKhttpManager{
 
             File cacheDirectory = new File(FileManager.PATH+"/"+"OKHttp3"+"/"+"cache");
             Cache cache = new Cache(cacheDirectory, cacheSize);
-            okHttpClient = new OkHttpClient.Builder().cache(cache).retryOnConnectionFailure(true).build();
+            okHttpClient = new OkHttpClient.Builder().
+                    cache(cache).
+                    retryOnConnectionFailure(true).
+                    connectTimeout(5000, TimeUnit.MILLISECONDS).
+                    readTimeout(5000,TimeUnit.MILLISECONDS).
+                    build();
         }
 
         return okHttpClient;
@@ -40,17 +47,14 @@ public class OKhttpManager{
 
     /**
      * 下载网址源码
-     * @param connectListener 下载过程的回调
+     * @param callback 下载过程的回调
      * */
-    public void connectUrl(OKHttpListener connectListener) {
+    public void connectUrl(String url, Callback callback) {
         //CacheControl cacheControl = new CacheControl.Builder().maxStale(365, TimeUnit.DAYS).build();
-        final Request request = new Request.Builder().url(connectListener.getLink())
-//                .cacheControl(cacheControl)
-//                .addHeader("If-None-Match","\"8051533a2e6cd21:0\"")
-//                .addHeader("If-Modified-Since","Wed, 11 Jan 2017 17:14:55 GMT")
+        final Request request = new Request.Builder().url(url)
                 .build();
         Call call = OKhttpManager.getInstance().getOkHttpClient().newCall(request);
-        call.enqueue(connectListener);
+        call.enqueue(callback);
     }
 
     /**

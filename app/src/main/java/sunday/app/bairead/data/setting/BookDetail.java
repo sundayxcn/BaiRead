@@ -348,4 +348,10 @@ public class BookDetail extends BookBase {
 
     }
 
+    
+    public void update(BookDetail bookDetail){
+        this.chapterLatest = bookDetail.getChapterLatest();
+        this.updateTime = bookDetail.getUpdateTime();
+    }
+
 }

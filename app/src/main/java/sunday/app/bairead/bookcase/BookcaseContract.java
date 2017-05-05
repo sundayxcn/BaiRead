@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import rx.Observable;
 import sunday.app.bairead.base.BaseView;
 import sunday.app.bairead.base.BookOperatorPresenter;
+import sunday.app.bairead.data.setting.BookChapter;
 import sunday.app.bairead.data.setting.BookInfo;
 
 /**
@@ -38,5 +40,10 @@ public interface BookcaseContract {
         void orderBooks(List<BookInfo> list);
 
         void topBooks(Map<Long,Boolean> map);
+    }
+
+    interface IBookInfoManager{
+        Observable<BookInfo> updateNewChapter(BookInfo bookInfo);
+        Observable<BookChapter> loadChapter(BookInfo bookInfo);
     }
 }

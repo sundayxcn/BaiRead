@@ -9,11 +9,16 @@ import sunday.app.bairead.base.BaseActivity;
 import sunday.app.bairead.bookRead.cache.BookChapterCacheNew;
 import sunday.app.bairead.bookRead.cache.BookReadSize;
 import sunday.app.bairead.bookRead.cache.BookReadText;
+import sunday.app.bairead.bookRead.cache.BookSimpleCache;
 import sunday.app.bairead.bookRead.view.BookReadSettingPanelView;
 import sunday.app.bairead.bookRead.view.BookReadView;
 import sunday.app.bairead.data.BookRepository;
 import sunday.app.bairead.data.setting.BookInfo;
+import sunday.app.bairead.download.BookDownService;
+import sunday.app.bairead.parse.ParseBookChapter;
+import sunday.app.bairead.parse.ParseChapterText;
 import sunday.app.bairead.utils.ActivityUtils;
+import sunday.app.bairead.utils.FileManager;
 import sunday.app.bairead.utils.PreferenceSetting;
 
 /**
@@ -38,16 +43,16 @@ public class BookReadActivity extends BaseActivity implements BookReadContract.V
         long bookId = intent.getLongExtra(BookReadContract.READ_EXTRA_ID, 0);
         BookInfo bookInfo = BookRepository.getInstance(getApplicationContext()).getBook(bookId);
         mPreferenceSetting = PreferenceSetting.getInstance(getApplicationContext());
+        BookSimpleCache bookSimpleCache = new BookSimpleCache(new BookDownService(FileManager.getInstance()),
+                new ParseBookChapter(),
+                new ParseChapterText());
         mBookReadPresenter = new BookReadPresenter(BookRepository.getInstance(getApplicationContext()),
-                BookChapterCacheNew.getInstance(),
+                bookSimpleCache,
                 mPreferenceSetting,
                 bookInfo,
                 this
         );
-
         mBookReadView.setPresenter(mBookReadPresenter);
-        BookChapterCacheNew.getInstance().setBookChapterCacheListener(mBookReadPresenter);
-
         mBookReadPresenter.start();
 
 

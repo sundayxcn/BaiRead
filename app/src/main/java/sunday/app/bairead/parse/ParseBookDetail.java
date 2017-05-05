@@ -1,6 +1,5 @@
 package sunday.app.bairead.parse;
 
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -8,16 +7,15 @@ import java.util.HashMap;
 
 import sunday.app.bairead.data.setting.BookDetail;
 
-
 /**
- * Created by sunday on 2017/1/16.
+ * Created by zhongfei.sun on 2017/5/2.
  */
 
-public class ParseDetail extends ParseXml {
+public class ParseBookDetail extends ParseBase<BookDetail>{
 
+
+    @Override
     public BookDetail parse() {
-
-        if(document == null) return null;
         //获取meta标签属性-start
         HashMap<String ,String> metaMap = new HashMap<>();
         Elements elements =  document.select("meta");
@@ -31,15 +29,6 @@ public class ParseDetail extends ParseXml {
                 metaMap.put(key,value);
             }
         }
-        //获取meta标签属性-end
-        //获取网站名称-start
-//        Elements elements2 = document.select("title");
-//        String[] ar = elements2.get(0).text().split("_");
-//        if(ar.length < 2){
-//            ar = elements2.get(0).text().split("-");
-//        }
-//        String title = ar[ar.length - 1];
-        //获取网站名称-end
 
         String readUrl = metaMap.get(BookDetail.Meta.CHAPTER_URL);
         if(readUrl == null || readUrl.length() == 0){

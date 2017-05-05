@@ -12,7 +12,9 @@ import java.util.List;
 
 import sunday.app.bairead.R;
 import sunday.app.bairead.bookRead.cache.BookChapterCacheNew;
+import sunday.app.bairead.bookcase.BookInfoManager;
 import sunday.app.bairead.data.setting.BookChapter;
+import sunday.app.bairead.data.setting.Chapter;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -21,10 +23,13 @@ import static android.view.View.VISIBLE;
  * Created by zhongfei.sun on 2017/4/20.
  */
 
-public class ChapterAdapter extends ReadAdapter<BookChapter.Chapter> {
+public class ChapterAdapter extends ReadAdapter<Chapter> {
 
-    public ChapterAdapter(Context context, List<BookChapter.Chapter> list) {
+    private String mBookName;
+
+    public ChapterAdapter(Context context, List<Chapter> list,String bookName) {
         super(context, list);
+        mBookName = bookName;
     }
 
     @Override
@@ -52,12 +57,12 @@ public class ChapterAdapter extends ReadAdapter<BookChapter.Chapter> {
             convertView.setTag(viewHolder);
         }
 
-        BookChapter.Chapter chapter = mList.get(position);
+        Chapter chapter = mList.get(position);
         ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 
         viewHolder.textView.setText(chapter.getTitle());
 
-        boolean isCache = BookChapterCacheNew.getInstance().isChapterExists(chapter);
+        boolean isCache = BookInfoManager.getInstance().isChapterExists(mBookName,chapter);
         viewHolder.cacheShowView.setVisibility(isCache ? VISIBLE : INVISIBLE);
 
         return convertView;

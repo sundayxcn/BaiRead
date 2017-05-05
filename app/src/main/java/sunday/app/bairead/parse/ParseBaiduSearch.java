@@ -4,6 +4,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sunday on 2017/3/17.
@@ -11,16 +12,15 @@ import java.util.ArrayList;
  *
  */
 
-public class ParseBaiduSearch extends ParseXml {
+public class ParseBaiduSearch extends ParseBase<List<String>> {
     @Override
-    public ArrayList<String> parse() {
-        ArrayList<String> list = new ArrayList<>();
+    public List<String> parse() {
+        List<String> list = new ArrayList<>();
         Elements elements = document.select("[class=result c-container ]");
         for(Element element : elements){
             String linkHref = element.select("a[href]").attr("href");
             list.add(linkHref);
         }
-
         return list;
     }
 }

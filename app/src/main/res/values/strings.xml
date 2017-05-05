@@ -24,6 +24,7 @@
     <string name="search_book_detail_button_cache_text">全本缓存</string>
 	<string name="book_search_book_dont_find_text">Sorry,找不到这本书，本软件暂时只支持精确搜索，请确认输入的书名是否正确</string>
     <string name="network_connect_failed">网络连接不上，请检查网络</string>
+    <string name="network_exception">网络异常，请检查网络</string>
     <string name="confirm">确定</string>
     <string name="cancel">取消</string>
     <string name="confirm_tips">在下明白了</string>

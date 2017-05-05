@@ -1,7 +1,5 @@
 package sunday.app.bairead.data.setting;
 
-import sunday.app.bairead.parse.ParseXml;
-
 /**
  * Created by sunday on 2016/12/8.
  */
@@ -29,7 +27,6 @@ public  class WebInfo{
     private String name;
     private String link;
     private String searchLink;
-    private ParseXml parseXml;
 
     public WebInfo(String name,String link,String searchLink){
         this.name = name;
@@ -46,15 +43,6 @@ public  class WebInfo{
         return searchLink;
     }
 
-
-
-    public void setParse(ParseXml parseXml){
-        this.parseXml = parseXml;
-    }
-
-    public ParseXml getParse(){
-        return parseXml;
-    }
 
 }
 
