@@ -2,16 +2,10 @@ package sunday.app.bairead.bookRead;
 
 import android.widget.ListView;
 
-import java.util.List;
-
-import rx.Observable;
-import sunday.app.bairead.base.BaseCache;
 import sunday.app.bairead.base.BasePresenter;
 import sunday.app.bairead.base.BaseView;
-import sunday.app.bairead.bookRead.cache.BookChapterCacheNew;
 import sunday.app.bairead.bookRead.cache.BookReadSize;
 import sunday.app.bairead.bookRead.cache.BookReadText;
-import sunday.app.bairead.data.setting.BookChapter;
 import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.data.setting.BookMarkInfo;
 
@@ -20,7 +14,7 @@ import sunday.app.bairead.data.setting.BookMarkInfo;
  */
 
 public interface BookReadContract {
-    String READ_ACTION = "sunday.app.bairead.readBook";
+
     String READ_EXTRA_ID = "bookId";
 
     interface ViewSub extends BaseView<Presenter> {

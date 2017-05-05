@@ -16,7 +16,6 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import sunday.app.bairead.R;
-import sunday.app.bairead.bookRead.cache.BookChapterCacheNew;
 import sunday.app.bairead.data.BookRepository;
 import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.utils.PreferenceKey;
@@ -158,7 +157,6 @@ public class BookcasePresenter implements BookcaseContract.Presenter {
     public void cacheBooks(List<Long> list) {
         for (long id : list) {
             BookInfo bookInfo = mBookRepository.getBook(id);
-            BookChapterCacheNew.getInstance().downloadAllChpater(bookInfo);
         }
     }
 

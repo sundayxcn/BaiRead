@@ -4,16 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import sunday.app.bairead.R;
-import sunday.app.bairead.bookRead.cache.BookChapterCacheNew;
 import sunday.app.bairead.bookcase.BookInfoManager;
-import sunday.app.bairead.data.setting.BookChapter;
 import sunday.app.bairead.data.setting.Chapter;
 
 import static android.view.View.INVISIBLE;

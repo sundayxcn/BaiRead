@@ -8,7 +8,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import sunday.app.bairead.R;
 import sunday.app.bairead.bookRead.adapter.MarkAdapter;
-import sunday.app.bairead.bookRead.cache.BookChapterCacheNew;
 import sunday.app.bairead.bookRead.cache.BookReadSize;
 import sunday.app.bairead.bookRead.cache.BookReadText;
 import sunday.app.bairead.data.BookRepository;
@@ -152,8 +151,8 @@ public class BookReadPresenter implements BookReadContract.Presenter{
         bookMarkInfo.setNameId(bookInfo.bookDetail.getId());
         int chapterIndex = bookInfo.bookChapter.getChapterIndex();
         bookMarkInfo.chapterIndex = chapterIndex;
-        bookMarkInfo.text = BookChapterCacheNew.getInstance().getMarkText(chapterIndex);
-        bookMarkInfo.title = BookChapterCacheNew.getInstance().getMarkTitle(chapterIndex);
+        //bookMarkInfo.text = BookChapterCacheNew.getInstance().getMarkText(chapterIndex);
+        //bookMarkInfo.title = BookChapterCacheNew.getInstance().getMarkTitle(chapterIndex);
         return bookMarkInfo;
     }
 

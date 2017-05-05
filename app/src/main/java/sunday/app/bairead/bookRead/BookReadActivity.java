@@ -6,10 +6,10 @@ import android.view.LayoutInflater;
 
 import sunday.app.bairead.R;
 import sunday.app.bairead.base.BaseActivity;
-import sunday.app.bairead.bookRead.cache.BookChapterCacheNew;
 import sunday.app.bairead.bookRead.cache.BookReadSize;
 import sunday.app.bairead.bookRead.cache.BookReadText;
 import sunday.app.bairead.bookRead.cache.BookSimpleCache;
+import sunday.app.bairead.bookRead.cache.IBookChapterCache;
 import sunday.app.bairead.bookRead.view.BookReadSettingPanelView;
 import sunday.app.bairead.bookRead.view.BookReadView;
 import sunday.app.bairead.data.BookRepository;
@@ -32,6 +32,7 @@ public class BookReadActivity extends BaseActivity implements BookReadContract.V
     private BookReadContract.ViewSetting mBookReadSetting;
     private PreferenceSetting mPreferenceSetting;
     private BookReadSize bookReadSize;
+    private IBookChapterCache mBookChapterCache;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +44,11 @@ public class BookReadActivity extends BaseActivity implements BookReadContract.V
         long bookId = intent.getLongExtra(BookReadContract.READ_EXTRA_ID, 0);
         BookInfo bookInfo = BookRepository.getInstance(getApplicationContext()).getBook(bookId);
         mPreferenceSetting = PreferenceSetting.getInstance(getApplicationContext());
-        BookSimpleCache bookSimpleCache = new BookSimpleCache(new BookDownService(FileManager.getInstance()),
+        mBookChapterCache = new BookSimpleCache(new BookDownService(FileManager.getInstance()),
                 new ParseBookChapter(),
                 new ParseChapterText());
         mBookReadPresenter = new BookReadPresenter(BookRepository.getInstance(getApplicationContext()),
-                bookSimpleCache,
+                mBookChapterCache,
                 mPreferenceSetting,
                 bookInfo,
                 this
@@ -62,8 +63,7 @@ public class BookReadActivity extends BaseActivity implements BookReadContract.V
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //bookReadPresenter.updateDataBookPage();
-        BookChapterCacheNew.getInstance().stop();
+        mBookChapterCache.stop();
     }
 
     @Override

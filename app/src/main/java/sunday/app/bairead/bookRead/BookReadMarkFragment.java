@@ -1,6 +1,5 @@
 package sunday.app.bairead.bookRead;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -18,13 +17,9 @@ import butterknife.OnItemClick;
 import butterknife.OnItemLongClick;
 import butterknife.Unbinder;
 import sunday.app.bairead.R;
-import sunday.app.bairead.base.BaseActivity;
 import sunday.app.bairead.base.BaseFragment;
-import sunday.app.bairead.bookRead.adapter.MarkAdapter;
 import sunday.app.bairead.bookRead.adapter.ReadAdapter;
-import sunday.app.bairead.bookRead.cache.BookChapterCacheNew;
 import sunday.app.bairead.data.setting.BookMarkInfo;
-import sunday.app.bairead.utils.PreferenceSetting;
 
 /**
  * Created by zhongfei.sun on 2017/4/19.
