@@ -27,6 +27,8 @@ public interface BookcaseContract {
         void showUpdateBook(List<BookInfo> list);
 
         void refresh(BookInfo bookInfo);
+
+        void reOrder();
     }
 
     interface Presenter extends BookOperatorPresenter{

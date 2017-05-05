@@ -20,6 +20,7 @@ import sunday.app.bairead.bookSearch.BookSearchActivity;
 import sunday.app.bairead.data.BookRepository;
 import sunday.app.bairead.utils.ActivityUtils;
 import sunday.app.bairead.utils.FileManager;
+import sunday.app.bairead.utils.PreferenceKey;
 import sunday.app.bairead.utils.PreferenceSetting;
 
 public class BookcaseActivity extends BaseActivity
@@ -28,7 +29,7 @@ public class BookcaseActivity extends BaseActivity
 
     private BookcasePresenter mBookcasePresenter;
     private BookcaseFragment mBookcaseFragment;
-
+    private PreferenceSetting mPreferenceSetting;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +48,9 @@ public class BookcaseActivity extends BaseActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mPreferenceSetting = PreferenceSetting.getInstance(getApplicationContext());
+
         mBookcaseFragment = new BookcaseFragment();
         ActivityUtils.addFragmentToActivity(getFragmentManager(),mBookcaseFragment,R.id.contentFrame);
         mBookcasePresenter = new BookcasePresenter(
@@ -106,9 +110,18 @@ public class BookcaseActivity extends BaseActivity
             intent.setClass(this, BookSearchActivity.class);
             startActivity(intent);
             return true;
-        } else {
-            //int order = comparatorManager.getOrder(id);
-            //reOrderList(order);
+        } else if(id == R.id.action_order_chapter_count){
+            mPreferenceSetting.putIntValue(PreferenceSetting.KEY_CASE_LIST_ORDER, PreferenceKey.ORDER_CHAPTER_COUNT);
+            mBookcaseFragment.reOrder();
+        }else if(id == R.id.action_order_author){
+            mPreferenceSetting.putIntValue(PreferenceSetting.KEY_CASE_LIST_ORDER, PreferenceKey.ORDER_AUTHOR);
+            mBookcaseFragment.reOrder();
+        }else if(id == R.id.action_order_update_time){
+            mPreferenceSetting.putIntValue(PreferenceSetting.KEY_CASE_LIST_ORDER, PreferenceKey.ORDER_UPDATE_TIME);
+            mBookcaseFragment.reOrder();
+        } else if(id == R.id.action_order_add_book){
+            mPreferenceSetting.putIntValue(PreferenceSetting.KEY_CASE_LIST_ORDER, PreferenceKey.ORDER_DEFAULT);
+            mBookcaseFragment.reOrder();
         }
 
         return super.onOptionsItemSelected(item);

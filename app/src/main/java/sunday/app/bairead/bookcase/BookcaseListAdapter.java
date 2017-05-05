@@ -100,7 +100,7 @@ public class BookcaseListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public BookInfo getItem(int position) {
         return bookInfos.get(position);
     }
 

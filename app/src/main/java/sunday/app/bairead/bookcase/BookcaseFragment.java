@@ -189,6 +189,12 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
     }
 
     @Override
+    public void reOrder() {
+        mPresenter.orderBooks(bookcaseListAdapter.getBookInfoList());
+        bookcaseListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void setPresenter(BookcaseContract.Presenter presenter) {
         mPresenter = presenter;
     }
@@ -238,8 +244,7 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
     @OnItemLongClick(R.id.bookcase_list_view)
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         if (!isToolBarShow()) {
-            long bookId = (long) bookcaseListAdapter.getItem(position);
-            BookInfo bookInfo = mPresenter.getBook(bookId);
+            BookInfo bookInfo =  bookcaseListAdapter.getItem(position);
             showCaseOperatorDialog(bookInfo);
         }
         return true;
