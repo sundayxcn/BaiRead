@@ -15,13 +15,8 @@ public class TimeFormat {
 
     public static final int HOUR_TO_MILL =  60 * 60 * 1000;
     public static String[] timeFormat = {
-//            "yyyy-MM-dd",
-//            "yyyy-MM-dd hh:mm",
             "yyyy-MM-dd hh:mm:ss",
-//            "yyyy/MM/dd",
-//            "yyyy/MM/dd hh:mm",
             "yyyy/MM/dd hh:mm:ss",
-
     };
 
     /**

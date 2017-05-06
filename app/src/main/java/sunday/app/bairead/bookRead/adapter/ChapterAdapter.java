@@ -9,7 +9,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import sunday.app.bairead.R;
-import sunday.app.bairead.bookcase.BookInfoManager;
+import sunday.app.bairead.manager.BookInfoManager;
 import sunday.app.bairead.data.setting.Chapter;
 
 import static android.view.View.INVISIBLE;

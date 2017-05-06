@@ -24,7 +24,7 @@ public interface BookcaseContract {
 
         void showNoBooks();
 
-        void showUpdateBook(List<BookInfo> list);
+        void showUpdateBook(int size);
 
         void refresh(BookInfo bookInfo);
 

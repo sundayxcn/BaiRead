@@ -1,4 +1,4 @@
-package sunday.app.bairead.bookcase;
+package sunday.app.bairead.manager;
 
 import android.support.annotation.NonNull;
 
@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import rx.Observable;
 import sunday.app.bairead.bookRead.cache.BookSimpleCache;
+import sunday.app.bairead.bookcase.BookcaseContract;
 import sunday.app.bairead.data.setting.BookChapter;
 import sunday.app.bairead.data.setting.BookDetail;
 import sunday.app.bairead.data.setting.BookInfo;

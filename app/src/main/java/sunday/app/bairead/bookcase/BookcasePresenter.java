@@ -12,12 +12,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import sunday.app.bairead.R;
 import sunday.app.bairead.data.BookRepository;
 import sunday.app.bairead.data.setting.BookInfo;
+import sunday.app.bairead.manager.BookInfoManager;
+import sunday.app.bairead.manager.ComparatorManager;
 import sunday.app.bairead.utils.PreferenceKey;
 import sunday.app.bairead.utils.PreferenceSetting;
 
@@ -30,7 +33,7 @@ public class BookcasePresenter implements BookcaseContract.Presenter {
     private BookRepository mBookRepository;
     private BookcaseContract.View mBookcaseView;
     private PreferenceSetting mPreferenceSetting;
-
+    private UpdateCount mUpdateCount;
 
     public BookcasePresenter(@NonNull BookRepository bookRepository,
                              @NonNull PreferenceSetting preferenceSetting,
@@ -60,26 +63,34 @@ public class BookcasePresenter implements BookcaseContract.Presenter {
     }
 
 
-    private void checkFinish(){
-        Log.e("sunday","atomicInteger.decrementAndGet() = "+atomicInteger.decrementAndGet());
-        if(atomicInteger.decrementAndGet() <= 0){
-            mBookcaseView.hideLoading();
+    public static class UpdateCount extends AtomicInteger{
+        private int updateCount = 0;
+        public UpdateCount(int size){
+            super(size);
+        }
+
+
+        public boolean isFinish(){
+            int count = decrementAndGet();
+            Log.e("sunday","atomicInteger.decrementAndGet() = "+count);
+            return count <=0 ;
+        }
+
+        public void addUpdate(){
+            updateCount++;
+        }
+
+        public int getUpdateCount(){
+            return updateCount;
         }
     }
-
-    private synchronized void checkBookInit(int size){
-        atomicInteger = new AtomicInteger(size);
-    }
-
-    private AtomicInteger atomicInteger;
-
 
     /**
      * 检查章节更新
      * **/
     @Override
     public void updateBooks(List<BookInfo> list) {
-        checkBookInit(list.size());
+        mUpdateCount = new UpdateCount(list.size());
         for(final BookInfo bookInfo : list){
             BookInfoManager.getInstance().
                     updateNewChapter(bookInfo).
@@ -108,8 +119,12 @@ public class BookcasePresenter implements BookcaseContract.Presenter {
                                     bookInfo.update(newBookInfo);
                                     mBookRepository.updateBook(bookInfo);
                                     mBookcaseView.refresh(bookInfo);
+                                    mUpdateCount.addUpdate();
                                 }
-                                checkFinish();
+                                if(mUpdateCount.isFinish()){
+                                    mBookcaseView.hideLoading();
+                                    mBookcaseView.showUpdateBook(mUpdateCount.getUpdateCount());
+                                }
                         }
                     });
         }

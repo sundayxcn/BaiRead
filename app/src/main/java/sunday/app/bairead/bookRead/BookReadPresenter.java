@@ -15,7 +15,7 @@ import sunday.app.bairead.data.setting.BookChapter;
 import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.data.setting.BookMarkInfo;
 import sunday.app.bairead.data.setting.Chapter;
-import sunday.app.bairead.bookcase.BookInfoManager;
+import sunday.app.bairead.manager.BookInfoManager;
 import sunday.app.bairead.bookRead.cache.IBookChapterCache;
 import sunday.app.bairead.utils.PreferenceSetting;
 

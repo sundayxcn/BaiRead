@@ -166,13 +166,12 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
     }
 
     @Override
-    public void showUpdateBook(List<BookInfo> list) {
-        if (list != null) {
+    public void showUpdateBook(int size) {
+        if(size > 0){
             showToast(R.string.update_finish);
-        } else {
+        }else{
             showToast(R.string.update_finish_no_new);
         }
-        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
