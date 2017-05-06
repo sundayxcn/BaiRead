@@ -1,0 +1,27 @@
+您的密钥库包含 1 个条目
+
+别名: bairead
+创建日期: 2017-3-12
+条目类型: PrivateKeyEntry
+证书链长度: 1
+证书[1]:
+所有者: CN=sunday, OU=company, O=china, L=shanghai, ST=shanghai, C=sh
+发布者: CN=sunday, OU=company, O=china, L=shanghai, ST=shanghai, C=sh
+序列号: d2244b4
+有效期开始日期: Sun Mar 12 20:34:10 CST 2017, 截止日期: Thu Mar 06 20:34:10 CST
+2042
+证书指纹:
+         MD5: 37:53:A0:E5:BE:AF:22:C4:A7:F7:3F:F0:25:75:8A:0D
+         SHA1: 13:A8:8D:4A:20:71:01:E3:F7:A6:D1:EA:91:71:2E:0F:E0:F7:44:F2
+         SHA256: 70:E8:B5:12:21:F9:A0:0E:50:EB:1C:7D:FD:19:BF:30:76:85:ED:3B:9B:19:43:4C:92:AB:CF:D5:69:CA:E3:20
+         签名算法名称: SHA256withRSA
+         版本: 3
+
+扩展:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: BB 40 6E C3 BD 7F 79 C3   09 5B 48 1E 4E 85 3E BA  .@n...y..[H.N.>.
+0010: C0 2F 1E FB                                        ./..
+]

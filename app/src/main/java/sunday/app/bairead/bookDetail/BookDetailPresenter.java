@@ -19,16 +19,21 @@ public class BookDetailPresenter implements BookDetailContract.Presenter{
         mView = view;
     }
 
-    public static void readBook(Context context,BookInfo bookInfo){
+
+    @Override
+    public void readBook(Context context, BookInfo bookInfo) {
         ActivityUtils.readBook(context,bookInfo.bookDetail.getId());
     }
 
-    public static void addToBookCase(Context context,BookInfo bookInfo){
+    @Override
+    public void addToCase(Context context, BookInfo bookInfo) {
         BookRepository.getInstance(context).addBook(bookInfo);
+        mView.disableCase();
     }
 
-    public static void cacheBook(BookInfo bookInfo){
-        //BookChapterCache.getInstance().downloadAllChpater(bookInfo);
+    @Override
+    public void cacheBook(Context context, BookInfo bookInfo) {
+
     }
 
     @Override

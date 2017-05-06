@@ -78,14 +78,13 @@ public class BookDetailActivity extends BaseActivity implements BookDetailContra
             int id = v.getId();
             switch (id) {
                 case R.id.book_detail_activity_button_read:
-                    BookDetailPresenter.readBook(getApplicationContext(),mBookInfo);
+                    mPresenter.readBook(getApplicationContext(),mBookInfo);
                     break;
                 case R.id.book_detail_activity_button_case:
-                    BookDetailPresenter.addToBookCase(getApplicationContext(),mBookInfo);
-                    mButtonCaseView.setEnabled(false);
+                    mPresenter.addToCase(getApplicationContext(),mBookInfo);
                     break;
                 case R.id.book_detail_activity_button_cache:
-                    BookDetailPresenter.cacheBook(mBookInfo);
+                    mPresenter.cacheBook(getApplicationContext(),mBookInfo);
                     break;
                 //case R.id.book_detail_activity_author:
                 default:
@@ -102,7 +101,7 @@ public class BookDetailActivity extends BaseActivity implements BookDetailContra
         mDescriptionTView.setText(mBookInfo.bookDetail.getDescription());
         long id = mBookInfo.bookDetail.getId();
         if(BookRepository.getInstance(this).getBook(id) != null) {
-            mButtonCaseView.setEnabled(false);
+            disableCase();
         }
 
         int type = mBookInfo.bookDetail.getType();
@@ -124,5 +123,10 @@ public class BookDetailActivity extends BaseActivity implements BookDetailContra
     @Override
     public void hideLoading() {
 
+    }
+
+    @Override
+    public void disableCase() {
+        mButtonCaseView.setEnabled(false);
     }
 }

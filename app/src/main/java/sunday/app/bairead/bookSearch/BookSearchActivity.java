@@ -17,11 +17,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import sunday.app.bairead.base.BaseActivity;
 import sunday.app.bairead.bookDetail.BookDetailActivity;
+import sunday.app.bairead.bookSearch.adapter.BookAdapter;
+import sunday.app.bairead.bookSearch.adapter.HistoryAdapter;
 import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.R;
+import sunday.app.bairead.download.BookDownService;
+import sunday.app.bairead.parse.ParseBaiduSearch;
+import sunday.app.bairead.parse.ParseBookDetail;
 import sunday.app.bairead.utils.Temp;
 import sunday.app.bairead.view.MaterialProgressView;
 
@@ -31,18 +37,10 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  * Created by sunday on 2017/3/6.
  */
 
-public class BookSearchActivity extends BaseActivity implements BookSearchPresenter.IBookSearchListener{
+public class BookSearchActivity extends BaseActivity implements BookSearchContract.View {
 
 
-    private BookSearchPresenter bookSearchPresenter;
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.book_search_activity);
-        setupView();
-        bookSearchPresenter = new BookSearchPresenter(this);
-    }
-
+    private BookSearchContract.Present mBookSearchPresenter;
     private ImageButton mBackButton;
     private EditText mBookTextEditText;
     private ListView historyListView;
@@ -59,126 +57,69 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
     private TextView mResultTextView;
     private MaterialProgressView materialProgressView;
 
-    public static void goBookDetail(Context context,BookInfo bookInfo){
-        Temp.getInstance().setBookInfo(bookInfo);
-        Intent intent = new Intent();
-        intent.setClass(context, BookDetailActivity.class);
-        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.book_search_activity);
+        setupView();
+        mBookSearchPresenter = new BookSearchPresenter(
+                this,
+                new BookDownService(),
+                new ParseBaiduSearch(),
+                new ParseBookDetail());
+        mBookSearchPresenter.start();
     }
 
-    private class HistoryAdapter extends BaseAdapter{
-
-        private ArrayList<String> list;
-
-
-        public HistoryAdapter(ArrayList<String> historyList){
-            this.list = historyList;
-        }
-
-        public void addItem(String name){
-            list.add(0,name);
-            notifyDataSetChanged();
-        }
-
-        public void clear(){
-            list.clear();
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return list.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null){
-                convertView = LayoutInflater.from(getBaseContext()).inflate(R.layout.history_list_item,null,false);
-                convertView.setMinimumHeight(200);
-            }
-
-            ((TextView)convertView).setText(list.get(position));
-            return convertView;
-        }
-    }
-
-
-    class ViewHolder {
-        private TextView nameTView;
-        private TextView authorTView;
-        private TextView sourceTView;
-        private TextView chapterLatestTView;
-        private TextView chapterTimeTView;
-
-        ViewHolder(View parent) {
-            nameTView = (TextView) parent.findViewById(R.id.search_fragment_list_item_name);
-            authorTView = (TextView) parent.findViewById(R.id.search_fragment_list_item_author);
-            sourceTView = (TextView) parent.findViewById(R.id.search_fragment_list_item_source);
-            chapterLatestTView = (TextView) parent.findViewById(R.id.search_fragment_list_item_chapter_latest);
-            chapterTimeTView = (TextView) parent.findViewById(R.id.search_fragment_list_item_chapter_time);
-        }
-
-        void setValue(BookInfo searchResult){
-            nameTView.setText(searchResult.bookDetail.getName());
-            authorTView.setText(searchResult.bookDetail.getAuthor());
-            //sourceTView.setText(sourceTView.getText()+info.get);
-            chapterLatestTView.setText(searchResult.bookDetail.getChapterLatest());
-            chapterTimeTView.setText(searchResult.bookDetail.getUpdateTime());
-        }
+    @Override
+    public void setPresenter(BookSearchContract.Present presenter) {
 
     }
 
-    private class BookAdapter extends BaseAdapter{
-        private ArrayList<BookInfo> list;
+    @Override
+    public void showLoading() {
+        showMaterialProgress();
+    }
 
-        public void initList(){
-            list = new ArrayList<>();
+    @Override
+    public void hideLoading() {
+        hideMaterialProgress();
+    }
+
+    @Override
+    public void showHistory(List<String> titleList) {
+        historyAdapter = new HistoryAdapter(getLayoutInflater(), new ArrayList<>());
+        historyListView.setAdapter(historyAdapter);
+        showHistoryPanel();
+    }
+
+    @Override
+    public void showResult(BookInfo bookInfo) {
+        if (bookAdapter == null) {
+            bookAdapter = new BookAdapter(getLayoutInflater(), new ArrayList<>());
+            bookListView.setAdapter(bookAdapter);
         }
+        showResultPanel();
+        bookAdapter.addItem(bookInfo);
+    }
 
-        public void addItem(BookInfo bookInfo){
-            list.add(bookInfo);
-        }
+    @Override
+    public void clearSearch() {
+        try {
+            bookAdapter.clearData();
+        } catch (NullPointerException e) {
 
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public BookInfo getItem(int position) {
-            return list.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null){
-                convertView = LayoutInflater.from(getBaseContext()).inflate(R.layout.search_list_item,null,false);
-                ViewHolder viewHolder = new ViewHolder(convertView);
-                convertView.setTag(viewHolder);
-            }
-            ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-            viewHolder.setValue(list.get(position));
-            return convertView;
         }
     }
 
-    private void setupView(){
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBookSearchPresenter.stop();
+    }
+
+    private void setupView() {
 
         materialProgressView = (MaterialProgressView) findViewById(R.id.book_search_activity_material_progress);
         mBackButton = (ImageButton) findViewById(R.id.book_search_button_back);
@@ -194,12 +135,10 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
             @Override
             public void onClick(View v) {
                 String name = mBookTextEditText.getText().toString();
-                if(name.length()!=0) {
-                    //mBookTextEditText.setText("");
+                if (name.length() != 0) {
                     mBookTextEditText.clearFocus();
-                    bookSearchPresenter.addSearchHistory(getBaseContext(), name);
-                    //bookSearchPresenter.searchBook(BookSearchActivity.this,name);
-                    //bookSearchPresenter.searchBookDebug(name);
+                    mBookSearchPresenter.addHistory(name);
+                    mBookSearchPresenter.search(name);
                 }
             }
         });
@@ -215,8 +154,7 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
         historyDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                historyAdapter.clear();
-                bookSearchPresenter.clearHistory(getBaseContext());
+                mBookSearchPresenter.clearHistory();
             }
         });
         historyListView = (ListView) mHistoryPanel.findViewById(R.id.book_search_history_list_view);
@@ -226,10 +164,9 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
                 String name = (String) historyAdapter.getItem(position);
                 mBookTextEditText.setText(name);
                 mBookTextEditText.clearFocus();
-                //bookSearchPresenter.searchBookDebug(name);
+                mBookSearchPresenter.search(name);
             }
         });
-
 
 
         mResultPanel = (RelativeLayout) findViewById(R.id.book_search_activity_result_panel);
@@ -238,100 +175,41 @@ public class BookSearchActivity extends BaseActivity implements BookSearchPresen
         bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //BookDownLoad.SearchResult searchResult = bookAdapter.getItem(position);
                 BookInfo bookInfo = bookAdapter.getItem(position);
-                goBookDetail(BookSearchActivity.this,bookInfo);
-//                bookSearchPresenter.updateBookDetail(bookInfo,BookSearchActivity.this);
+                mBookSearchPresenter.goBookDetail(getApplicationContext(), bookInfo);
             }
         });
 
     }
 
 
-    public void showMaterialProgress(){
+    public void showMaterialProgress() {
         materialProgressView.setVisibility(View.VISIBLE);
         materialProgressView.start();
     }
 
-    public void hideMaterialProgress(){
+    public void hideMaterialProgress() {
         materialProgressView.setVisibility(View.GONE);
         materialProgressView.stop();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        bookSearchPresenter.readSearchHistory(this);
-    }
-
-
-    @Override
     public void onBackPressed() {
-        if(materialProgressView.getVisibility() ==View.VISIBLE){
+        if (materialProgressView.getVisibility() == View.VISIBLE) {
             hideMaterialProgress();
-        }else{
+        } else {
             super.onBackPressed();
         }
     }
 
-    @Override
-    public void historyAddFinish(String name) {
-        historyAdapter.addItem(name);
-
+    public void showHistoryPanel() {
+        mHistoryPanel.setVisibility(View.VISIBLE);
+        mResultPanel.setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public void historyLoadFinish(ArrayList<String> historyList) {
-        historyAdapter = new HistoryAdapter(historyList);
-        historyListView.setAdapter(historyAdapter);
-    }
-
-    @Override
-    public void bookSearchStart() {
-        //showProgressDialog();
-        showMaterialProgress();
-        showHistoryPanel(false);
-        showResultPanel(true);
-        //if(bookAdapter == null){
-            bookAdapter = new BookAdapter();
-            bookAdapter.initList();
-            bookListView.setAdapter(bookAdapter);
-        //}
-    }
-
-    @Override
-    public void bookSearching(BookInfo bookInfo) {
-
-        bookAdapter.addItem(bookInfo);
-        bookAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void bookSearchFinish() {
-        hideMaterialProgress();
-        if(bookAdapter.getCount() == 0){
-            showTipsDialog(R.string.search_result_null);
-        }
-        //mResultTextView.setText("搜索完成");
-    }
-
-
-    @Override
-    public void bookSearchError() {
-        //hideProgressDialog();
-        hideMaterialProgress();
-        showToastNetworkUnConnect();
-    }
-
-    public void showHistoryPanel(boolean show){
-        int visibility = show ? View.VISIBLE : View.GONE;
-        mHistoryPanel.setVisibility(visibility);
-
-    }
-
-    public void showResultPanel(boolean show){
-        int visibility = show ? View.VISIBLE : View.GONE;
-        mResultPanel.setVisibility(visibility);
+    public void showResultPanel() {
+        mHistoryPanel.setVisibility(View.INVISIBLE);
+        mResultPanel.setVisibility(View.VISIBLE);
     }
 
 

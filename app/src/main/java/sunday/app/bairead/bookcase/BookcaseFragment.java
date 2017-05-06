@@ -291,7 +291,7 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
                     mPresenter.topBooks(map);
                     break;
                 case OPERATOR_DETAIL:
-                    BookSearchActivity.goBookDetail(getActivity(), bookInfo);
+                    ActivityUtils.gotoBookDetail(getActivity(), bookInfo);
                     break;
                 case OPERATOR_CACHE:
                     showConfirmDialog(R.string.cache_one_book_tips, (dialog, which) -> mPresenter.cacheBook(bookInfo.bookDetail.getId()));

@@ -110,40 +110,26 @@ public class FileManager{
 
 
 
-    public static ArrayList<String> readFileByLine(String fileName){
+    public static ArrayList<String> readFileByLine(String fileName) throws IOException {
         ArrayList<String> list = new ArrayList<>();
-        try{
-            File file = new File(fileName);
-            if(!file.exists()){
-                file.createNewFile();
-            }
-            InputStream inputStream = new FileInputStream(file);
-            InputStreamReader reader = new InputStreamReader(inputStream);
-            BufferedReader buffReader= new BufferedReader(reader);
-            String  str;
-            while ((str = buffReader.readLine()) != null) {
-                list.add(str);
-            }
-            inputStream.close();
-        }catch (Exception e) {
-            e.printStackTrace();
+        File file = new File(fileName);
+        InputStream inputStream = new FileInputStream(file);
+        InputStreamReader reader = new InputStreamReader(inputStream);
+        BufferedReader buffReader = new BufferedReader(reader);
+        String str;
+        while ((str = buffReader.readLine()) != null) {
+            list.add(str);
         }
+        inputStream.close();
+
         return list;
     }
 
-    public static void writeFileByLine(String fileName,String name) {
-        try {
-            File file = new File(fileName);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            FileWriter fileWriter = new FileWriter(fileName, true);
-            fileWriter.write(name);
-            fileWriter.write("\r\n");
-            fileWriter.close();
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+    public static void writeFileByLine(String fileName,String name) throws IOException {
+        FileWriter fileWriter = new FileWriter(fileName, true);
+        fileWriter.write(name);
+        fileWriter.write("\r\n");
+        fileWriter.close();
     }
 
 
@@ -251,23 +237,10 @@ public class FileManager{
         deleteFolder(file);
     }
 
-    public static void writeSearchFile(byte[] bytes) {
-        try {
-//            File file = new File(TEMP_BAIDU_SEARCH_FILE);
-//            if(!file.exists()){
-//                file.createNewFile();
-//            }
-            FileOutputStream fileOutputStream = new FileOutputStream(TEMP_BAIDU_SEARCH_FILE);
-            fileOutputStream.write(bytes);
-            fileOutputStream.close();
-            //Log.e(TAG,"writeByte"+SEARCH_FILE+"  bytes.length=="+bytes.length);
-        } catch(IOException e){
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-
-        }
+    public static void writeSearchFile(byte[] bytes) throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream(TEMP_BAIDU_SEARCH_FILE);
+        fileOutputStream.write(bytes);
+        fileOutputStream.close();
     }
 
     public void deleteAllCahce(){
