@@ -12,10 +12,8 @@ import sunday.app.bairead.data.setting.BookMarkInfo;
 
 public interface BookDataSource {
 
-    /**
-     * @param refresh 清除缓存/重新从数据库加载书籍
-     * **/
-    Observable<List<BookInfo>> loadBooks(boolean refresh);
+
+    Observable<List<BookInfo>> loadBooks();
 
     void addBook(BookInfo bookInfo);
 

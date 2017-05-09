@@ -128,6 +128,7 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
             if (isToolBarShow()) {
                 hideBookCaseToolBar();
             }
+            List<BookInfo> bookInfos = bookcaseListAdapter.getBookInfoList();
             bookcaseListAdapter.notifyDataSetChanged();
         }
     }
@@ -353,7 +354,7 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
                                 @Override
                                 protected void onPostExecute(Void aVoid) {
                                     super.onPostExecute(aVoid);
-                                    mPresenter.loadBooks(true);
+                                    mPresenter.loadBooks();
 //                                    if (bookcaseListAdapter != null) {
 //                                        bookcaseListAdapter.notifyDataSetChanged();
 //                                    }

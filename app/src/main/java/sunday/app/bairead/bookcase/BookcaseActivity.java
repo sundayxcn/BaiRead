@@ -27,7 +27,7 @@ public class BookcaseActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
 
-    private BookcasePresenter mBookcasePresenter;
+    private BookcaseContract.Presenter mBookcasePresenter;
     private BookcaseFragment mBookcaseFragment;
     private PreferenceSetting mPreferenceSetting;
     @Override
@@ -51,8 +51,9 @@ public class BookcaseActivity extends BaseActivity
 
         mPreferenceSetting = PreferenceSetting.getInstance(getApplicationContext());
 
-        mBookcaseFragment = new BookcaseFragment();
-        ActivityUtils.addFragmentToActivity(getFragmentManager(),mBookcaseFragment,R.id.contentFrame);
+        BookcaseFragment bookcaseFragment = new BookcaseFragment();
+        mBookcaseFragment = bookcaseFragment;
+        ActivityUtils.addFragmentToActivity(getFragmentManager(),bookcaseFragment,R.id.contentFrame);
         mBookcasePresenter = new BookcasePresenter(
                 BookRepository.getInstance(getApplicationContext()),
                 PreferenceSetting.getInstance(getApplicationContext()),

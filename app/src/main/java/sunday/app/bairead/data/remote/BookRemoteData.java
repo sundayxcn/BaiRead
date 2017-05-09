@@ -36,13 +36,8 @@ public class BookRemoteData implements BookDataSource {
     }
 
     @Override
-    public Observable<List<BookInfo>> loadBooks(boolean refresh) {
-        return Observable.create(new Observable.OnSubscribe<List<BookInfo>>() {
-            @Override
-            public void call(Subscriber<? super List<BookInfo>> subscriber) {
-                subscriber.onNext(mBookInfoList);
-            }
-        });
+    public Observable<List<BookInfo>> loadBooks() {
+        return Observable.create(subscriber -> subscriber.onNext(mBookInfoList));
     }
 
     @Override

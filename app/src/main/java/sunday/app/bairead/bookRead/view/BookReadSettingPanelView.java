@@ -185,16 +185,25 @@ public class BookReadSettingPanelView extends RelativeLayout implements BookRead
 
     }
 
-    public void show() {
-        setVisibility(VISIBLE);
-    }
+//    public void show() {
+//        setVisibility(VISIBLE);
+//    }
+//
+//    public void hide() {
+//        if (mBookSizeSetting != null) {
+//            removeView(mBookSizeSetting);
+//            mBookSizeSetting = null;
+//        }
+//        setVisibility(GONE);
+//    }
 
-    public void hide() {
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
         if (mBookSizeSetting != null) {
             removeView(mBookSizeSetting);
             mBookSizeSetting = null;
         }
-        setVisibility(GONE);
     }
 
     public boolean isShow() {

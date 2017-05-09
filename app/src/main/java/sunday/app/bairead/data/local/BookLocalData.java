@@ -43,7 +43,7 @@ public class BookLocalData implements BookDataSource {
     }
 
     @Override
-    public Observable<List<BookInfo>> loadBooks(boolean refresh) {
+    public Observable<List<BookInfo>> loadBooks() {
         return Observable.create(subscriber -> {
             List<BookInfo> bookList = new ArrayList<>();
             loadBookDetails(bookList);

@@ -47,9 +47,9 @@ public class BookcasePresenter implements BookcaseContract.Presenter {
 
 
     @Override
-    public void loadBooks(boolean refresh) {
+    public void loadBooks() {
         mBookcaseView.showLoading();
-        mBookRepository.loadBooks(refresh).
+        mBookRepository.loadBooks().
                 subscribeOn(Schedulers.io()).
                 observeOn(AndroidSchedulers.mainThread()).
                 subscribe(list -> {
@@ -200,13 +200,13 @@ public class BookcasePresenter implements BookcaseContract.Presenter {
             mBookRepository.getBook(key).bookDetail.setTopCase(check);
         }
         //需要排序
-        loadBooks(false);
+        loadBooks();
     }
 
 
     @Override
     public void start() {
-        loadBooks(true);
+        loadBooks();
     }
 
 

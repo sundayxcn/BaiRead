@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.List;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -23,6 +24,8 @@ public class BookRepository implements BookDataSource{
 
     private final BookDataSource mBookLocalData;
     private final BookDataSource mBookRemoteData;
+
+    private boolean mIscache;
 
     private BookRepository(BookDataSource bookLocalData,BookDataSource bookRemoteData){
         mBookLocalData = bookLocalData;
@@ -43,17 +46,17 @@ public class BookRepository implements BookDataSource{
     }
 
     @Override
-    public Observable<List<BookInfo>> loadBooks(boolean refresh) {
-        if(refresh){
-            mBookRemoteData.clear();
-            return mBookLocalData.loadBooks(refresh).filter(bookInfos -> {
+    public Observable<List<BookInfo>> loadBooks() {
+        if(mIscache){
+            return mBookRemoteData.loadBooks();
+        }else{
+            mIscache = true;
+            return mBookLocalData.loadBooks().flatMap(bookInfos -> {
                 for(BookInfo bookInfo : bookInfos){
                     mBookRemoteData.addBook(bookInfo);
                 }
-                return true;
+                return mBookRemoteData.loadBooks();
             });
-        }else{
-            return mBookRemoteData.loadBooks(refresh);
         }
 
     }

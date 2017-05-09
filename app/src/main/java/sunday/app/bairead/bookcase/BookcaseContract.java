@@ -33,7 +33,7 @@ public interface BookcaseContract {
 
     interface Presenter extends BookOperatorPresenter{
 
-        void loadBooks(boolean refresh);
+        void loadBooks();
 
         void updateBooks(List<BookInfo> list);
 

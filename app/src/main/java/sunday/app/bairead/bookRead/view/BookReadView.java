@@ -88,10 +88,11 @@ public class BookReadView extends RelativeLayout implements BookReadContract.Vie
 
     @Override
     public void onPageChange(int page, int pageCount) {
+        mPresenter.updateBookChapterPage(page);
         page++;
         String text = page + "/" + pageCount;
         mBookPage.setText(text);
-        mPresenter.updateBookChapterPage(page);
+
     }
 
 
