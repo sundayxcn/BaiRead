@@ -286,7 +286,7 @@ public class BookcaseFragment extends BaseFragment implements BookcaseContract.V
                 case OPERATOR_TOP:
                     Map<Long,Boolean> map = new HashMap();
                     boolean topCase = bookInfo.bookDetail.isTopCase();
-                    map.put(bookInfo.bookDetail.getId(),topCase);
+                    map.put(bookInfo.bookDetail.getId(),!topCase);
                     mPresenter.topBooks(map);
                     break;
                 case OPERATOR_DETAIL:

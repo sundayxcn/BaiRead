@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swipe_refresh_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-    <FrameLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/book_case_tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            layout="@layout/book_case_tool_bar"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp" />
 
         <ListView
             android:id="@+id/bookcase_list_view"
@@ -23,6 +26,6 @@
             android:divider="@null"
             android:dividerHeight="@dimen/book_case_list_item_div_height" />
 
-    </FrameLayout>
 
-</android.support.v4.widget.SwipeRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>
