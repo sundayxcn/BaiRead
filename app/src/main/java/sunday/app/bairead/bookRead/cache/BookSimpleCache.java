@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -58,6 +59,7 @@ public class BookSimpleCache implements IBookChapterCache {
     public void start(BookInfo bookInfo) {
         mBookInfo = bookInfo;
         fullDir = FileManager.PATH + "/" + mBookInfo.bookDetail.getName() + "/" + DIR;
+        FileManager.createDir(fullDir);
         endIndex = mBookInfo.bookChapter.getChapterCount() - 1 ;
         int index = bookInfo.bookChapter.getChapterIndex();
         if (product == null || !product.isAlive()) {
@@ -100,12 +102,14 @@ public class BookSimpleCache implements IBookChapterCache {
             Chapter chapter = mBookInfo.bookChapter.getChapter(index);
             String fileName = getFullName(chapter);
             try {
-            if(!isChapterExists(chapter)){
-                mBookDownload.downloadHtml(fileName,chapter.getLink());
-            }
-            String text = mChapterTextParse.from(fileName).parse();
-            chapter.setText(text);
-            } catch (IOException e) {
+                if(!isChapterExists(chapter)){
+                    mBookDownload.downloadHtml(fileName,chapter.getLink());
+                }
+                String text = mChapterTextParse.from(fileName).parse();
+                chapter.setText(text);
+            }catch (FileNotFoundException e){
+                subscriber.onError(e);
+            }catch (IOException e) {
                 subscriber.onError(e);
             }catch (NullPointerException e){
                 subscriber.onError(e);
@@ -113,7 +117,6 @@ public class BookSimpleCache implements IBookChapterCache {
             subscriber.onNext(chapter);
         });
     }
-
 
     public String getFullName(Chapter chapter){
         return fullDir + "/" + chapter.getNum() + ".html";

@@ -78,6 +78,11 @@ public class BookReadActivity extends BaseActivity implements BookReadContract.V
     }
 
     @Override
+    public void setPage(int page) {
+        mBookReadView.setPage(page);
+    }
+
+    @Override
     public void showSetting() {
         if(mBookReadSetting == null) {
             mBookReadSetting = (BookReadSettingPanelView) LayoutInflater.from(this).inflate(R.layout.book_read_setting_panel, null, false);

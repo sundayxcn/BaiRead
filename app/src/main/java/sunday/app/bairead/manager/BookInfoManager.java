@@ -3,6 +3,7 @@ package sunday.app.bairead.manager;
 import android.support.annotation.NonNull;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import rx.Observable;
@@ -53,21 +54,21 @@ public class BookInfoManager implements BookcaseContract.IBookInfoManager {
     /**
      * 返回一个新的bookinfo实例
      * present通过判断章节数目决定是否重新指向
-     * **/
+     **/
     @Override
     public Observable<BookInfo> updateNewChapter(BookInfo bookInfo) {
         return Observable.create(subscriber -> {
             String url = bookInfo.bookChapter.getChapterLink();
             String fileName = getFullChapterFileName(bookInfo.bookDetail.getName());
             try {
-                mBookDownload.downloadHtml(fileName,url);
+                mBookDownload.downloadHtml(fileName, url);
                 BookInfo newBookInfo = new BookInfo();
-                newBookInfo.bookDetail =  mBookDetailParse.from(fileName,ParseBase.GB2312).parse();
+                newBookInfo.bookDetail = mBookDetailParse.from(fileName, ParseBase.GB2312).parse();
                 newBookInfo.bookChapter = mBookChapterParse.from(fileName).parse();
                 subscriber.onNext(newBookInfo);
             } catch (IOException e) {
                 subscriber.onError(e);
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 subscriber.onError(e);
             }
         });
@@ -77,8 +78,12 @@ public class BookInfoManager implements BookcaseContract.IBookInfoManager {
     public Observable<BookChapter> loadChapter(BookInfo bookInfo) {
         return Observable.create(subscriber -> {
             try {
-                String fileName = getFullChapterFileName(bookInfo.bookDetail.getName());
-                BookChapter bookChapter = mBookChapterParse.from(fileName,ParseBase.GB2312).parse();
+                String bookName = bookInfo.bookDetail.getName();
+                String fileName = getFullChapterFileName(bookName);
+                if (!isDetailExists(bookName)) {
+                    mBookDownload.downloadHtml(fileName, bookInfo.bookChapter.getChapterLink());
+                }
+                BookChapter bookChapter = mBookChapterParse.from(fileName, ParseBase.GB2312).parse();
                 bookInfo.bookChapter.setChapterList(bookChapter.getChapterList());
                 subscriber.onNext(bookChapter);
             } catch (IOException e) {
@@ -87,21 +92,33 @@ public class BookInfoManager implements BookcaseContract.IBookInfoManager {
         });
     }
 
-    public boolean isChapterExists(String bookName,Chapter chapter) {
-        String fileName = FileManager.PATH +
-                "/" +
-                bookName +
-                "/" +
-                BookSimpleCache.DIR +
-                "/" +
-                chapter.getNum() +
-                ".html";
+    public boolean isDetailExists(String bookName) {
+        String fileDir = createChapterFileDir(bookName);
+        File file = new File(fileDir + "/" + BookChapter.FileName);
+        return file.exists();
+    }
+
+    public boolean isChapterExists(String bookName, Chapter chapter) {
+        String fileName = new StringBuffer().
+                append(FileManager.PATH).
+                append("/").
+                append(bookName).
+                append("/").
+                append(BookSimpleCache.DIR).
+                append("/").
+                append(chapter.getNum()).
+                append(".html").
+                toString();
 
         File file = new File(fileName);
         return file.exists();
     }
 
-    public String getFullChapterFileName(String bookName){
+    public String createChapterFileDir(String bookName) {
+        return FileManager.createDir(FileManager.PATH + "/" + bookName);
+    }
+
+    public String getFullChapterFileName(String bookName) {
         return FileManager.PATH + "/" + bookName + "/" + BookChapter.FileName;
     }
 }

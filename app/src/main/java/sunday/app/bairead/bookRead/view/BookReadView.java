@@ -122,6 +122,11 @@ public class BookReadView extends RelativeLayout implements BookReadContract.Vie
         removeView((View)view);
     }
 
+    @Override
+    public void setPage(int page) {
+        mBookText.initPage(page);
+    }
+
 
     @Override
     public void setPresenter(BookReadContract.Presenter presenter) {

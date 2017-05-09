@@ -30,6 +30,7 @@ public interface BookReadContract {
 
         void hideSetting(ViewSetting view);
 
+        void setPage(int page);
     }
 
     interface ViewSetting extends ViewSub {
@@ -44,6 +45,8 @@ public interface BookReadContract {
         void showChapter(BookReadText bookReadText);
 
         void textSizeChange(BookReadSize bookReadSize);
+
+        void setPage(int page);
 
         void showSetting();
 
