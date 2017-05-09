@@ -12,7 +12,7 @@ import sunday.app.bairead.utils.FileManager;
 public class BookDownService implements IBookDownload{
 
     @Override
-    public boolean downloadHtml(String fileName,String url) throws IOException {
+    public boolean downloadHtml(String fileName,String url) throws IOException,NullPointerException {
         Response response = OKhttpManager.getInstance().connectUrl(url);
         FileManager.getInstance().saveByte(fileName,response.body().bytes());
         response.body().close();

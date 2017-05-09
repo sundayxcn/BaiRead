@@ -63,7 +63,7 @@ public class BookReadActivity extends BaseActivity implements BookReadContract.V
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mBookChapterCache.stop();
+        mBookReadPresenter.stop();
     }
 
     @Override

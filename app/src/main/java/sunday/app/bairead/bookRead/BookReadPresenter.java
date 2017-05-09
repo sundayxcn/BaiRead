@@ -84,8 +84,9 @@ public class BookReadPresenter implements BookReadContract.Presenter{
     }
 
     @Override
-    public void updateBookChapterPage() {
-        mBookRepository.updateBook(mBookInfo);
+    public void updateBookChapterPage(int page) {
+        mBookInfo.bookChapter.setChapterPage(page);
+        //mBookRepository.updateBook(mBookInfo);
     }
 
     @Override
@@ -180,6 +181,12 @@ public class BookReadPresenter implements BookReadContract.Presenter{
         return mBookInfo;
     }
 
+    @Override
+    public void stop() {
+        mBookRepository.updateBook(mBookInfo);
+        mBookChapterCache.stop();
+    }
+
     public BookReadSize getBookReadSize() {
         int textSize = mPreferenceSetting.getIntValue(PreferenceSetting.KEY_TEXT_SIZE, 45);
         int lineSize = mPreferenceSetting.getIntValue(PreferenceSetting.KEY_LINE_SIZE, 45);
@@ -198,6 +205,8 @@ public class BookReadPresenter implements BookReadContract.Presenter{
         int chapterIndex = mBookInfo.bookChapter.getChapterIndex() + 1;
         if (chapterIndex >= mBookInfo.bookChapter.getChapterCount()) {
             mBookReadView.showToast(R.string.last_chapter);
+            //保存page
+            mBookRepository.updateBook(mBookInfo);
         } else {
             loadChapter(chapterIndex);
         }

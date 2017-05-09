@@ -13,6 +13,8 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import sunday.app.bairead.R;
+import sunday.app.bairead.data.setting.BookChapter;
 import sunday.app.bairead.data.setting.BookDetail;
 import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.download.IBookDownload;
@@ -32,18 +34,21 @@ public class BookSearchPresenter implements BookSearchContract.Present {
     private IBookDownload mBookDownload;
     private ParseBase<List<String>> mSearchParse;
     private ParseBase<BookDetail> mDetailParse;
+    private ParseBase<BookChapter> mChapterParse;
     private List<String> mHistoryList;
     private AtomicInteger atomicInteger;
 
     public BookSearchPresenter(@NonNull BookSearchContract.View view,
                                @NonNull IBookDownload bookDownload,
                                @NonNull ParseBase<List<String>> searchParse,
-                               @NonNull ParseBase<BookDetail> detailParse
+                               @NonNull ParseBase<BookDetail> detailParse,
+                               @NonNull ParseBase<BookChapter> chapterParse
     ) {
         mView = view;
         mBookDownload = bookDownload;
         mSearchParse = searchParse;
         mDetailParse = detailParse;
+        mChapterParse = chapterParse;
     }
 
     private void checkStart(int count) {
@@ -94,6 +99,8 @@ public class BookSearchPresenter implements BookSearchContract.Present {
                 subscriber.onNext(list);
             } catch (IOException e) {
                 subscriber.onError(e);
+            }catch (NullPointerException e){
+                subscriber.onError(e);
             }
         }).flatMap(strings -> Observable.from(strings)).map(url1 -> {
             String fileName = getBaiduLinkCodeString(url1);
@@ -101,8 +108,11 @@ public class BookSearchPresenter implements BookSearchContract.Present {
                 mBookDownload.downloadHtml(fileName, url1);
                 BookInfo bookInfo = new BookInfo();
                 bookInfo.bookDetail = mDetailParse.from(fileName).parse();
+                bookInfo.bookChapter = mChapterParse.from(fileName).parse();
                 return bookInfo;
             } catch (IOException e) {
+                e.printStackTrace();
+            }catch (NullPointerException e){
                 e.printStackTrace();
             }
             return null;
@@ -121,7 +131,13 @@ public class BookSearchPresenter implements BookSearchContract.Present {
 
             @Override
             public void onError(Throwable e) {
-                checkFinish();
+                if(e instanceof NullPointerException) {
+                    //搜索失败
+                    mView.hideLoading();
+                    mView.showToast(R.string.network_exception);
+                }else{
+                    checkFinish();
+                }
             }
 
             @Override

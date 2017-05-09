@@ -27,6 +27,7 @@ import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.R;
 import sunday.app.bairead.download.BookDownService;
 import sunday.app.bairead.parse.ParseBaiduSearch;
+import sunday.app.bairead.parse.ParseBookChapter;
 import sunday.app.bairead.parse.ParseBookDetail;
 import sunday.app.bairead.utils.Temp;
 import sunday.app.bairead.view.MaterialProgressView;
@@ -67,7 +68,8 @@ public class BookSearchActivity extends BaseActivity implements BookSearchContra
                 this,
                 new BookDownService(),
                 new ParseBaiduSearch(),
-                new ParseBookDetail());
+                new ParseBookDetail(),
+                new ParseBookChapter());
         mBookSearchPresenter.start();
     }
 

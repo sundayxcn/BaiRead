@@ -107,6 +107,8 @@ public class BookSimpleCache implements IBookChapterCache {
             chapter.setText(text);
             } catch (IOException e) {
                 subscriber.onError(e);
+            }catch (NullPointerException e){
+                subscriber.onError(e);
             }
             subscriber.onNext(chapter);
         });

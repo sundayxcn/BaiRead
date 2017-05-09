@@ -7,5 +7,5 @@ import java.io.IOException;
  */
 
 public interface IBookDownload {
-    boolean downloadHtml(String fileName,String url) throws IOException;
+    boolean downloadHtml(String fileName,String url) throws IOException,NullPointerException;
 }

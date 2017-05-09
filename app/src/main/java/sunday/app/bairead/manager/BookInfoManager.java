@@ -67,6 +67,8 @@ public class BookInfoManager implements BookcaseContract.IBookInfoManager {
                 subscriber.onNext(newBookInfo);
             } catch (IOException e) {
                 subscriber.onError(e);
+            }catch (NullPointerException e){
+                subscriber.onError(e);
             }
         });
     }

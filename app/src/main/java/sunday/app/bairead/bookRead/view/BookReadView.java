@@ -91,7 +91,7 @@ public class BookReadView extends RelativeLayout implements BookReadContract.Vie
         page++;
         String text = page + "/" + pageCount;
         mBookPage.setText(text);
-        mPresenter.updateBookChapterPage();
+        mPresenter.updateBookChapterPage(page);
     }
 
 

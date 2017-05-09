@@ -80,7 +80,7 @@ public interface BookReadContract {
 
         void updateBookChapterIndex(int index);
 
-        void updateBookChapterPage();
+        void updateBookChapterPage(int page);
 
         void goToChapterMenu();
 
@@ -89,5 +89,7 @@ public interface BookReadContract {
         void showSetting();
 
         BookInfo getBookInfo();
+
+        void stop();
     }
 }

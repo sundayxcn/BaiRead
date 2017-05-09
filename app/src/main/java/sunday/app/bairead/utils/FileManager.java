@@ -249,22 +249,19 @@ public class FileManager{
     }
 
 
-    public static final FileFilter fileFilter = new FileFilter() {
-        @Override
-        public boolean accept(File pathname) {
-            if (pathname.isDirectory()) {
-                if(pathname.getName().contains("cache")) {
-                    return false;
-                }else if(pathname.getName().contains("temp")){
-                    return false;
-                }else{
-                    return true;
-                }
-            } else {
+    public static final FileFilter fileFilter = pathname -> {
+        if (pathname.isDirectory()) {
+            if(pathname.getName().contains("OKHttp3")) {
                 return false;
+            }else if(pathname.getName().contains("temp")){
+                return false;
+            }else{
+                return true;
             }
-
+        } else {
+            return false;
         }
+
     };
 
     public File[] checkBookCache(){
