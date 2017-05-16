@@ -1,6 +1,7 @@
 package sunday.app.bairead.bookcase;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,7 +122,12 @@ public class BookcaseListAdapter extends BaseAdapter {
         BookInfo bookInfo = bookInfos.get(position);
         boolean isEdit = getEdit();
         boolean isCheck = isItemCheck(bookInfo.bookDetail.getId());
-        viewHolder.setValue(bookInfo, isEdit, isCheck);
+        try {
+            viewHolder.setValue(bookInfo, isEdit, isCheck);
+        }catch (NullPointerException e){
+            Log.e("sunday","bookInfo"+bookInfo);
+            e.printStackTrace();
+        }
         return convertView;
     }
 
