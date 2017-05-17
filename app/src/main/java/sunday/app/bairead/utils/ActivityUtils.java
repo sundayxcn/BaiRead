@@ -33,7 +33,8 @@ public class ActivityUtils {
     public static void readBook(Context context, long bookId){
         Intent intent = new Intent();
         intent.setClass(context.getApplicationContext(), BookReadActivity.class);
-        intent.putExtra(BookReadContract.READ_EXTRA_ID,bookId);
+        intent.putExtra(BookReadContract.READ_EXTRA_ID, bookId);
+        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 

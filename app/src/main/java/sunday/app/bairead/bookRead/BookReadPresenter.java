@@ -49,7 +49,7 @@ public class BookReadPresenter implements BookReadContract.Presenter{
     @Override
     public void start() {
         mBookReadView.textSizeChange(getBookReadSize());
-        mBookReadView.setPage(mBookInfo.bookChapter.getChapterPage());
+
         if(mBookInfo.bookChapter.getChapterList() == null){
             mBookReadView.showLoading();
             BookInfoManager.getInstance().
@@ -69,6 +69,7 @@ public class BookReadPresenter implements BookReadContract.Presenter{
 
                 @Override
                 public void onNext(BookChapter bookChapter) {
+                    mBookReadView.setPage(mBookInfo.bookChapter.getChapterPage());
                     mBookChapterCache.start(mBookInfo);
                     loadChapter(mBookInfo.bookChapter.getChapterIndex());
                 }

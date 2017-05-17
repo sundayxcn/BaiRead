@@ -6,6 +6,7 @@ import sunday.app.bairead.base.BaiReadApplication;
 import sunday.app.bairead.data.BookRepository;
 import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.utils.ActivityUtils;
+import sunday.app.bairead.utils.Temp;
 
 /**
  * Created by sunday on 2017/3/7.
@@ -22,6 +23,9 @@ public class BookDetailPresenter implements BookDetailContract.Presenter{
 
     @Override
     public void readBook(Context context, BookInfo bookInfo) {
+        if(bookInfo.bookDetail.getId() == 0){
+            Temp.getInstance().setBookInfo(bookInfo);
+        }
         ActivityUtils.readBook(context,bookInfo.bookDetail.getId());
     }
 

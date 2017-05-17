@@ -15,11 +15,13 @@ import sunday.app.bairead.bookRead.view.BookReadView;
 import sunday.app.bairead.data.BookRepository;
 import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.download.BookDownService;
+import sunday.app.bairead.manager.BookInfoManager;
 import sunday.app.bairead.parse.ParseBookChapter;
 import sunday.app.bairead.parse.ParseChapterText;
 import sunday.app.bairead.utils.ActivityUtils;
 import sunday.app.bairead.utils.FileManager;
 import sunday.app.bairead.utils.PreferenceSetting;
+import sunday.app.bairead.utils.Temp;
 
 /**
  * Created by sunday on 2016/12/21.
@@ -43,6 +45,9 @@ public class BookReadActivity extends BaseActivity implements BookReadContract.V
         Intent intent = getIntent();
         long bookId = intent.getLongExtra(BookReadContract.READ_EXTRA_ID, 0);
         BookInfo bookInfo = BookRepository.getInstance(getApplicationContext()).getBook(bookId);
+        if(bookId == 0) {
+            bookInfo = Temp.getInstance().getBookInfo();
+        }
         mPreferenceSetting = PreferenceSetting.getInstance(getApplicationContext());
         mBookChapterCache = new BookSimpleCache(new BookDownService(),
                 new ParseBookChapter(),
