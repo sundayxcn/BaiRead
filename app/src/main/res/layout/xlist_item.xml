@@ -15,13 +15,15 @@
         android:layout_height="wrap_content" />
 
     <ImageView
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:layout_toRightOf="@id/xlist_item_check_box"
         android:id="@+id/xlist_item_cover_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:scaleType="center"
+        android:scaleType="fitCenter"
         android:src="@drawable/default_book_detail_cover_image" />
 
     <sunday.app.bairead.bookcase.view.TopCaseView

@@ -11,6 +11,8 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,6 +25,8 @@ import butterknife.OnCheckedChanged;
 import sunday.app.bairead.R;
 import sunday.app.bairead.bookcase.view.TopCaseView;
 import sunday.app.bairead.data.setting.BookInfo;
+import sunday.app.bairead.download.BookCaseImageCache;
+import sunday.app.bairead.download.ImageCache;
 import sunday.app.bairead.utils.NewChapterShow;
 import sunday.app.bairead.utils.TimeFormat;
 
@@ -114,7 +118,7 @@ public class BookcaseListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.xlist_item, null);
-            ViewHolder viewHolder = new ViewHolder(this,convertView);
+            ViewHolder viewHolder = new ViewHolder(this,new BookCaseImageCache(context),convertView);
             viewHolders.add(viewHolder);
             convertView.setTag(viewHolder);
         }
@@ -152,9 +156,12 @@ public class BookcaseListAdapter extends BaseAdapter {
         private long bookId;
 
         private BookcaseListAdapter bookcaseListAdapter;
+        private ImageCache mImageCache;
 
-        ViewHolder(BookcaseListAdapter bookcaseListAdapter,View view) {
+        ViewHolder(BookcaseListAdapter bookcaseListAdapter,
+                   ImageCache imageCache,View view) {
             this.bookcaseListAdapter = bookcaseListAdapter;
+            mImageCache = imageCache;
             ButterKnife.bind(this, view);
         }
 
@@ -177,6 +184,9 @@ public class BookcaseListAdapter extends BaseAdapter {
             nameTView.setText(name);
             chapterLatestTView.setText(chapterLatest);
             chapterIndexTView.setText(chapterText);
+
+
+            mImageCache.loadImage(bookInfo.bookDetail.getCoverImageLink(),coverImageView);
 
             String timeString = TimeFormat.getTimeString(bookInfo.bookDetail.getUpdateTime());
             updateTimeTView.setText(timeString);
