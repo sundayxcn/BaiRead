@@ -2,7 +2,7 @@ package sunday.app.bairead.data.setting;
 
 import android.content.ContentValues;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sunday on 2016/12/12.
@@ -32,7 +32,7 @@ public class BookChapter extends BookBase {
     private int chapterIndex;
     /**
      * 阅读章节页
-     * */
+     */
     private int chapterPage;
 
     /**
@@ -44,7 +44,7 @@ public class BookChapter extends BookBase {
     private boolean current;
 
 
-    private ArrayList<Chapter> mChapterList;
+    private List<Chapter> mChapterList;
 
 
     private BookChapter(Builder builder) {
@@ -63,18 +63,18 @@ public class BookChapter extends BookBase {
         chapterIndex = index;
     }
 
-    public int getChapterPage(){
+    public int getChapterPage() {
         return chapterPage;
     }
 
-    public void setChapterPage(int page){
+    public void setChapterPage(int page) {
         chapterPage = page;
     }
 
     /**
-    * 书架要显示总章节，但是为了加快速度，章节列表没有在启动时加载，
-    * 所以count读写在数据库中，不是直接返回list的长度
-    * */
+     * 书架要显示总章节，但是为了加快速度，章节列表没有在启动时加载，
+     * 所以count读写在数据库中，不是直接返回list的长度
+     */
     public int getChapterCount() {
         return chapterCount;
     }
@@ -91,17 +91,17 @@ public class BookChapter extends BookBase {
         return mChapterList.get(index);
     }
 
-    public Chapter getCurrentChapter(){
+    public Chapter getCurrentChapter() {
         return mChapterList.get(chapterIndex);
     }
 
-    public void setChapterList(ArrayList<Chapter> list) {
-        mChapterList = list;
-        chapterCount = list.size();
+    public List<Chapter> getChapterList() {
+        return mChapterList;
     }
 
-    public ArrayList<Chapter> getChapterList() {
-        return mChapterList;
+    public void setChapterList(List<Chapter> list) {
+        mChapterList = list;
+        chapterCount = list.size();
     }
 
     public void onAddToDatabase(ContentValues values) {
@@ -115,6 +115,11 @@ public class BookChapter extends BookBase {
          */
         int source = current ? 1 : 0;
         values.put(BookSetting.Chapter.CURRENT, source);
+    }
+
+    public Chapter getLastChapter() {
+        int count = mChapterList.size();
+        return mChapterList.get(count - 1);
     }
 
     public static class Builder {
@@ -157,12 +162,6 @@ public class BookChapter extends BookBase {
             return new BookChapter(this);
         }
 
-    }
-
-
-    public Chapter getLastChapter(){
-        int count = mChapterList.size();
-        return mChapterList.get(count - 1);
     }
 
 
