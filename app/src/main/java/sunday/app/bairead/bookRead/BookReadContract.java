@@ -17,49 +17,16 @@ public interface BookReadContract {
 
     String READ_EXTRA_ID = "bookId";
 
-    interface ViewSub extends BaseView<Presenter> {
-    }
-
-    interface ViewRead extends ViewSub {
+    interface ViewRead extends BaseView<ReadPresenter> {
 
         void showChapter(BookReadText bookReadText);
 
         void textSizeChange(BookReadSize bookReadSize);
 
-        void showSetting(ViewSetting view);
-
-        void hideSetting(ViewSetting view);
-
         void setPage(int page);
     }
 
-    interface ViewSetting extends ViewSub {
-        void initTextSize(BookReadSize bookReadSize);
-    }
-
-    interface ViewMenu extends ViewSub {
-
-    }
-
-    interface View extends BaseView<Presenter> {
-        void showChapter(BookReadText bookReadText);
-
-        void textSizeChange(BookReadSize bookReadSize);
-
-        void setPage(int page);
-
-        void showSetting();
-
-        void hideSetting();
-
-        void showChapterMenu();
-
-        void showMarkMenu();
-
-    }
-
-
-    interface Presenter extends BasePresenter {
+    interface ReadPresenter extends BasePresenter {
 
         void setChapterIndex(int index);
 
@@ -67,6 +34,24 @@ public interface BookReadContract {
 
         void chapterPrev();
 
+        void updateTextSize();
+
+        void updateBookChapterIndex(int index);
+
+        void updateBookChapterPage(int page);
+
+        void stop();
+
+        void showSetting();
+
+    }
+
+
+    interface ViewSetting extends BaseView<SettingPresenter> {
+        void setReadSize(BookReadSize bookReadSize);
+    }
+
+    interface SettingPresenter extends BasePresenter {
         void addBookMark();
 
         void loadBookMark(ListView listView);
@@ -79,20 +64,18 @@ public interface BookReadContract {
 
         void downBook();
 
-        void updateTextSize(BookReadSize bookReadSize);
-
-        void updateBookChapterIndex(int index);
-
-        void updateBookChapterPage(int page);
-
-        void goToChapterMenu();
-
-        void goToMarkMenu();
-
         void showSetting();
 
-        BookInfo getBookInfo();
+        void hideSetting();
 
         void stop();
+
+        void updateReadSize(BookReadSize bookReadSize);
+
+    }
+
+    interface ReadSetting{
+        BookReadSize getReadSize();
+        void setReadSize(BookReadSize bookReadSize);
     }
 }

@@ -1,6 +1,7 @@
 package sunday.app.bairead.bookRead.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
@@ -27,9 +28,8 @@ public class BookReadView extends RelativeLayout implements BookReadContract.Vie
     TextView mBookTitle;
     BookTextView mBookText;
     TextView mBookPage;
-    //BookReadSettingPanelView mSettingPanelView;
 
-    private BookReadContract.Presenter mPresenter;
+    private BookReadContract.ReadPresenter mPresenter;
 
     public BookReadView(Context context) {
         super(context);
@@ -65,7 +65,7 @@ public class BookReadView extends RelativeLayout implements BookReadContract.Vie
                 } else if (y < displayHeight / 3) {
                     mBookText.readNext(false);
                 } else {
-                    mPresenter.showSetting();
+                    getContext().sendBroadcast(new Intent(BookReadActivity.ACTION_VIEW_SETTING));
                 }
                 break;
             default:
@@ -107,21 +107,6 @@ public class BookReadView extends RelativeLayout implements BookReadContract.Vie
         mBookText.setReadSize(bookReadSize);
     }
 
-    @Override
-    public void showSetting(BookReadContract.ViewSetting view) {
-        View realView = (View) view;
-        int index = indexOfChild(realView);
-        if(index == -1){
-            addView((View) view);
-        }else {
-            hideSetting(view);
-        }
-    }
-
-    @Override
-    public void hideSetting(BookReadContract.ViewSetting view) {
-        removeView((View)view);
-    }
 
     @Override
     public void setPage(int page) {
@@ -130,7 +115,7 @@ public class BookReadView extends RelativeLayout implements BookReadContract.Vie
 
 
     @Override
-    public void setPresenter(BookReadContract.Presenter presenter) {
+    public void setPresenter(BookReadContract.ReadPresenter presenter) {
         mPresenter = presenter;
     }
 

@@ -25,7 +25,7 @@ import sunday.app.bairead.data.setting.BookMarkInfo;
  * Created by zhongfei.sun on 2017/4/19.
  */
 
-public class BookReadMarkFragment extends BaseFragment implements BookReadContract.ViewMenu {
+public class BookReadMarkFragment extends BaseFragment{
 
     @BindView(R.id.book_read_setting_panel_list_title)
     TextView mListTitle;
@@ -34,7 +34,7 @@ public class BookReadMarkFragment extends BaseFragment implements BookReadContra
     @BindView(R.id.book_read_setting_panel_list)
     ListView mList;
 
-    private BookReadContract.Presenter mPresenter;
+
     private ReadAdapter mReadAdapter;
     private Unbinder unbinder;
     @Nullable
@@ -47,23 +47,7 @@ public class BookReadMarkFragment extends BaseFragment implements BookReadContra
     }
 
     private void init(){
-        mPresenter.loadBookMark(mList);
-    }
-
-
-    @Override
-    public void setPresenter(BookReadContract.Presenter presenter) {
-        mPresenter = presenter;
-    }
-
-    @Override
-    public void showLoading() {
-
-    }
-
-    @Override
-    public void hideLoading() {
-
+        //mPresenter.loadBookMark(mList);
     }
 
 
@@ -76,7 +60,7 @@ public class BookReadMarkFragment extends BaseFragment implements BookReadContra
     @OnItemClick(R.id.book_read_setting_panel_list)
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         BookMarkInfo bookMarkInfo = (BookMarkInfo) mList.getAdapter().getItem(position);
-        mPresenter.setChapterIndex(bookMarkInfo.chapterIndex);
+        //mPresenter.setChapterIndex(bookMarkInfo.chapterIndex);
     }
 
     @OnItemLongClick(R.id.book_read_setting_panel_list)
@@ -85,7 +69,7 @@ public class BookReadMarkFragment extends BaseFragment implements BookReadContra
         showConfirmDialog(R.string.mark_delete, (dialog, which) -> {
             mReadAdapter = (ReadAdapter) mList.getAdapter();
             mReadAdapter.removeItem(bookMarkInfo);
-            mPresenter.deleteBookMark(bookMarkInfo);
+            //mPresenter.deleteBookMark(bookMarkInfo);
         });
         return true;
     }
@@ -95,7 +79,7 @@ public class BookReadMarkFragment extends BaseFragment implements BookReadContra
         showConfirmDialog(R.string.mark_clear, (dialog, which) -> {
             mReadAdapter = (ReadAdapter) mList.getAdapter();
             mReadAdapter.clear();
-            mPresenter.clearBookMark();
+            //mPresenter.clearBookMark();
         });
     }
 }

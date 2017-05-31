@@ -3,6 +3,7 @@ package sunday.app.bairead.data.setting;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sunday on 2016/12/13.
@@ -40,7 +41,7 @@ public class BookInfo{
     public void update(BookInfo bookInfo){
         this.bookDetail.setChapterLatest(bookInfo.bookDetail.getChapterLatest());
         this.bookDetail.setUpdateTime(bookInfo.bookDetail.getUpdateTime());
-        ArrayList<Chapter> list = bookInfo.bookChapter.getChapterList();
+        List<Chapter> list = bookInfo.bookChapter.getChapterList();
         if(list == null || list.size() == 0){
             Log.e(TAG,"bookInfo copy update warning chapterList == null");
         }else {

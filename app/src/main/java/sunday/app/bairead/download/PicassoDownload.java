@@ -61,12 +61,12 @@ public class PicassoDownload implements Downloader {
 
     @Override
     public void shutdown() {
-        Cache cache = mClient.cache();
-        if (cache != null) {
-            try {
-                cache.close();
-            } catch (IOException ignored) {
-            }
-        }
+//        Cache cache = mClient.cache();
+//        if (cache != null) {
+//            try {
+//                cache.close();
+//            } catch (IOException ignored) {
+//            }
+//        }
     }
 }
