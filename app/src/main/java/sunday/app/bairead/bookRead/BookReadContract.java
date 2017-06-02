@@ -6,6 +6,7 @@ import sunday.app.bairead.base.BasePresenter;
 import sunday.app.bairead.base.BaseView;
 import sunday.app.bairead.bookRead.cache.BookReadSize;
 import sunday.app.bairead.bookRead.cache.BookReadText;
+import sunday.app.bairead.data.setting.BookChapter;
 import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.data.setting.BookMarkInfo;
 
@@ -74,8 +75,23 @@ public interface BookReadContract {
 
     }
 
+    interface ChapterPresenter extends BasePresenter{
+        void changeOrder();
+        void setChapterIndex(int index);
+    }
+
+    interface ChapterView extends BaseView<ChapterPresenter>{
+        void showOrder(boolean defaultOrder);
+        void showChapter(BookInfo bookInfo);
+    }
+
+
     interface ReadSetting{
         BookReadSize getReadSize();
         void setReadSize(BookReadSize bookReadSize);
+
+        boolean isDefaultChapterOrder();
+
+        void changeChapterOrder(boolean defaultOrder);
     }
 }

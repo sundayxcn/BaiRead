@@ -18,7 +18,6 @@ import sunday.app.bairead.download.BookDownService;
 import sunday.app.bairead.parse.ParseBookChapter;
 import sunday.app.bairead.parse.ParseChapterText;
 import sunday.app.bairead.utils.ActivityUtils;
-import sunday.app.bairead.utils.PreferenceSetting;
 import sunday.app.bairead.utils.Temp;
 
 /**
@@ -29,9 +28,12 @@ public class BookReadActivity extends BaseActivity{
 
     private BookReadContract.ReadPresenter mBookReadPresenter;
     private BookReadContract.SettingPresenter mBookSettingPresenter;
+    private BookReadContract.ChapterPresenter mChapterPresenter;
     private BookReadView mBookReadView;
     private BookReadSizeSetting mBookReadSetting;
     private IBookChapterCache mBookChapterCache;
+    private BookInfo mBookInfo;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +44,9 @@ public class BookReadActivity extends BaseActivity{
         registerBroadcast();
         Intent intent = getIntent();
         long bookId = intent.getLongExtra(BookReadContract.READ_EXTRA_ID, 0);
-        BookInfo bookInfo = BookRepository.getInstance(getApplicationContext()).getBook(bookId);
+        mBookInfo = BookRepository.getInstance(getApplicationContext()).getBook(bookId);
         if(bookId == 0) {
-            bookInfo = Temp.getInstance().getBookInfo();
+            mBookInfo = Temp.getInstance().getBookInfo();
         }
         mBookReadSetting = new BookReadSizeSetting(getApplicationContext());
         mBookChapterCache = new BookSimpleCache(new BookDownService(),
@@ -53,13 +55,13 @@ public class BookReadActivity extends BaseActivity{
         mBookReadPresenter = new BookReadPresenter(BookRepository.getInstance(getApplicationContext()),
                 mBookChapterCache,
                 mBookReadSetting,
-                bookInfo,
+                mBookInfo,
                 mBookReadView
         );
         mBookReadPresenter.start();
         //ViewGroup viewGroup = (ViewGroup) mBookReadView;
         mBookSettingPresenter = new BookSettingPresenter(BookRepository.getInstance(getApplicationContext()),
-                bookInfo,
+                mBookInfo,
                 mBookReadView,
                 mBookReadSetting
                 );
@@ -122,9 +124,9 @@ public class BookReadActivity extends BaseActivity{
 
     public void goToChapterMenu() {
         BookReadChapterFragment bookReadChapterFragment = new BookReadChapterFragment();
-        bookReadChapterFragment.setPreferenceSetting(PreferenceSetting.getInstance(getApplicationContext()));
         ActivityUtils.addFragmentToActivity(getFragmentManager(), bookReadChapterFragment,
                 R.id.book_read_parent);
+        mChapterPresenter = new BookReadChapterPresenter(mBookReadSetting,bookReadChapterFragment,mBookInfo);
     }
 
 

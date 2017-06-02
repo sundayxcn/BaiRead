@@ -3,6 +3,7 @@ package sunday.app.bairead.bookRead;
 import android.content.Context;
 
 import sunday.app.bairead.bookRead.cache.BookReadSize;
+import sunday.app.bairead.utils.PreferenceKey;
 import sunday.app.bairead.utils.PreferenceSetting;
 
 /**
@@ -11,8 +12,6 @@ import sunday.app.bairead.utils.PreferenceSetting;
 
 public class BookReadSizeSetting implements BookReadContract.ReadSetting {
     private PreferenceSetting mPreferenceSetting;
-
-
 
 
     BookReadSizeSetting(Context context){
@@ -33,6 +32,21 @@ public class BookReadSizeSetting implements BookReadContract.ReadSetting {
         mPreferenceSetting.putIntValue(PreferenceSetting.KEY_TEXT_SIZE, bookReadSize.textSize);
         mPreferenceSetting.putIntValue(PreferenceSetting.KEY_LINE_SIZE, bookReadSize.lineSize);
         mPreferenceSetting.putIntValue(PreferenceSetting.KEY_MARGIN_SIZE, bookReadSize.marginSize);
+    }
+
+    @Override
+    public boolean isDefaultChapterOrder() {
+        int order = mPreferenceSetting.getIntValue(PreferenceSetting.KEY_CHAPTER_ORDER, PreferenceKey.CHAPTER_ORDER_DEFAULT);
+        return order == PreferenceKey.CHAPTER_ORDER_DEFAULT;
+    }
+
+    @Override
+    public void changeChapterOrder(boolean defaultOrder) {
+        if (defaultOrder) {
+            mPreferenceSetting.putIntValue(PreferenceSetting.KEY_CHAPTER_ORDER, PreferenceKey.CHAPTER_ORDER_DEFAULT);
+        } else {
+            mPreferenceSetting.putIntValue(PreferenceSetting.KEY_CHAPTER_ORDER, PreferenceKey.CHAPTER_ORDER_REVERSE);
+        }
     }
 
 }

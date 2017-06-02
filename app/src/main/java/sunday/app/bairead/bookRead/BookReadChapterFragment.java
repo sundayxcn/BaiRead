@@ -25,6 +25,7 @@ import sunday.app.bairead.R;
 import sunday.app.bairead.base.BaseFragment;
 import sunday.app.bairead.bookRead.adapter.ChapterAdapter;
 import sunday.app.bairead.bookRead.adapter.ReadAdapter;
+import sunday.app.bairead.data.setting.BookInfo;
 import sunday.app.bairead.data.setting.Chapter;
 import sunday.app.bairead.utils.PreferenceKey;
 import sunday.app.bairead.utils.PreferenceSetting;
@@ -33,7 +34,7 @@ import sunday.app.bairead.utils.PreferenceSetting;
  * Created by zhongfei.sun on 2017/4/19.
  */
 
-public class BookReadChapterFragment extends BaseFragment {
+public class BookReadChapterFragment extends BaseFragment implements BookReadContract.ChapterView {
 
     @BindView(R.id.book_read_setting_panel_list_title)
     TextView mListTitle;
@@ -42,9 +43,18 @@ public class BookReadChapterFragment extends BaseFragment {
     @BindView(R.id.book_read_setting_panel_list)
     ListView mList;
 
-    private PreferenceSetting mPreferenceSetting;
+    private BookReadContract.ChapterPresenter mPresenter;
     private ReadAdapter mReadAdapter;
     private Unbinder unbinder;
+
+    private boolean isOrderDefault;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Nullable
     @Override
@@ -52,43 +62,10 @@ public class BookReadChapterFragment extends BaseFragment {
         Log.e("sunday", "BookReadChapterFragment-onCreateView");
         View root = inflater.inflate(R.layout.book_read_fragment, container, false);
         unbinder = ButterKnife.bind(this, root);
-        init();
-
+        mPresenter.start();
         return root;
     }
 
-
-    public void init() {
-        String title = "";//mPresenter.getBookInfo().bookDetail.getName();
-        mListTitle.setText(title);
-        mListButton.setText(getButtonText());
-        List<Chapter> list = new ArrayList<>();
-        //list.addAll(mPresenter.getBookInfo().bookChapter.getChapterList());
-        if (!isOrderDefault()) {
-            Collections.reverse(list);
-        }
-        mReadAdapter = new ChapterAdapter(getActivity(), list, title);
-        mList.setAdapter(mReadAdapter);
-
-    }
-
-    public void setPreferenceSetting(PreferenceSetting preferenceSetting) {
-        mPreferenceSetting = preferenceSetting;
-    }
-
-    public String getButtonText() {
-        if (isOrderDefault()) {
-            return getResources().getString(R.string.order_default);
-        } else {
-            return getResources().getString(R.string.order_revert);
-        }
-    }
-
-
-    public boolean isOrderDefault() {
-        int order = mPreferenceSetting.getIntValue(PreferenceSetting.KEY_CHAPTER_ORDER, PreferenceKey.CHAPTER_ORDER_DEFAULT);
-        return order == PreferenceKey.CHAPTER_ORDER_DEFAULT;
-    }
 
     @Override
     public void onDestroyView() {
@@ -98,7 +75,7 @@ public class BookReadChapterFragment extends BaseFragment {
 
     @OnItemClick(R.id.book_read_setting_panel_list)
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        int chapterIndex = isOrderDefault() ? position : mReadAdapter.getCount() - position - 1;
+        int chapterIndex = isOrderDefault ? position : mReadAdapter.getCount() - position - 1;
         getFragmentManager().popBackStack();
         Intent intent = new Intent(BookReadActivity.ACTION_CHAPTER_INDEX);
         intent.putExtra(BookReadActivity.ACTION_CHAPTER_EXTRA, chapterIndex);
@@ -107,21 +84,49 @@ public class BookReadChapterFragment extends BaseFragment {
 
     @OnClick(R.id.book_read_setting_panel_list_button)
     public void onClick(View view) {
-        int order = mPreferenceSetting.getIntValue(PreferenceSetting.KEY_CHAPTER_ORDER, PreferenceKey.CHAPTER_ORDER_DEFAULT);
-        if (order == PreferenceKey.CHAPTER_ORDER_DEFAULT) {
-            mPreferenceSetting.putIntValue(PreferenceSetting.KEY_CHAPTER_ORDER, PreferenceKey.CHAPTER_ORDER_REVERSE);
-        } else {
-            mPreferenceSetting.putIntValue(PreferenceSetting.KEY_CHAPTER_ORDER, PreferenceKey.CHAPTER_ORDER_DEFAULT);
+        mPresenter.changeOrder();
+    }
+
+    @Override
+    public void setPresenter(BookReadContract.ChapterPresenter presenter) {
+        mPresenter = presenter;
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showOrder(boolean defaultOrder) {
+        if (isOrderDefault != defaultOrder) {
+            isOrderDefault = defaultOrder;
+            Collections.reverse(mReadAdapter.getList());
+            mReadAdapter.notifyDataSetChanged();
         }
-        Collections.reverse(mReadAdapter.getList());
-        mReadAdapter.notifyDataSetChanged();
         mListButton.setText(getButtonText());
     }
 
-
-    @Override
-    protected boolean onBackPressed() {
-        return super.onBackPressed();
+    public String getButtonText() {
+        if (isOrderDefault) {
+            return getResources().getString(R.string.order_default);
+        } else {
+            return getResources().getString(R.string.order_revert);
+        }
     }
 
+    @Override
+    public void showChapter(BookInfo bookInfo) {
+        String title = bookInfo.bookDetail.getName();
+        List list = new ArrayList();
+        list.addAll(bookInfo.bookChapter.getChapterList());
+        mReadAdapter = new ChapterAdapter(getActivity(), list, title);
+        mList.setAdapter(mReadAdapter);
+        mListTitle.setText(title);
+    }
 }
