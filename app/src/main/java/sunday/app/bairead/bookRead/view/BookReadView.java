@@ -1,5 +1,6 @@
 package sunday.app.bairead.bookRead.view;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import sunday.app.bairead.R;
+import sunday.app.bairead.base.BaseActivity;
 import sunday.app.bairead.bookRead.BookReadActivity;
 import sunday.app.bairead.bookRead.BookReadContract;
 import sunday.app.bairead.bookRead.cache.BookReadSize;
@@ -121,16 +123,33 @@ public class BookReadView extends RelativeLayout implements BookReadContract.Vie
 
     @Override
     public void showLoading() {
-
+        showProgressDialog();
     }
 
     @Override
     public void hideLoading() {
-
+        hideProgressDialog();
     }
 
     @Override
     public void showToast(@NonNull @StringRes int resId) {
+        Toast.makeText(getContext(),resId,Toast.LENGTH_SHORT).show();
+    }
+    ProgressDialog mProgressDialog;
 
+    protected void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(getContext());
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            mProgressDialog.setMessage("数据加载中，请稍后");
+        }
+        mProgressDialog.show();
+    }
+
+    protected void hideProgressDialog(){
+        if(mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            //progressDialog = null;
+        }
     }
 }
