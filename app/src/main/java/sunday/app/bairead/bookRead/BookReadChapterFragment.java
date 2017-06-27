@@ -104,7 +104,7 @@ public class BookReadChapterFragment extends BaseFragment implements BookReadCon
 
     @Override
     public void showOrder(boolean defaultOrder) {
-        if (isOrderDefault != defaultOrder) {
+        if (isOrderDefault != defaultOrder && mReadAdapter != null) {
             isOrderDefault = defaultOrder;
             Collections.reverse(mReadAdapter.getList());
             mReadAdapter.notifyDataSetChanged();
@@ -126,6 +126,9 @@ public class BookReadChapterFragment extends BaseFragment implements BookReadCon
         List list = new ArrayList();
         list.addAll(bookInfo.bookChapter.getChapterList());
         mReadAdapter = new ChapterAdapter(getActivity(), list, title);
+        if(!isOrderDefault){
+            Collections.reverse(mReadAdapter.getList());
+        }
         mList.setAdapter(mReadAdapter);
         mListTitle.setText(title);
     }

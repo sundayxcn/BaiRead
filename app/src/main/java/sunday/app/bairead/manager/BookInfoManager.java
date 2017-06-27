@@ -56,7 +56,7 @@ public class BookInfoManager implements BookcaseContract.IBookInfoManager {
      * present通过判断章节数目决定是否重新指向
      **/
     @Override
-    public Observable<BookInfo> updateNewChapter(BookInfo bookInfo) {
+    public Observable<BookInfo> updateNewChapter(final BookInfo bookInfo) {
         return Observable.create(subscriber -> {
             String url = bookInfo.bookChapter.getChapterLink();
             String fileName = getFullChapterFileName(bookInfo.bookDetail.getName());

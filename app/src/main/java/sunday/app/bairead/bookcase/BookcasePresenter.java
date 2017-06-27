@@ -91,10 +91,10 @@ public class BookcasePresenter implements BookcaseContract.Presenter {
     @Override
     public void updateBooks(List<BookInfo> list) {
         mUpdateCount = new UpdateCount(list.size());
-        for(final BookInfo bookInfo : list){
+        for(BookInfo bookInfo : list){
             BookInfoManager.getInstance().
                     updateNewChapter(bookInfo).
-                    subscribeOn(Schedulers.io()).
+                    subscribeOn(Schedulers.newThread()).
                     observeOn(AndroidSchedulers.mainThread()).
                     subscribe(new Observer<BookInfo>() {
                         @Override

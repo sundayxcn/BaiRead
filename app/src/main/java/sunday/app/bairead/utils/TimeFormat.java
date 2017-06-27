@@ -32,7 +32,7 @@ public class TimeFormat {
                 index = 1;
             }
 
-        return timeFormat[index].substring(0,length);
+        return timeFormat[index].substring(0,10);
     }
 
 
